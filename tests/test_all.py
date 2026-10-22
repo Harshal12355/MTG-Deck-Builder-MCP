@@ -482,13 +482,14 @@ class SkillTest(unittest.TestCase):
         from mtg_mcp.skills import fetch_skill, load_skills
 
         loaded = load_skills()
-        self.assertEqual(set(loaded), {"nero-build", "nero-tune"})
+        self.assertEqual(set(loaded), {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"})
         for skill in loaded.values():
-            self.assertIn("reference_principles", skill.instructions)
             self.assertTrue(skill.description)
+            self.assertTrue(skill.instructions)
+        self.assertIn("reference_principles", loaded["nero-tune"].instructions)
         missing = fetch_skill("ponytail")
         self.assertIn("error", missing)
-        self.assertEqual(set(missing["skills"]), {"nero-build", "nero-tune"})
+        self.assertEqual(set(missing["skills"]), {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"})
 
     def test_frontmatter_required(self):
         from mtg_mcp.skills import parse_skill
@@ -529,7 +530,10 @@ class McpProtocolTest(unittest.TestCase):
              "reference_library", "reference_principles", "reference_cards", "reference_card", "reference_deck",
              "reference_compare", "moxfield_import_user", "get_skill"},
         )
-        self.assertEqual({p.name for p in prompts.prompts}, {"nero-build", "nero-tune"})
+        self.assertEqual(
+            {p.name for p in prompts.prompts},
+            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"},
+        )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)
 

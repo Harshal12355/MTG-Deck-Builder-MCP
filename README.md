@@ -42,7 +42,7 @@ An MCP server that lets Claude (or any MCP client) help build and tune Magic: Th
 | `reference_deck` | One reference deck: plan, mulligan guide, win lines (ready for `simulate_deck`), key cards, stats and full `decklist` |
 | `reference_compare` | Proven staples in a deck's colour identity that it doesn't play yet, grouped by role |
 | `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, primers) of a Moxfield user as a library source |
-| `get_skill` | Load a deckbuilding skill and follow it. `nero-build` (commander, no list) or `nero-tune` (a list or a link). Same text is also an MCP prompt |
+| `get_skill` | Load a deckbuilding skill from `deck_skills/` and follow it. `nero-build`, `nero-tune`, `nero-mana`, `nero-goldfish`. Same text is also an MCP prompt |
 
 ## Reference library
 
@@ -193,6 +193,7 @@ src/mtg_mcp/
   archidekt.py  Archidekt deck search and deck lists (unofficial)
   library.py    reference library loader and queries
   moxfield.py   Moxfield user importer (unofficial)
+  deck_skills/  one folder per deckbuilding skill (SKILL.md)
   data/library/ reference library sources (decks, cards, principles, notes)
 scripts/build_library_docs.py   regenerate docs/library/ markdown
 docs/library/   readable principles, card library and deck notes

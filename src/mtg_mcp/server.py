@@ -57,8 +57,9 @@ Tools for Magic: The Gathering questions and deckbuilding.
   identity / price, reference_deck for a full list with its win lines (pass them to simulate_deck),
   reference_card to see how a card was used, and reference_compare to find proven staples a deck is missing.
   Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
-- Deckbuilding skills: call get_skill before building or tuning a deck, then follow what it returns.
-  nero-build when there is a commander and no list. nero-tune when a decklist or a deck link is already here.
+- Deckbuilding skills: call get_skill and follow what it returns.
+  nero-build when there is a commander and no list. nero-tune when a decklist or a link is already here.
+  nero-mana for a mana-base pass. nero-goldfish for speed, mulligans, or a curve check.
   The same text is available as MCP prompts under those names.
 Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
 """

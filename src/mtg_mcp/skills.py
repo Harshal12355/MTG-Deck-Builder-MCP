@@ -1,16 +1,13 @@
 """Deckbuilding skills shipped with the server.
 
-Cursor reads the copies in `.cursor/skills/`. A hosted client never sees that
-folder, so the same files are loaded here and exposed as a tool and as prompts.
+One folder under ``deck_skills/`` is one skill. ``get_skill`` and the prompt
+list both read that directory, so a hosted server sees the same files.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-
-# shortcut: a new skill needs its name here and a force-include line in pyproject.toml
-SKILL_NAMES = ("nero-build", "nero-tune")
 
 
 @dataclass(frozen=True)
@@ -20,17 +17,8 @@ class Skill:
     instructions: str
 
 
-def _roots() -> list[Path]:
-    here = Path(__file__).resolve().parent
-    roots = []
-    packaged = here / "skills"
-    if packaged.is_dir():
-        roots.append(packaged)
-    # here is src/mtg_mcp (or site-packages/mtg_mcp). parents[1] is the repo root.
-    repo = here.parents[1] / ".cursor" / "skills"
-    if repo.is_dir():
-        roots.append(repo)
-    return roots
+def _skill_dir() -> Path:
+    return Path(__file__).resolve().parent / "deck_skills"
 
 
 def parse_skill(text: str) -> Skill:
@@ -63,14 +51,13 @@ def parse_skill(text: str) -> Skill:
 
 
 def load_skills() -> dict[str, Skill]:
+    root = _skill_dir()
     found: dict[str, Skill] = {}
-    for root in _roots():
-        for skill_name in SKILL_NAMES:
-            if skill_name in found:
-                continue
-            path = root / skill_name / "SKILL.md"
-            if path.is_file():
-                found[skill_name] = parse_skill(path.read_text(encoding="utf-8"))
+    if not root.is_dir():
+        return found
+    for path in sorted(root.glob("*/SKILL.md")):
+        skill = parse_skill(path.read_text(encoding="utf-8"))
+        found[skill.name] = skill
     return found
 
 
