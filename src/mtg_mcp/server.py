@@ -12,10 +12,15 @@ from typing import Any, Literal
 
 from mcp.server.fastmcp import FastMCP
 
-from .analysis import analyze, card_roles
+from .analysis import TEMPLATE_CATEGORIES, analyze, card_roles, resolve_template, template_overlap
+from .archidekt import Archidekt, parse_deck_id
 from .decklist import ParsedDeck, parse_decklist
 from .edhrec import Edhrec
 from .http import ApiError, HttpClient
+from .goldfish import simulate
+from .library import ROLES, decklist_text, deck_label, get_library, library_dir, reload_library
+from .moxfield import import_user
+from .principles import principles as build_principles
 from .scryfall import Scryfall, price_usd, summarize_card
 from .spellbook import Spellbook
 
@@ -28,7 +33,29 @@ Tools for Magic: The Gathering questions and deckbuilding.
   then find_combos and edhrec_recommendations (pass the decklist so cards already in the deck are skipped).
 - search_cards uses Scryfall syntax, e.g. `id<=bg t:creature o:"sacrifice" usd<3 f:commander`.
   For Commander, restrict to the commander's colours with `id<=<colors>` and `f:commander`.
-Prices are Scryfall's daily USD market prices. EDHREC data is best-effort.
+- Building or tuning a Commander deck: follow the deckbuilding template (call deckbuilding_template).
+  By default: 38 lands, 10 ramp, 12 card advantage, 12 targeted disruption, 6 mass disruption, 30 plan cards.
+  The targets add up to 108 for 99 slots, so about 9 cards should fill two roles.
+  The player may change any of these numbers. Use their numbers for the rest of the conversation,
+  passing them as `template` to deckbuilding_template and analyze_deck.
+- For focused, high-power or budget (~$100) builds, also call deckbuilding_principles and follow it:
+  engine commander, define the win line first, build backwards from the ideal turn, average mana value
+  near or below 2.0, synergy over staples, 29-34 lands rather than a rigid template, and interaction
+  that protects your own win first. Its build_process gives the order to build in: analyze what the
+  commander really enables, choose the win condition, fill ramp/draw/interaction at higher-than-usual
+  counts, then pick synergistic cards for every slot. Don't copy EDHREC lists wholesale.
+- To test how a deck plays, call simulate_deck with its win lines (groups of card names). Compare runs
+  before and after changes rather than reading the numbers as win rates.
+- Real decks people have built: archidekt_search_decks (by commander, card, name, owner, colours, bracket),
+  archidekt_get_deck for one deck's full list (its `decklist` field can go straight into analyze_deck / find_combos),
+  and archidekt_popular_cards to see what the most-viewed Archidekt decks for a commander actually run.
+- Reference library (reference_* tools): real, tested budget high-power decks from builders we learn from
+  (first source: NeRo, ~$100 Bracket 4 / budget cEDH lists with primers). Use it when building or tuning:
+  reference_principles for the builder's principles, reference_cards for proven card choices by role / colour
+  identity / price, reference_deck for a full list with its win lines (pass them to simulate_deck),
+  reference_card to see how a card was used, and reference_compare to find proven staples a deck is missing.
+  Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
+Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
 """
 
 mcp = FastMCP("mtg-deckbuilder", instructions=INSTRUCTIONS)
@@ -41,6 +68,12 @@ def _clients() -> tuple[Scryfall, Spellbook, Edhrec]:
     if _http is None:
         _http = HttpClient()
     return Scryfall(_http), Spellbook(_http), Edhrec(_http)
+
+
+def _archidekt() -> Archidekt:
+    _clients()  # make sure the shared client exists
+    assert _http is not None
+    return Archidekt(_http)
 
 
 def set_http_client(http: HttpClient) -> None:
@@ -178,24 +211,117 @@ async def analyze_deck(
     format: str = "commander",
     commanders: list[str] | None = None,
     budget_per_card: float | None = None,
+    template: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Analyse a pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain `1 Card Name` lines).
 
     Reports legality for the format (size, copies, colour identity, bans), mana curve,
     colour pips vs land sources, card roles (ramp, draw, removal, wipes, tutors...),
-    gaps against a typical Commander template, Game Changers, and total price.
+    how the deck compares to the deckbuilding template, Game Changers, and total price.
     Pass `commanders` if the list doesn't mark them. `budget_per_card` flags cards above that USD price.
+    `template` overrides template targets, e.g. {"lands": 36, "ramp": 12} (see deckbuilding_template).
     """
+    try:
+        resolve_template(template)
+    except ValueError as exc:
+        return {"error": str(exc)}
     try:
         deck, cards, not_found = await _resolve_deck(decklist, commanders)
     except ApiError as exc:
         return _error(exc)
     if not deck.playing:
         return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck.unparsed_lines[:10]}
-    result = analyze(deck, cards, fmt=format, budget_per_card=budget_per_card)
+    result = analyze(deck, cards, fmt=format, budget_per_card=budget_per_card, template=template)
     result["cards_not_found"] = sorted(set(result["cards_not_found"]) | set(not_found)) or None
     if deck.unparsed_lines:
         result["unparsed_lines"] = deck.unparsed_lines[:20]
+    return result
+
+
+@mcp.tool()
+async def deckbuilding_template(template: dict[str, int] | None = None, color_identity: str | None = None) -> dict[str, Any]:
+    """The Commander deckbuilding template to follow when building or tuning a deck.
+
+    Defaults (The Command Zone's template): 38 lands, 10 ramp, 12 card advantage, 12 targeted disruption,
+    6 mass disruption, 30 plan cards. Pass `template` to change any of them, e.g. {"lands": 36, "plan": 34}.
+    Pass `color_identity` (e.g. "wub") to get Scryfall queries for each category limited to those colours.
+    """
+    try:
+        targets = resolve_template(template)
+    except ValueError as exc:
+        return {"error": str(exc)}
+    colors = f" id<={color_identity.lower()}" if color_identity else ""
+    categories = {}
+    for key, spec in TEMPLATE_CATEGORIES.items():
+        entry: dict[str, Any] = {"target": targets[key], "default": spec["target"], "description": spec["description"]}
+        if spec["scryfall"]:
+            entry["search_query"] = f"{spec['scryfall']} f:commander{colors}"
+        categories[key] = entry
+    return {
+        "categories": categories,
+        "customized": sorted(k for k in targets if targets[k] != TEMPLATE_CATEGORIES[k]["target"]) or None,
+        **template_overlap(targets),
+        "how_to_use": [
+            "Choose the plan cards first: the ones that make this commander's strategy work (edhrec_recommendations helps).",
+            "Fill ramp, card advantage, targeted disruption and mass disruption next, preferring cards that also fit the plan.",
+            "Count a card in every category it fills. The overlap figure above is how many cards need to do double duty.",
+            "Add lands last, and match colour sources to the deck's colour pips.",
+            "Check the finished list with analyze_deck, passing the same template.",
+            "The template is a starting point, not a rule: for focused or budget builds see deckbuilding_principles.",
+        ],
+    }
+
+
+@mcp.tool()
+async def deckbuilding_principles() -> dict[str, Any]:
+    """Principles for building focused, powerful Commander decks on a budget (~$100).
+
+    Engine commander, win line first, build backwards from the ideal turn, average mana value near 2.0,
+    synergy over staples, 29-34 lands instead of a rigid template, interaction that protects the win.
+    Also returns `build_process` (Budget Bros MTG): analyze the commander beyond its surface theme,
+    start with the win condition, fill ramp/draw/interaction at higher-than-usual counts, make every
+    utility card synergistic, avoid cookie-cutter EDHREC lists, and use untapped budget dual lands.
+    Use with deckbuilding_template and analyze_deck when building or tuning a deck.
+    """
+    return build_principles()
+
+
+@mcp.tool()
+async def simulate_deck(
+    decklist: str,
+    commanders: list[str] | None = None,
+    win_lines: list[list[str]] | None = None,
+    turns: int = 8,
+    trials: int = 5000,
+    on_play: bool = True,
+    extra_cards_per_turn: int = 0,
+    seed: int | None = None,
+) -> dict[str, Any]:
+    """Goldfish a deck: shuffle and play it out thousands of times to see how fast it sets up.
+
+    Reports how often 7-card hands are kept, the chance the commander can be cast by each turn, and,
+    for each win line, the chance its cards have been seen by each turn (tutors stand in for missing pieces).
+    `win_lines` is a list of card-name groups, e.g. [["Pitiless Plunderer", "Gravecrawler", "Carrion Feeder"],
+    ["Kresh the Bloodbraided", "Jarad, Golgari Lich Lord"]]. `extra_cards_per_turn` approximates draw engines.
+    No opponents and mana is counted by amount, not colour, so use it to compare versions of a deck,
+    not as a win rate. `seed` makes results repeatable.
+    """
+    if not 1 <= turns <= 15:
+        return {"error": "turns must be from 1 to 15."}
+    if not 100 <= trials <= 50000:
+        return {"error": "trials must be from 100 to 50000."}
+    if not 0 <= extra_cards_per_turn <= 5:
+        return {"error": "extra_cards_per_turn must be from 0 to 5."}
+    try:
+        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+    except ApiError as exc:
+        return _error(exc)
+    if not deck.playing:
+        return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck.unparsed_lines[:10]}
+    result = simulate(deck, cards, win_lines=win_lines, turns=turns, trials=trials, on_play=on_play,
+                      extra_cards_per_turn=extra_cards_per_turn, seed=seed)
+    if "error" not in result:
+        result["cards_not_found"] = sorted(set(result.get("cards_not_found") or []) | set(not_found)) or None
     return result
 
 
@@ -306,6 +432,284 @@ async def price_decklist(decklist: str) -> dict[str, Any]:
         "no_price_listed": [r["card"] for r in rows if r["usd_each"] is None] or None,
         "cards_not_found": not_found or None,
     }
+
+
+# --------------------------------------------------------------------------- archidekt
+
+
+@mcp.tool()
+async def archidekt_search_decks(
+    commander: str | None = None,
+    card: str | None = None,
+    name: str | None = None,
+    format: str | None = "commander",
+    owner: str | None = None,
+    colors: str | None = None,
+    exact_colors: bool = False,
+    bracket: int | None = None,
+    order: Literal["views", "newest", "updated", "name"] = "views",
+    page: int = 1,
+    limit: int = 20,
+) -> dict[str, Any]:
+    """Search public decks on Archidekt.
+
+    - commander: commander name (resolved through Scryfall first, so partial names work).
+    - card: decks that include this card. name: text in the deck title. owner: Archidekt username.
+    - format: "commander" (default), "modern", "standard", "pauper", "brawl", ... or None for any format.
+    - colors: colour letters like "bg"; exact_colors=True requires all of them.
+    - bracket: Commander bracket 1-5. order: "views" (most viewed), "newest", "updated" or "name".
+    Returns deck ids and URLs; pass one to archidekt_get_deck for the full list.
+    """
+    scryfall, _, _ = _clients()
+    try:
+        if commander:
+            commander = (await scryfall.named(commander)).get("name", commander)
+        if card:
+            card = (await scryfall.named(card)).get("name", card)
+        return await _archidekt().search(
+            name=name, commander=commander, card=card, fmt=format, owner=owner, colors=colors,
+            exact_colors=exact_colors, bracket=bracket, order=order, page=page, limit=limit,
+        )
+    except ValueError as exc:
+        return {"error": str(exc)}
+    except ApiError as exc:
+        return _error(exc)
+
+
+@mcp.tool()
+async def archidekt_get_deck(deck: str, include_cards: bool = True) -> dict[str, Any]:
+    """One public Archidekt deck by id or URL (e.g. https://archidekt.com/decks/123456/my-deck).
+
+    Returns commanders, the builder's categories with card counts (Ramp, Draw, Removal...),
+    cards grouped by category, approximate price, description, and a plain `decklist`
+    you can pass straight to analyze_deck, find_combos or price_decklist.
+    """
+    deck_id = parse_deck_id(deck)
+    if deck_id is None:
+        return {"error": f"Couldn't find an Archidekt deck id in {deck!r}."}
+    try:
+        return await _archidekt().deck_summary(deck_id, include_cards=include_cards)
+    except ApiError as exc:
+        return _error(exc)
+
+
+@mcp.tool()
+async def archidekt_popular_cards(
+    commander: str,
+    decks: int = 15,
+    order: Literal["views", "newest", "updated"] = "views",
+    bracket: int | None = None,
+    decklist: str | None = None,
+    include_basics: bool = False,
+    top: int = 60,
+) -> dict[str, Any]:
+    """Scour the top public Archidekt decks for a commander and report how often each card appears.
+
+    - decks: how many decks to sample (1-30; each one is a separate request, about 1 s apiece).
+    - order: sample the most viewed ("views"), newest or most recently updated decks.
+    - bracket: only decks tagged with this Commander bracket (1-5).
+    - decklist: if given, cards already in it are left out, so results are suggested adds.
+    Each card shows inclusion % across the sample and the category builders most often file it under.
+    A complement to edhrec_recommendations: smaller sample, but real, recently edited lists.
+    """
+    scryfall, _, _ = _clients()
+    try:
+        resolved = (await scryfall.named(commander)).get("name", commander)
+        exclude: set[str] = set()
+        if decklist:
+            exclude = {e.name for e in parse_decklist(decklist).playing}
+        return await _archidekt().popular_cards(
+            resolved, decks=max(1, min(decks, 30)), order=order, bracket=bracket,
+            exclude=exclude, include_basics=include_basics, top=max(1, min(top, 200)),
+        )
+    except ApiError as exc:
+        return _error(exc)
+
+
+# --------------------------------------------------------------------------- reference library
+
+
+def _library_or_error():
+    lib = get_library()
+    if not lib.decks:
+        return None, {"error": f"No reference library found in {library_dir()}. Import one with moxfield_import_user."}
+    return lib, None
+
+
+@mcp.tool()
+async def reference_library() -> dict[str, Any]:
+    """Overview of the reference library: who the builders are and every deck with archetype and stats.
+
+    The library holds real, tested decklists (first source: NeRo's ~$100 high-power Bracket 4 / budget cEDH lists)
+    with the builder's own card tags, primer-derived notes and win lines. Start here, then use
+    reference_principles, reference_cards, reference_deck, reference_card and reference_compare.
+    """
+    lib, err = _library_or_error()
+    if err:
+        return err
+    decks = []
+    for d in lib.decks:
+        notes = d.get("notes", {})
+        decks.append({
+            "deck": deck_label(d), "id": d["id"], "source": d["source"], "name": d["name"],
+            "commanders": d.get("commanders", []), "colors": d.get("colors"), "bracket": d.get("bracket"),
+            "archetype": notes.get("archetype"), "views": d.get("views"), "updated": d.get("updated"),
+            "has_primer_notes": bool(notes.get("plan")), "win_lines": len(notes.get("win_lines", [])),
+            "placeholder": d.get("placeholder", False), "url": d.get("url"),
+            **{k: v for k, v in lib.deck_stats(d).items() if k != "tagged_role_counts"},
+        })
+    return {
+        "sources": [{k: s.get(k) for k in ("key", "author", "profile_url", "summary", "captured")} for s in lib.sources.values()],
+        "decks": decks,
+        "unique_cards": sum(1 for u in lib.usage.values() if u["decks"]),
+        "roles": ROLES,
+        "note": "price_usd_at_capture is for the exact printings in the list at capture time, excluding basics; "
+                "cheapest printings are often lower. Re-check with price_decklist before buying.",
+    }
+
+
+@mcp.tool()
+async def reference_principles(source: str | None = None) -> dict[str, Any]:
+    """The reference builders' deckbuilding principles distilled from their primers, with evidence decks and rules of thumb.
+
+    Complements deckbuilding_principles (Budget Pub Stomper / Budget Bros). source: e.g. "nero" (default: all).
+    """
+    lib, err = _library_or_error()
+    if err:
+        return err
+    out = []
+    for key, s in lib.sources.items():
+        if source and key != source:
+            continue
+        out.append({"source": key, "author": s.get("author"), "principles": s.get("principles", []),
+                    "rules_of_thumb": s.get("rules_of_thumb", [])})
+    return {"sources": out} if out else {"error": f"Unknown source {source!r}; have {sorted(lib.sources)}"}
+
+
+@mcp.tool()
+async def reference_cards(
+    role: str | None = None,
+    color_identity: str | None = None,
+    min_decks: int = 1,
+    max_price: float | None = None,
+    max_mana_value: float | None = None,
+    query: str | None = None,
+    theme: str | None = None,
+    include_lands: bool = True,
+    sort: Literal["decks", "price", "mana_value"] = "decks",
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Proven card choices from the reference library, ranked by how many of the builder's decks play them.
+
+    - role: one of ramp, draw, tutor, counter, removal, wipe, protection, stax, combo, recursion, untap, clone,
+      tokens, evasion, land (from the builder's own tags).
+    - color_identity: e.g. "UB" returns only cards legal in a Dimir deck. Colourless cards always qualify.
+    - min_decks: 3+ gives the builder's staples; 1 shows everything he has tried.
+    - max_price: USD at capture time. theme: match his other tags (e.g. "-1/-1", "poison", "elf").
+    Each card lists which decks run it, its roles, and decks still 'considering' it.
+    """
+    lib, err = _library_or_error()
+    if err:
+        return err
+    if role and role.lower() not in ROLES:
+        return {"error": f"Unknown role {role!r}. Use one of {ROLES}."}
+    cards = lib.search_cards(role=role, color_identity=color_identity, min_decks=max(1, min_decks), max_price=max_price,
+                             max_mana_value=max_mana_value, query=query, theme=theme, include_lands=include_lands,
+                             sort=sort, limit=max(1, min(limit, 300)))
+    return {"count": len(cards), "cards": cards}
+
+
+@mcp.tool()
+async def reference_card(name: str) -> dict[str, Any]:
+    """How the reference builders use one card: which decks run it, the roles they tag it with, and decks considering it."""
+    lib, err = _library_or_error()
+    if err:
+        return err
+    resolved = lib.resolve_card(name)
+    if not resolved or resolved not in lib.usage:
+        return {"name": name, "in_library": False, "note": "No reference deck plays or considers this card."}
+    return {"in_library": True, **lib.card_entry(resolved)}
+
+
+@mcp.tool()
+async def reference_deck(deck: str, include_cards: bool = True, include_considering: bool = False) -> dict[str, Any]:
+    """One reference deck: plan, ideal turn, mulligan guide, win lines, key cards, stats and the full decklist.
+
+    deck: commander name, deck name or Moxfield id (e.g. "Kefka", "Hapatra", "Vren").
+    `decklist` goes straight into analyze_deck / find_combos; `notes.win_lines` into simulate_deck's win_lines.
+    """
+    lib, err = _library_or_error()
+    if err:
+        return err
+    hits = lib.find_decks(deck)
+    if not hits:
+        return {"error": f"No reference deck matches {deck!r}.", "decks": [deck_label(d) for d in lib.decks]}
+    d = hits[0]
+    out: dict[str, Any] = {
+        "deck": deck_label(d), "name": d["name"], "url": d.get("url"), "source": d["source"],
+        "commanders": d.get("commanders"), "colors": d.get("colors"), "bracket": d.get("bracket"),
+        "updated": d.get("updated"), "description": d.get("description"), "notes": d.get("notes", {}),
+        "stats": lib.deck_stats(d),
+    }
+    if len(hits) > 1:
+        out["other_matches"] = [deck_label(h) for h in hits[1:]]
+    if include_cards:
+        out["decklist"] = decklist_text(d, include_considering=include_considering)
+        out["cards"] = [{"name": n, "qty": q, "board": b, "tags": t} for n, q, b, t in d["cards"]
+                        if include_considering or b != "considering"]
+    return out
+
+
+@mcp.tool()
+async def reference_compare(
+    decklist: str,
+    commanders: list[str] | None = None,
+    min_decks: int = 3,
+    max_price: float | None = None,
+    limit_per_role: int = 15,
+) -> dict[str, Any]:
+    """Compare a deck with the reference library: proven staples in its colour identity that it doesn't play, by role.
+
+    Use it to tweak an existing deck. Raise min_decks for only the most-played staples, and set max_price for budget.
+    Treat results as candidates to check against the deck's plan, not automatic adds.
+    """
+    lib, err = _library_or_error()
+    if err:
+        return err
+    try:
+        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+    except ApiError as exc:
+        return _error(exc)
+    identity = "".join(sorted({c for e in deck.commanders for c in (cards.get(e.name.lower()) or {}).get("color_identity", [])},
+                              key="WUBRG".index))
+    if not deck.commanders:
+        return {"error": "Couldn't tell the commander; pass commanders=[...]."}
+    names = [(cards.get(e.name.lower()) or {}).get("name", e.name) for e in deck.commanders + deck.main]
+    result = lib.compare(names, identity, min_decks=max(1, min_decks), max_price=max_price, limit=limit_per_role)
+    result["commanders"] = [e.name for e in deck.commanders]
+    if not_found:
+        result["unresolved_cards"] = not_found
+    return result
+
+
+@mcp.tool()
+async def moxfield_import_user(username: str, source_key: str | None = None, include_primers: bool = True,
+                               max_decks: int = 100) -> dict[str, Any]:
+    """Import (or refresh) every public Commander deck of a Moxfield user into the reference library.
+
+    Saves decks with the author's card tags, card metadata, and raw primers (markdown) under
+    <library>/<source_key>/. Existing hand-written notes for decks are kept. Moxfield has no official API,
+    so this can break or be rate-limited (about 1 request per second, ~2 per deck).
+    """
+    _clients()
+    assert _http is not None
+    try:
+        result = await import_user(_http, username, library_dir(), source_key=source_key,
+                                   include_primers=include_primers, max_decks=max(1, min(max_decks, 200)))
+    except ApiError as exc:
+        return {**_error(exc), "hint": "Moxfield may be blocking automated requests from this network."}
+    reload_library()
+    return result
 
 
 # --------------------------------------------------------------------------- entry point

@@ -1,0 +1,7790 @@
+{
+"Aarakocra Sneak": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Bird Rogue",
+"usd": 0.13
+},
+"Abdel Adrian, Gorion's Ward": {
+"ci": "W",
+"cmc": 5.0,
+"type": "Legendary Creature — Human Warrior",
+"usd": 0.27
+},
+"Abigale, Eloquent First-Year": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Legendary Creature — Bird Bard",
+"usd": 0.37
+},
+"Abolish": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Abrade": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.25
+},
+"Abrupt Decay": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.96
+},
+"Access Tunnel": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.61
+},
+"Accursed Marauder": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Zombie Warrior",
+"usd": 0.37
+},
+"Acrobatic Leap": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.11
+},
+"Ad Nauseam": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 10.43
+},
+"Adarkar Wastes": {
+"ci": "UW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.4
+},
+"Aether Hub": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.25
+},
+"Aether Spellbomb": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.34
+},
+"Aetherflux Reservoir": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact",
+"usd": 20.32
+},
+"Afterlife from the Loam": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Sorcery",
+"usd": 1.4
+},
+"Aftermath Analyst": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Detective",
+"usd": 0.98
+},
+"Airbender Ascension": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 1.84
+},
+"Alaundo the Seer": {
+"ci": "GU",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Shaman",
+"usd": 0.18
+},
+"Alchemist's Refuge": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.4
+},
+"Alseid of Life's Bounty": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Enchantment Creature — Nymph",
+"usd": 0.25
+},
+"Altar of Bhaal // Bone Offering": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.31
+},
+"Altar of Dementia": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 19.38
+},
+"Altar of the Brood": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 10.62
+},
+"Aminatou's Augury": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Sorcery",
+"usd": 0.39
+},
+"Ammit Eternal": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Zombie Crocodile Demon",
+"usd": 1.32
+},
+"Amphibian Downpour": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 1.9
+},
+"An Offer You Can't Refuse": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 3.17
+},
+"Anchor to Reality": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.18
+},
+"Ancient Ziggurat": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.33
+},
+"Andúril, Narsil Reforged": {
+"ci": "",
+"cmc": 2.0,
+"type": "Legendary Artifact — Equipment",
+"usd": 10.68
+},
+"Anep, Vizier of Hazoret": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Legendary Creature — Jackal Warrior",
+"usd": 0.29
+},
+"Anger": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Creature — Incarnation",
+"usd": 0.56
+},
+"Anguished Unmaking": {
+"ci": "BW",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 1.8
+},
+"Animate Dead": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 7.54
+},
+"Annex Sentry": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Artifact Creature — Phyrexian Cleric",
+"usd": 0.26
+},
+"Anointed Peacekeeper": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Human Cleric",
+"usd": 0.33
+},
+"Ao, the Dawn Sky": {
+"ci": "W",
+"cmc": 5.0,
+"type": "Legendary Creature — Dragon Spirit",
+"usd": 0.54
+},
+"Aphetto Alchemist": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 2.78
+},
+"Apple of Eden, Isu Relic": {
+"ci": "",
+"cmc": 4.0,
+"type": "Legendary Artifact",
+"usd": 0.79
+},
+"Arachne, Psionic Weaver": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Creature — Spider Human Hero",
+"usd": 0.3
+},
+"Arachnoid Adaptation": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Arbor Elf": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 0.42
+},
+"Arboreal Grazer": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Sloth Beast",
+"usd": 0.26
+},
+"Arcane Denial": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 2.43
+},
+"Arcane Endeavor": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": 0.48
+},
+"Arcane Signet": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.54
+},
+"Arcanis the Omnipotent": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Legendary Creature — Wizard",
+"usd": 0.24
+},
+"Archdruid's Charm": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 8.97
+},
+"Archfiend of Ifnir": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Creature — Demon",
+"usd": 0.37
+},
+"Archmage Emeritus": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Human Wizard",
+"usd": 0.7
+},
+"Archon of Cruelty": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Creature — Archon",
+"usd": 4.01
+},
+"Archon of Emeria": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Archon",
+"usd": 1.04
+},
+"Archon of the Wild Rose": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Creature — Archon",
+"usd": 0.27
+},
+"Archpriest of Shadows": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Creature — Human Warlock",
+"usd": 1.17
+},
+"Archway of Innovation": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.25
+},
+"Arid Archway": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 1.33
+},
+"Armored Scrapgorger": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Phyrexian Beast",
+"usd": 0.34
+},
+"Arterial Flow": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Ash Barrens": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.24
+},
+"Ashaya, Soul of the Wild": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Legendary Creature — Elemental",
+"usd": 15.26
+},
+"Assassin's Trophy": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.22
+},
+"Astral Cornucopia": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 0.29
+},
+"Asylum Visitor": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Vampire Wizard",
+"usd": 0.36
+},
+"Atalan Jackal": {
+"ci": "GR",
+"cmc": 3.0,
+"type": "Creature — Human Tyranid Scout",
+"usd": 4.44
+},
+"Aurora Awakener": {
+"ci": "G",
+"cmc": 7.0,
+"type": "Creature — Giant Druid",
+"usd": 0.72
+},
+"Auroral Procession": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.39
+},
+"Autumn's Veil": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.6
+},
+"Avacyn's Pilgrim": {
+"ci": "GW",
+"cmc": 1.0,
+"type": "Creature — Human Monk",
+"usd": 0.44
+},
+"Aven Interrupter": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Bird Rogue",
+"usd": 3.28
+},
+"Aven Mindcensor": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Bird Wizard",
+"usd": null
+},
+"Avengers Disassembled": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.0
+},
+"Azorius Guildgate": {
+"ci": "UW",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.09
+},
+"Azra Oddsmaker": {
+"ci": "BR",
+"cmc": 3.0,
+"type": "Creature — Azra Warrior",
+"usd": 0.84
+},
+"Azure Beastbinder": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Rat Rogue",
+"usd": 0.5
+},
+"Baldur's Gate": {
+"ci": "",
+"cmc": 0.0,
+"type": "Legendary Land — Gate",
+"usd": 3.39
+},
+"Baleful Force": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Creature — Elemental",
+"usd": 0.58
+},
+"Baleful Strix": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Artifact Creature — Bird",
+"usd": 4.8
+},
+"Bandit's Talent": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment — Class",
+"usd": 0.36
+},
+"Banewhip Punisher": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Warrior",
+"usd": 0.25
+},
+"Baral's Expertise": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.24
+},
+"Baral, Chief of Compliance": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Wizard",
+"usd": 4.11
+},
+"Barbarian Ring": {
+"ci": "R",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.29
+},
+"Bartolomé del Presidio": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Legendary Creature — Vampire Knight",
+"usd": 0.28
+},
+"Basal Thrull": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Thrull",
+"usd": 0.24
+},
+"Basalt Monolith": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 5.43
+},
+"Basilisk Gate": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.28
+},
+"Basim Ibn Ishaq": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Assassin",
+"usd": 2.54
+},
+"Beacon of Tomorrows": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Sorcery",
+"usd": 3.24
+},
+"Beast Whisperer": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Druid",
+"usd": 7.6
+},
+"Beast Within": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.77
+},
+"Benefactor's Draught": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 14.64
+},
+"Benevolent Bodyguard": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Creature — Human Cleric",
+"usd": 0.27
+},
+"Bident of Thassa": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Legendary Enchantment Artifact",
+"usd": 0.48
+},
+"Big Game Hunter": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Rebel Assassin",
+"usd": 0.53
+},
+"Bilious Skulldweller": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Phyrexian Insect",
+"usd": 0.35
+},
+"Biomancer's Familiar": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Creature — Mutant",
+"usd": 1.9
+},
+"Birds of Paradise": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Bird",
+"usd": 7.66
+},
+"Birthing Ritual": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 4.26
+},
+"Bitter Revelation": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.03
+},
+"Bitter Triumph": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.35
+},
+"Black Market Connections": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 13.19
+},
+"Black Sun's Zenith": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.36
+},
+"Blackcleave Cliffs": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.87
+},
+"Blasting Station": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 12.42
+},
+"Blazing Sunsteel": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 9.52
+},
+"Blighted Agent": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Phyrexian Human Rogue",
+"usd": 1.45
+},
+"Blighted Burgeoning": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 0.13
+},
+"Blighted Woodland": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.36
+},
+"Blood Artist": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Vampire",
+"usd": 3.54
+},
+"Blood Pet": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Thrull",
+"usd": 4.97
+},
+"Bloodmark Mentor": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.95
+},
+"Bloodroot Apothecary": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Squirrel Druid",
+"usd": 3.56
+},
+"Blossoming Tortoise": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Turtle",
+"usd": 7.23
+},
+"Blowfly Infestation": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.33
+},
+"Body Double": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.16
+},
+"Boggart Trawler // Boggart Bog": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Goblin",
+"usd": 2.03
+},
+"Bojuka Bog": {
+"ci": "B",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.55
+},
+"Bolt Bend": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 3.6
+},
+"Bonders' Enclave": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.35
+},
+"Boomerang": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.13
+},
+"Boreal Druid": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Snow Creature — Elf Druid",
+"usd": 4.51
+},
+"Borne Upon a Wind": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 3.07
+},
+"Boromir, Warden of the Tower": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Soldier",
+"usd": 4.45
+},
+"Boros Guildgate": {
+"ci": "RW",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.08
+},
+"Botanical Sanctum": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.42
+},
+"Bottomless Pit": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 7.63
+},
+"Braids, Arisen Nightmare": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Nightmare",
+"usd": 4.41
+},
+"Brain Freeze": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 3.57
+},
+"Brainstorm": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.48
+},
+"Brash Taunter": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Creature — Goblin",
+"usd": 2.22
+},
+"Breach the Multiverse": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": null
+},
+"Breath of Darigaaz": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.19
+},
+"Breena, the Demagogue": {
+"ci": "BW",
+"cmc": 3.0,
+"type": "Legendary Creature — Bird Warlock",
+"usd": null
+},
+"Bribery": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 3.91
+},
+"Bridgeworks Battle // Tanglespan Bridgeworks": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.28
+},
+"Brighthearth Banneret": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Elemental Warrior",
+"usd": 2.41
+},
+"Brigid, Clachan's Heart // Brigid, Doun's Mind": {
+"ci": "GW",
+"cmc": 3.0,
+"type": "Legendary Creature — Kithkin Warrior",
+"usd": 0.45
+},
+"Bring to Light": {
+"ci": "GU",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.34
+},
+"Brushland": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.38
+},
+"Burglar Rat": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Rat",
+"usd": 0.31
+},
+"Buried Alive": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 2.95
+},
+"Buried Ruin": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.37
+},
+"Burnout Bashtronaut": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.36
+},
+"Burnt Offering": {
+"ci": "BR",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.59
+},
+"Burst of Energy": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.18
+},
+"Butch DeLoria, Tunnel Snake": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Rogue",
+"usd": 0.31
+},
+"Cackling Counterpart": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Cacophony Scamp": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Phyrexian Goblin Warrior",
+"usd": 0.29
+},
+"Call of the Ring": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 4.5
+},
+"Cankerbloom": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Phyrexian Fungus",
+"usd": 0.34
+},
+"Canopy Cover": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 2.87
+},
+"Canopy Tactician": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Warrior",
+"usd": 3.42
+},
+"Canopy Vista": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land — Forest Plains",
+"usd": 0.26
+},
+"Capsize": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.71
+},
+"Careful Study": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 2.4
+},
+"Carpet of Flowers": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 1.75
+},
+"Cascade Bluffs": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.34
+},
+"Case of the Locked Hothouse": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Enchantment — Case",
+"usd": 3.55
+},
+"Case of the Stashed Skeleton": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment — Case",
+"usd": 0.35
+},
+"Castle Embereth": {
+"ci": "R",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.32
+},
+"Caustic Bronco": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Snake Horse Mount",
+"usd": 0.34
+},
+"Caves of Koilos": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.86
+},
+"Celestial Reunion": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 1.12
+},
+"Centaur Garden": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.55
+},
+"Cephalid Coliseum": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.33
+},
+"Cephalid Illusionist": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Octopus Wizard",
+"usd": 0.38
+},
+"Cerulean Wisps": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.58
+},
+"Chain of Smog": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 6.25
+},
+"Chainsaw": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 1.44
+},
+"Chakram Retriever": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Creature — Elemental Dog",
+"usd": 5.49
+},
+"Chameleon, Master of Disguise": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Shapeshifter Villain",
+"usd": 0.39
+},
+"Champions of the Perfect": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Warrior",
+"usd": 1.18
+},
+"Chancellor of the Annex": {
+"ci": "W",
+"cmc": 7.0,
+"type": "Creature — Phyrexian Angel",
+"usd": 3.18
+},
+"Channeler Initiate": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Human Druid",
+"usd": 0.15
+},
+"Chaos Terminator Lord": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Creature — Astartes Warrior",
+"usd": 0.43
+},
+"Chaos Warp": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.67
+},
+"Charcoal Diamond": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.26
+},
+"Charitable Levy": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.21
+},
+"Charming Prince": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Noble",
+"usd": 0.42
+},
+"Chart a Course": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.33
+},
+"Choked Estuary": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.36
+},
+"Chomping Changeling": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.82
+},
+"Chord of Calling": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 6.99
+},
+"Chthonian Nightmare": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.79
+},
+"Cinder Glade": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land — Mountain Forest",
+"usd": 0.3
+},
+"Circle of Dreams Druid": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Druid",
+"usd": 21.32
+},
+"Claim the Firstborn": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.22
+},
+"Clarion Conqueror": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Dragon",
+"usd": 3.65
+},
+"Clever Concealment": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 5.27
+},
+"Clever Conjurer": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Gnome Wizard",
+"usd": 0.21
+},
+"Clever Impersonator": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Shapeshifter",
+"usd": 2.6
+},
+"Cliffhaven Kitesail": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 0.15
+},
+"Clone Legion": {
+"ci": "U",
+"cmc": 9.0,
+"type": "Sorcery",
+"usd": 1.33
+},
+"Cloud Key": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 1.8
+},
+"Cloudshift": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.23
+},
+"Coastal Piracy": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 0.29
+},
+"Codie, Vociferous Codex": {
+"ci": "BGRUW",
+"cmc": 3.0,
+"type": "Legendary Artifact Creature — Book Construct",
+"usd": 0.35
+},
+"Coiling Rebirth": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.31
+},
+"Coldsteel Heart": {
+"ci": "",
+"cmc": 2.0,
+"type": "Snow Artifact",
+"usd": 1.12
+},
+"Collective Resistance": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.53
+},
+"Collector Ouphe": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Ouphe",
+"usd": 1.92
+},
+"Combat Celebrant": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Human Warrior",
+"usd": 2.79
+},
+"Combat Courier": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Artifact Creature — Construct",
+"usd": 0.06
+},
+"Combine Chrysalis": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.13
+},
+"Command Tower": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.32
+},
+"Command the Dreadhorde": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 0.54
+},
+"Commandeer": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Instant",
+"usd": 3.49
+},
+"Commander's Sphere": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.32
+},
+"Commune with Evil": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.19
+},
+"Compost": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 1.16
+},
+"Conduit of Worlds": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Artifact",
+"usd": 4.07
+},
+"Confounding Riddle": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Congregation at Dawn": {
+"ci": "GW",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 4.61
+},
+"Conjurer's Closet": {
+"ci": "",
+"cmc": 5.0,
+"type": "Artifact",
+"usd": 2.87
+},
+"Conqueror's Flail": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 0.49
+},
+"Consider": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Conspicuous Snoop": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin Rogue",
+"usd": 3.18
+},
+"Consuming Tide": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.54
+},
+"Contagion Clasp": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.34
+},
+"Containment Priest": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Cleric",
+"usd": 0.27
+},
+"Contentious Plan": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Coordinated Clobbering": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.19
+},
+"Copperline Gorge": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.83
+},
+"Copycrook": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Shapeshifter Rogue",
+"usd": 0.31
+},
+"Corpse Knight": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Creature — Zombie Knight",
+"usd": 0.4
+},
+"Corrupted Conviction": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.35
+},
+"Council of Reeds": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Scientist Hero",
+"usd": 0.43
+},
+"Counterspell": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 3.72
+},
+"Countersquall": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.46
+},
+"Crashing Drawbridge": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Wall",
+"usd": 0.85
+},
+"Crippling Fear": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.43
+},
+"Crop Rotation": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 3.71
+},
+"Cryogen Relic": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.32
+},
+"Cryptolith Rite": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 11.52
+},
+"Culling the Weak": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 9.13
+},
+"Cultist of the Absolute": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Legendary Enchantment — Background",
+"usd": 0.41
+},
+"Cunning Lethemancer": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 5.25
+},
+"Cuombajj Witches": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 0.24
+},
+"Curse of Opulence": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Enchantment — Aura Curse",
+"usd": 4.17
+},
+"Curse of Verbosity": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment — Aura Curse",
+"usd": 0.48
+},
+"Cursed Totem": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.4
+},
+"Cut Down": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 2.54
+},
+"Cyber Conversion": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 4.05
+},
+"Cybernetica Datasmith": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Artifact Creature — Human Artificer",
+"usd": 0.34
+},
+"Damping Sphere": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.75
+},
+"Dance of the Dead": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 15.69
+},
+"Dark Confidant": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 3.94
+},
+"Dark Deal": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 2.32
+},
+"Dark Ritual": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 4.77
+},
+"Dark Tutelage": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.23
+},
+"Darkslick Shores": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.99
+},
+"Darkstar Augur": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Bat Warlock",
+"usd": 0.97
+},
+"Darksteel Citadel": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact Land",
+"usd": 1.28
+},
+"Darksteel Relic": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 2.06
+},
+"Darkwater Catacombs": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.38
+},
+"Dauntless Dismantler": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Artificer",
+"usd": 0.28
+},
+"Dauthi Voidwalker": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Dauthi Rogue",
+"usd": 4.66
+},
+"Dawn's Reflection": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Enchantment — Aura",
+"usd": 0.2
+},
+"Day's Undoing": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.48
+},
+"Daydream": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.32
+},
+"Daze": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.87
+},
+"Dead Drop": {
+"ci": "B",
+"cmc": 10.0,
+"type": "Sorcery",
+"usd": 0.18
+},
+"Deadeye Navigator": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Creature — Spirit",
+"usd": null
+},
+"Deadly Dispute": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.44
+},
+"Deafening Silence": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 1.72
+},
+"Deathrite Shaman": {
+"ci": "BG",
+"cmc": 1.0,
+"type": "Creature — Elf Shaman",
+"usd": 4.4
+},
+"Deceptive Frostkite": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Dragon",
+"usd": 2.69
+},
+"Deep Analysis": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.22
+},
+"Defile": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.21
+},
+"Delay": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.68
+},
+"Delirium Skeins": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.28
+},
+"Demon's Disciple": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Cleric",
+"usd": 0.28
+},
+"Demonic Consultation": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 7.94
+},
+"Demonic Counsel": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 2.39
+},
+"Demonic Junker": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Artifact — Vehicle",
+"usd": 0.29
+},
+"Deputy of Detention": {
+"ci": "UW",
+"cmc": 3.0,
+"type": "Creature — Vedalken Wizard",
+"usd": 0.33
+},
+"Destiny Spinner": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment Creature — Human",
+"usd": 1.09
+},
+"Devastating Onslaught": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 4.39
+},
+"Devoted Druid": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Druid",
+"usd": 1.37
+},
+"Diabolic Intent": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 15.65
+},
+"Diabolic Tutor": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 2.09
+},
+"Dig Through Time": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Instant",
+"usd": 0.33
+},
+"Dimir Charm": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.45
+},
+"Dimir Guildgate": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.13
+},
+"Dimir House Guard": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Skeleton",
+"usd": 0.16
+},
+"Dimir Infiltrator": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Creature — Spirit",
+"usd": 0.3
+},
+"Dimir Machinations": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.31
+},
+"Dimir Signet": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.19
+},
+"Dina's Guidance": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.82
+},
+"Diresight": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.17
+},
+"Dismember": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 3.32
+},
+"Dispel": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Disruptor Flute": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.96
+},
+"Divining Witch": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Human Spellshaper",
+"usd": 0.84
+},
+"Djeru's Resolve": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.21
+},
+"Doomsday": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 2.08
+},
+"Doorkeeper Thrull": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Thrull",
+"usd": 0.8
+},
+"Double Major": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.76
+},
+"Dowsing Dagger // Lost Vale": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 7.13
+},
+"Draco": {
+"ci": "",
+"cmc": 16.0,
+"type": "Artifact Creature — Dragon",
+"usd": 4.16
+},
+"Dragonskull Summit": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.65
+},
+"Dramatic Reversal": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.42
+},
+"Drana, Liberator of Malakir": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Vampire Ally",
+"usd": 1.1
+},
+"Drannith Magistrate": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 9.67
+},
+"Dread Return": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.63
+},
+"Dream's Grip": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.39
+},
+"Dreamroot Cascade": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.1
+},
+"Dreamtide Whale": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Whale",
+"usd": 3.42
+},
+"Dress Down": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.34
+},
+"Drift of Phantasms": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Spirit",
+"usd": 0.32
+},
+"Drown in Dreams": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 1.25
+},
+"Drown in the Loch": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": null
+},
+"Drowned Catacomb": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.79
+},
+"Druids' Repository": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 2.25
+},
+"Dualcaster Mage": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 3.63
+},
+"Dusk Mangler": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — Horror",
+"usd": 0.11
+},
+"Dwynen's Elite": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Warrior",
+"usd": 0.13
+},
+"Eagle Vision": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.32
+},
+"Earth Kingdom Jailer": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Human Soldier Ally",
+"usd": 0.12
+},
+"Echo of Eons": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 10.16
+},
+"Echocasting Symposium": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery — Lesson",
+"usd": 3.38
+},
+"Eclipsed Elf": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Creature — Elf Scout",
+"usd": 0.24
+},
+"Ecological Appreciation": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.53
+},
+"Eerie Interlude": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 6.93
+},
+"Eidolon of Astral Winds": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment Creature — Spirit",
+"usd": 0.32
+},
+"Eidolon of Rhetoric": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment Creature — Spirit",
+"usd": 0.55
+},
+"Elas il-Kor, Sadistic Pilgrim": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Legendary Creature — Phyrexian Kor Cleric",
+"usd": 0.81
+},
+"Eldritch Evolution": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 3.98
+},
+"Electroduplicate": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.73
+},
+"Elemental Bond": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 3.45
+},
+"Ellivere of the Wild Court": {
+"ci": "GW",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Knight",
+"usd": 0.43
+},
+"Elven Ambush": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 6.82
+},
+"Elven Raft-Steerer": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Elf Pilot",
+"usd": 0.25
+},
+"Elves of Deep Shadow": {
+"ci": "BG",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 4.46
+},
+"Elvish Archdruid": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Druid",
+"usd": 1.0
+},
+"Elvish Archivist": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Artificer",
+"usd": 0.3
+},
+"Elvish Mystic": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 0.54
+},
+"Elvish Pioneer": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 0.3
+},
+"Elvish Spirit Guide": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Spirit",
+"usd": 2.3
+},
+"Elvish Warmaster": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Warrior",
+"usd": 3.64
+},
+"Ember Island Production": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.34
+},
+"Emerald Charm": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.16
+},
+"Emeritus of Truce // Swords to Plowshares": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Cat Cleric",
+"usd": 1.72
+},
+"Endless Atlas": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 2.01
+},
+"Enduring Courage": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Enchantment Creature — Dog Glimmer",
+"usd": 2.41
+},
+"Enduring Curiosity": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Enchantment Creature — Cat Glimmer",
+"usd": 6.2
+},
+"Enduring Innocence": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment Creature — Sheep Glimmer",
+"usd": 4.02
+},
+"Ennis, Debate Moderator": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Cleric",
+"usd": 0.23
+},
+"Ephemerate": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 5.32
+},
+"Ertai's Meddling": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.79
+},
+"Escape from Orthanc": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.2
+},
+"Esior, Wardwing Familiar": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Bird",
+"usd": 0.54
+},
+"Essence Flux": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.37
+},
+"Eternal Witness": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Shaman",
+"usd": 1.47
+},
+"Ethersworn Canonist": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Artifact Creature — Human Cleric",
+"usd": 2.68
+},
+"Everflowing Chalice": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 0.3
+},
+"Evolution Sage": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Druid",
+"usd": 3.01
+},
+"Executioner's Capsule": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.1
+},
+"Exhume": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": null
+},
+"Exotic Orchard": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.29
+},
+"Expansion Algorithm": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 2.42
+},
+"Experimental Augury": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.2
+},
+"Explore": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Expropriate": {
+"ci": "U",
+"cmc": 9.0,
+"type": "Sorcery",
+"usd": null
+},
+"Exsanguinate": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.46
+},
+"Extract from Darkness": {
+"ci": "BU",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.17
+},
+"Exuberant Fuseling": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Phyrexian Goblin Warrior",
+"usd": 0.26
+},
+"Eye of Vecna": {
+"ci": "",
+"cmc": 2.0,
+"type": "Legendary Artifact",
+"usd": 0.34
+},
+"Fabricate": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 7.76
+},
+"Fact or Fiction": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.28
+},
+"Faerie Fencing": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.33
+},
+"Faerie Seer": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Faerie Wizard",
+"usd": 0.36
+},
+"Faithless Looting": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Far Traveler": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Enchantment — Background",
+"usd": 0.32
+},
+"Fatal Push": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.58
+},
+"Fated Infatuation": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.55
+},
+"Fauna Shaman": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Shaman",
+"usd": 5.69
+},
+"Fear of Missing Out": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Enchantment Creature — Nightmare",
+"usd": 3.44
+},
+"Feed the Swarm": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.31
+},
+"Felidar Guardian": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Creature — Cat Beast",
+"usd": 2.97
+},
+"Fell the Profane // Fell Mire": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 5.14
+},
+"Fellwar Stone": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.59
+},
+"Fertile Ground": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 0.27
+},
+"Fetid Heath": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.26
+},
+"Feywild Caretaker": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Creature — Orc Wizard",
+"usd": 0.13
+},
+"Fiend Artisan": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Creature — Nightmare",
+"usd": 4.65
+},
+"Fiery Islet": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 4.25
+},
+"Fiery Temper": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.22
+},
+"Final Parting": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.55
+},
+"Final-Word Phantom": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Spirit Detective",
+"usd": 2.63
+},
+"Fire Covenant": {
+"ci": "BR",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Fire Magic": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.75
+},
+"Fire-Lit Thicket": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.72
+},
+"Fireball": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.13
+},
+"Fireblade Charger": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.17
+},
+"Flare of Denial": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 3.26
+},
+"Flare of Duplication": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 2.41
+},
+"Fleshbag Marauder": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Zombie Warrior",
+"usd": 0.27
+},
+"Flicker of Fate": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Flickerwisp": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Elemental",
+"usd": 0.22
+},
+"Flitterwing Nuisance": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Faerie Rogue",
+"usd": 0.31
+},
+"Flooded Grove": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.34
+},
+"Flourishing Defenses": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 0.47
+},
+"Flux Channeler": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 3.92
+},
+"Fly": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 0.25
+},
+"Focus the Mind": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Fog": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.26
+},
+"Foil": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 1.67
+},
+"Force of Despair": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 6.57
+},
+"Forensic Gadgeteer": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Vedalken Artificer Detective",
+"usd": 2.98
+},
+"Forensic Researcher": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Merfolk Detective",
+"usd": 0.29
+},
+"Forest": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Basic Land — Forest",
+"usd": null
+},
+"Forget": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.3
+},
+"Formidable Speaker": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Druid",
+"usd": 8.26
+},
+"Fortified Village": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.23
+},
+"Foundation Breaker": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elemental",
+"usd": 0.3
+},
+"Foundry Inspector": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact Creature — Construct",
+"usd": 0.39
+},
+"Fracture": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.35
+},
+"Fractured Powerstone": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.28
+},
+"Frantic Search": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 1.14
+},
+"Freed from the Real": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 6.76
+},
+"Fugitive Droid": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Artifact Creature — Robot Scientist",
+"usd": 0.28
+},
+"Full Throttle": {
+"ci": "R",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 6.33
+},
+"Fume Spitter": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Phyrexian Horror",
+"usd": 0.19
+},
+"Fury of the Horde": {
+"ci": "R",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": 5.84
+},
+"Fyndhorn Elves": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 1.88
+},
+"Fynn, the Fangbearer": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Warrior",
+"usd": 0.17
+},
+"Gaddock Teeg": {
+"ci": "GW",
+"cmc": 2.0,
+"type": "Legendary Creature — Kithkin Advisor",
+"usd": 0.63
+},
+"Gala Greeters": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Druid",
+"usd": null
+},
+"Game Trail": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.31
+},
+"Garruk's Packleader": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Creature — Beast",
+"usd": 0.15
+},
+"Geier Reach Sanitarium": {
+"ci": "",
+"cmc": 0.0,
+"type": "Legendary Land",
+"usd": 2.2
+},
+"Gemstone Mine": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.64
+},
+"Gene Pollinator": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Artifact Creature — Robot Insect",
+"usd": 0.36
+},
+"Generator Servant": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Elemental",
+"usd": 0.29
+},
+"Generous Gift": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.97
+},
+"Generous Patron": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Advisor",
+"usd": 0.41
+},
+"Genesis Wave": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.35
+},
+"Geth's Grimoire": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact — Book",
+"usd": 9.11
+},
+"Ghirapur Aether Grid": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.28
+},
+"Ghost Quarter": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.46
+},
+"Ghostfire Slice": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.24
+},
+"Ghostly Flicker": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 1.21
+},
+"Ghostly Pilferer": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Spirit Rogue",
+"usd": 1.9
+},
+"Ghostway": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 2.96
+},
+"Gift of the Viper": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.23
+},
+"Gifts Ungiven": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 5.04
+},
+"Gilanra, Caller of Wirewood": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Legendary Creature — Elf Druid",
+"usd": 0.34
+},
+"Gilded Goose": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Bird",
+"usd": 0.35
+},
+"Gilraen, Dúnedain Protector": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Noble",
+"usd": 0.37
+},
+"Gimli of the Glittering Caves": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Legendary Creature — Dwarf Warrior",
+"usd": 15.16
+},
+"Gitaxian Probe": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 2.34
+},
+"Gix, Yawgmoth Praetor": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Phyrexian Praetor",
+"usd": 0.79
+},
+"Glasspool Mimic // Glasspool Shore": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Shapeshifter Rogue",
+"usd": 6.55
+},
+"Glen Elendra Archmage": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Faerie Wizard",
+"usd": 10.68
+},
+"Glissa Sunslayer": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Legendary Creature — Phyrexian Zombie Elf",
+"usd": 0.77
+},
+"Glistener Elf": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Phyrexian Elf Warrior",
+"usd": 0.6
+},
+"Glittering Frost": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Snow Enchantment — Aura",
+"usd": 0.26
+},
+"Glowrider": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Human Cleric",
+"usd": null
+},
+"Goblin Bushwhacker": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Warrior",
+"usd": 1.11
+},
+"Goblin Chainwhirler": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.43
+},
+"Goblin Chirurgeon": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Shaman",
+"usd": 1.46
+},
+"Goblin Cratermaker": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.17
+},
+"Goblin Glory Chaser": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.18
+},
+"Goblin Matron": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Goblin",
+"usd": 0.23
+},
+"Goblin Recruiter": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin",
+"usd": 4.71
+},
+"Gogo, Mysterious Mime": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Legendary Creature — Wizard",
+"usd": 1.08
+},
+"Goldhound": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Artifact Creature — Treasure Dog",
+"usd": 0.28
+},
+"Gollum, Patient Plotter": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Legendary Creature — Halfling Horror",
+"usd": 0.21
+},
+"Gond Gate": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 1.56
+},
+"Gornog, the Red Reaper": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Legendary Creature — Minotaur Warrior",
+"usd": 3.21
+},
+"Grafdigger's Cage": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 2.27
+},
+"Gran-Gran": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Legendary Creature — Human Peasant Ally",
+"usd": 0.31
+},
+"Graven Cairns": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.45
+},
+"Grazilaxx, Illithid Scholar": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Creature — Horror",
+"usd": 1.38
+},
+"Great Train Heist": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 4.81
+},
+"Grim Hireling": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Tiefling Rogue",
+"usd": 12.99
+},
+"Grim Reaper's Sprint": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Enchantment — Aura",
+"usd": 1.35
+},
+"Grim Servant": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Zombie Warlock",
+"usd": 0.29
+},
+"Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Legendary Enchantment",
+"usd": 9.51
+},
+"Growth Spiral": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Gruul Guildgate": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.12
+},
+"Gruul Turf": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.27
+},
+"Guardian of Ghirapur": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Angel",
+"usd": 0.36
+},
+"Guild Artisan": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Legendary Enchantment — Background",
+"usd": 0.25
+},
+"Gush": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 2.95
+},
+"Haliya, Guided by Light": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Soldier",
+"usd": 5.43
+},
+"Hapatra, Vizier of Poisons": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Cleric",
+"usd": 0.26
+},
+"Harmonic Prodigy": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 6.64
+},
+"Harrow": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.38
+},
+"Hashep Oasis": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.29
+},
+"Hawkeye's Bow": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 0.29
+},
+"Haywire Mite": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Artifact Creature — Insect",
+"usd": 0.49
+},
+"Hazel's Brewmaster": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Squirrel Warlock",
+"usd": 3.8
+},
+"Hazoret's Monument": {
+"ci": "",
+"cmc": 3.0,
+"type": "Legendary Artifact",
+"usd": 1.36
+},
+"Heap Gate": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.35
+},
+"Heartlash Cinder": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Elemental Warrior",
+"usd": 0.14
+},
+"Heartless Summoning": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 1.69
+},
+"Hecteyes": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Ooze Horror",
+"usd": 0.21
+},
+"Helpful Hunter": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Cat",
+"usd": 0.32
+},
+"Helping Hand": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.25
+},
+"Herald's Horn": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 5.61
+},
+"Herbal Poultice": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 0.36
+},
+"Heritage Druid": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 3.56
+},
+"Hermit Druid": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Human Druid",
+"usd": 9.47
+},
+"Hex Magic": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Sorcery — Arcane",
+"usd": 0.64
+},
+"Hickory Woodlot": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Land",
+"usd": 4.68
+},
+"Hidden Strings": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.33
+},
+"Hidetsugu and Kairi": {
+"ci": "BU",
+"cmc": 5.0,
+"type": "Legendary Creature — Ogre Demon Dragon",
+"usd": 0.37
+},
+"High Market": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.4
+},
+"High Perfect Morcant": {
+"ci": "BG",
+"cmc": 4.0,
+"type": "Legendary Creature — Elf Noble",
+"usd": 1.27
+},
+"High Stride": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.15
+},
+"High Tide": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.08
+},
+"Hinterland Harbor": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.37
+},
+"Hoard Robber": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Tiefling Rogue",
+"usd": 0.26
+},
+"Hoarding Broodlord": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Creature — Dragon",
+"usd": 5.11
+},
+"Holdout Settlement": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.24
+},
+"Hollowmurk Siege": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.99
+},
+"Honored Heirloom": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.22
+},
+"Hope Tender": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Human Druid",
+"usd": 0.11
+},
+"Hope of Ghirapur": {
+"ci": "",
+"cmc": 1.0,
+"type": "Legendary Artifact Creature — Thopter",
+"usd": 2.46
+},
+"Hopeless Nightmare": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 0.32
+},
+"Horizon Explorer": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Insect Scout",
+"usd": 2.89
+},
+"Horizon of Progress": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 4.42
+},
+"Horn of the Mark": {
+"ci": "",
+"cmc": 2.0,
+"type": "Legendary Artifact",
+"usd": 0.63
+},
+"Host of the Hereafter": {
+"ci": "BG",
+"cmc": 4.0,
+"type": "Creature — Zombie Warlock",
+"usd": 0.3
+},
+"Hostile Negotiations": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.37
+},
+"Howling Mine": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 5.26
+},
+"Hullbreaker Horror": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Creature — Kraken Horror",
+"usd": 5.95
+},
+"Hushbringer": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Faerie",
+"usd": 0.44
+},
+"Hushwing Gryff": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Hippogriff",
+"usd": 0.36
+},
+"Hydroelectric Specimen // Hydroelectric Laboratory": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Weird",
+"usd": 1.61
+},
+"Hypergenesis": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Sorcery",
+"usd": 1.18
+},
+"Hyrax Tower Scout": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Scout",
+"usd": 0.18
+},
+"Icebreaker Kraken": {
+"ci": "U",
+"cmc": 12.0,
+"type": "Snow Creature — Kraken",
+"usd": 0.4
+},
+"Ichor Rats": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Phyrexian Rat",
+"usd": 3.85
+},
+"Idol of Oblivion": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 2.68
+},
+"Ignoble Hierarch": {
+"ci": "BGR",
+"cmc": 1.0,
+"type": "Creature — Goblin Shaman",
+"usd": 0.93
+},
+"Imoen, Mystic Trickster": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Rogue Wizard",
+"usd": 0.23
+},
+"Imp's Mischief": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 8.27
+},
+"Imperious Perfect": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Warrior",
+"usd": null
+},
+"Impostor Syndrome": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Enchantment",
+"usd": 6.32
+},
+"In Garruk's Wake": {
+"ci": "B",
+"cmc": 9.0,
+"type": "Sorcery",
+"usd": null
+},
+"Incarnation Technique": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 9.85
+},
+"Incubation Druid": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Druid",
+"usd": 0.77
+},
+"Inevitable Betrayal": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Sorcery",
+"usd": 1.42
+},
+"Infantry Shield": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Artifact — Equipment",
+"usd": 1.59
+},
+"Infectious Bite": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.62
+},
+"Infectious Inquiry": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Infernal Grasp": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Ingenious Infiltrator": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Creature — Vedalken Ninja",
+"usd": null
+},
+"Ingenious Prodigy": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Human Wizard",
+"usd": 0.25
+},
+"Innocent Blood": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.34
+},
+"Inquisitorial Rosette": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 2.9
+},
+"Insatiable Avarice": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 5.3
+},
+"Insidious Fungus": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Fungus",
+"usd": 0.51
+},
+"Insidious Roots": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 1.72
+},
+"Insight": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 1.75
+},
+"Insight Engine": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 1.03
+},
+"Instill Energy": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 2.08
+},
+"Into the Flood Maw": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 2.42
+},
+"Into the Story": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Instant",
+"usd": 0.23
+},
+"Intruder Alarm": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 4.1
+},
+"Ioreth of the Healing House": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Cleric",
+"usd": 0.36
+},
+"Ipnu Rivulet": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.24
+},
+"Irma, Part-Time Mutant": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Mutant Shapeshifter",
+"usd": 4.09
+},
+"Island": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Basic Land — Island",
+"usd": 0.2
+},
+"Isochron Scepter": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 8.76
+},
+"Isolated Chapel": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.29
+},
+"Ivora, Insatiable Heir": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Legendary Creature — Vampire Warrior",
+"usd": 0.42
+},
+"Ivy Lane Denizen": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Warrior",
+"usd": 0.26
+},
+"Izzet Guildgate": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.11
+},
+"Izzet Signet": {
+"ci": "RU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.45
+},
+"Jace, Wielder of Mysteries": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Legendary Planeswalker — Jace",
+"usd": 6.66
+},
+"Jaxis, the Troublemaker": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Warrior",
+"usd": 1.25
+},
+"Jaya's Immolating Inferno": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Legendary Sorcery",
+"usd": 2.05
+},
+"Jhoira's Timebug": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Insect",
+"usd": 0.17
+},
+"Jin-Gitaxias, Core Augur": {
+"ci": "U",
+"cmc": 10.0,
+"type": "Legendary Creature — Phyrexian Praetor",
+"usd": 13.4
+},
+"Jin-Gitaxias, Progress Tyrant": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Legendary Creature — Phyrexian Praetor",
+"usd": 9.59
+},
+"Joraga Treespeaker": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 1.05
+},
+"Judge's Familiar": {
+"ci": "UW",
+"cmc": 1.0,
+"type": "Creature — Bird",
+"usd": 0.22
+},
+"Jund Panorama": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.39
+},
+"Junk Winder": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Creature — Serpent",
+"usd": 0.29
+},
+"Justiciar's Portal": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.22
+},
+"Kambal, Profiteering Mayor": {
+"ci": "BW",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Advisor",
+"usd": 5.8
+},
+"Kargan Intimidator": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Human Warrior",
+"usd": 0.27
+},
+"Karplusan Forest": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.52
+},
+"Keen Sense": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 2.37
+},
+"Kefka, Court Mage // Kefka, Ruler of Ruin": {
+"ci": "BRU",
+"cmc": 5.0,
+"type": "Legendary Creature — Human Wizard",
+"usd": 5.43
+},
+"Kelpie Guide": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Beast",
+"usd": 0.24
+},
+"Kessig Wolf Run": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.4
+},
+"Ketramose, the New Dawn": {
+"ci": "BW",
+"cmc": 3.0,
+"type": "Legendary Creature — God",
+"usd": 3.94
+},
+"Khalni Ambush // Khalni Territory": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.48
+},
+"Kiki-Jiki, Mirror Breaker": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Legendary Creature — Goblin Shaman",
+"usd": 15.82
+},
+"Kindly Customer": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Citizen",
+"usd": 0.27
+},
+"Kindred Discovery": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 5.18
+},
+"Kiora's Follower": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Creature — Merfolk",
+"usd": 0.32
+},
+"Kiora, Behemoth Beckoner": {
+"ci": "GU",
+"cmc": 3.0,
+"type": "Legendary Planeswalker — Kiora",
+"usd": 0.52
+},
+"Kitesail Larcenist": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Pirate",
+"usd": 0.48
+},
+"Kitsa, Otterball Elite": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Otter Wizard",
+"usd": 4.4
+},
+"Kodama of the East Tree": {
+"ci": "G",
+"cmc": 6.0,
+"type": "Legendary Creature — Spirit",
+"usd": 3.77
+},
+"Koma, Cosmos Serpent": {
+"ci": "GU",
+"cmc": 7.0,
+"type": "Legendary Creature — Serpent",
+"usd": 4.18
+},
+"Kraum, Ludevic's Opus": {
+"ci": "RU",
+"cmc": 5.0,
+"type": "Legendary Creature — Zombie Horror",
+"usd": 2.58
+},
+"Krosan Wayfarer": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Human Druid",
+"usd": 0.75
+},
+"Kutzil, Malamet Exemplar": {
+"ci": "GW",
+"cmc": 3.0,
+"type": "Legendary Creature — Cat Warrior",
+"usd": 1.92
+},
+"Kydele, Chosen of Kruphix": {
+"ci": "GU",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Wizard",
+"usd": null
+},
+"Laboratory Maniac": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.45
+},
+"Lae'zel's Acrobatics": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 2.76
+},
+"Laelia, the Blade Reforged": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Legendary Creature — Spirit Warrior",
+"usd": 0.37
+},
+"Languish": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Lapis Orb of Dragonkind": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.26
+},
+"Laser Screwdriver": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 1.57
+},
+"Lathril, Blade of the Elves": {
+"ci": "BG",
+"cmc": 4.0,
+"type": "Legendary Creature — Elf Noble",
+"usd": 1.54
+},
+"Laughing Mad": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.26
+},
+"Leaf-Crowned Visionary": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Druid",
+"usd": 5.22
+},
+"Leaping Ambush": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.23
+},
+"Ledger Shredder": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Bird Advisor",
+"usd": 10.57
+},
+"Leonin Relic-Warder": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Cat Cleric",
+"usd": 0.24
+},
+"Lethal Scheme": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.2
+},
+"Leyline of the Void": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 0.35
+},
+"Lightning Bolt": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.85
+},
+"Lightning Greaves": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 5.33
+},
+"Lightstall Inquisitor": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Creature — Angel Wizard",
+"usd": 0.37
+},
+"Likeness Looter": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Creature — Faerie Shapeshifter",
+"usd": 2.38
+},
+"Liliana of the Veil": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Planeswalker — Liliana",
+"usd": 5.39
+},
+"Liliana's Triumph": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.29
+},
+"Lim-Dûl's Vault": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.91
+},
+"Liquimetal Torque": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 2.54
+},
+"Lively Dirge": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 6.39
+},
+"Living Death": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 4.28
+},
+"Llanowar Elves": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Druid",
+"usd": 0.4
+},
+"Llanowar Wastes": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.72
+},
+"Llawan, Cephalid Empress": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Legendary Creature — Octopus Noble",
+"usd": 0.87
+},
+"Lofty Denial": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Long-Term Plans": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 5.72
+},
+"Loran of the Third Path": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Artificer",
+"usd": 6.99
+},
+"Lose Focus": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.3
+},
+"Lost in the Maze": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.25
+},
+"Lotus Cobra": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Snake",
+"usd": 6.08
+},
+"Louisoix's Sacrifice": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Loyal Inventor": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Artificer",
+"usd": 0.34
+},
+"Lunar Insight": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.24
+},
+"Lys Alana Huntmaster": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Warrior",
+"usd": 1.25
+},
+"Magic Damper": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.24
+},
+"Magus Lucea Kane": {
+"ci": "GRU",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Tyranid Wizard",
+"usd": null
+},
+"Magus of the Candelabra": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Human Wizard",
+"usd": 0.35
+},
+"Magus of the Moon": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 3.5
+},
+"Maha, Its Feathers Night": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Legendary Creature — Elemental Bird",
+"usd": 20.7
+},
+"Make Disappear": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.26
+},
+"Malevolent Hermit // Benevolent Geist": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Human Wizard",
+"usd": 1.49
+},
+"Mana Leak": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.17
+},
+"Manglehorn": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Beast",
+"usd": 1.26
+},
+"Manifold Key": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 1.64
+},
+"March of Swirling Mist": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 3.98
+},
+"Mari, the Killing Quill": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Vampire Assassin",
+"usd": 6.0
+},
+"Market Festival": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Enchantment — Aura",
+"usd": 0.22
+},
+"Markov Blademaster": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Vampire Warrior",
+"usd": 0.31
+},
+"Marvin, Murderous Mimic": {
+"ci": "",
+"cmc": 2.0,
+"type": "Legendary Artifact Creature — Toy",
+"usd": 3.77
+},
+"Marwyn, the Nurturer": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Legendary Creature — Elf Druid",
+"usd": 6.11
+},
+"Mask of Memory": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 0.33
+},
+"Massacre Girl, Known Killer": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Assassin",
+"usd": 0.52
+},
+"Massacre Wurm": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Creature — Phyrexian Wurm",
+"usd": 2.81
+},
+"Master Transmuter": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Artifact Creature — Human Artificer",
+"usd": 4.84
+},
+"Mausoleum Wanderer": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Spirit",
+"usd": 0.28
+},
+"Mayhem Devil": {
+"ci": "BR",
+"cmc": 3.0,
+"type": "Creature — Devil",
+"usd": 0.33
+},
+"Maze's End": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": null
+},
+"Memory Lapse": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.37
+},
+"Mentor of the Meek": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Human Soldier",
+"usd": 0.25
+},
+"Merciless Executioner": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Orc Warrior",
+"usd": 0.37
+},
+"Meria, Scholar of Antiquity": {
+"ci": "GR",
+"cmc": 3.0,
+"type": "Legendary Creature — Elf Artificer",
+"usd": 0.26
+},
+"Metallic Mimic": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Shapeshifter",
+"usd": 3.22
+},
+"Metamorphic Alteration": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 0.35
+},
+"Meteor Crater": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.71
+},
+"Midnight Clock": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.36
+},
+"Mikaeus, the Unhallowed": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Legendary Creature — Zombie Cleric",
+"usd": 23.25
+},
+"Mimic Vat": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.59
+},
+"Mina and Denn, Wildborn": {
+"ci": "GR",
+"cmc": 4.0,
+"type": "Legendary Creature — Elf Ally",
+"usd": 1.82
+},
+"Mind Rake": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.23
+},
+"Mind Stone": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.34
+},
+"Mind Swords": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.17
+},
+"Mind into Matter": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.36
+},
+"Mirage Mirror": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.4
+},
+"Mirage Mockery": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.41
+},
+"Mire in Misery": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.6
+},
+"Mirrex": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Sphere",
+"usd": 0.75
+},
+"Mirror Box": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 4.25
+},
+"Mirror Image": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.3
+},
+"Mirror Mockery": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 0.44
+},
+"Mirror Shield": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 0.46
+},
+"Mirrormade": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 3.03
+},
+"Mirrorpool": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.06
+},
+"Miscast": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.41
+},
+"Misdirection": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 13.25
+},
+"Mishra's Bauble": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 1.42
+},
+"Mistblade Shinobi": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Ninja",
+"usd": 0.69
+},
+"Mistcaller": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Merfolk Wizard",
+"usd": 0.37
+},
+"Mizzium Mortars": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.52
+},
+"Mnemonic Betrayal": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 7.3
+},
+"Mob Verdict": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Mobilize": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 1.29
+},
+"Mockingbird": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Bird Bard",
+"usd": 3.74
+},
+"Mogg Fanatic": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin",
+"usd": 0.34
+},
+"Momentum Breaker": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.28
+},
+"Monologue Tax": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 1.47
+},
+"Monument to Endurance": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 18.43
+},
+"Moon-Circuit Hacker": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment Creature — Human Ninja",
+"usd": 0.34
+},
+"Moonsilver Key": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.0
+},
+"Moraug, Fury of Akoum": {
+"ci": "R",
+"cmc": 6.0,
+"type": "Legendary Creature — Minotaur Warrior",
+"usd": 1.84
+},
+"Morbid Opportunist": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Rogue",
+"usd": 0.39
+},
+"Moria Marauder": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.43
+},
+"Morphic Pool": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 27.58
+},
+"Mossfire Valley": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.22
+},
+"Mountain": {
+"ci": "R",
+"cmc": 0.0,
+"type": "Basic Land — Mountain",
+"usd": 0.16
+},
+"Muddle the Mixture": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 2.71
+},
+"Multiversal Recruitment": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 6.63
+},
+"Murkfiend Liege": {
+"ci": "GU",
+"cmc": 5.0,
+"type": "Creature — Horror",
+"usd": 3.28
+},
+"Myriad Landscape": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.36
+},
+"Mystic Forge": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact",
+"usd": 3.74
+},
+"Mystic Remora": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 10.47
+},
+"Mystic Sanctuary": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land — Island",
+"usd": 1.42
+},
+"Mystical Dispute": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.37
+},
+"Naban, Dean of Iteration": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Wizard",
+"usd": 0.31
+},
+"Narset's Reversal": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 2.78
+},
+"Narset, Parter of Veils": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Planeswalker — Narset",
+"usd": 1.16
+},
+"Nashi, Moon Sage's Scion": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Rat Ninja",
+"usd": 3.39
+},
+"Nasty End": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.23
+},
+"Natural Affinity": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 4.94
+},
+"Nature's Chosen": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 2.69
+},
+"Nature's Claim": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.62
+},
+"Nature's Revolt": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 5.4
+},
+"Nature's Rhythm": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 3.31
+},
+"Naya Panorama": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.21
+},
+"Necroblossom Snarl": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.46
+},
+"Necrodominance": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Enchantment",
+"usd": 2.89
+},
+"Necrogen Mists": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 12.55
+},
+"Necrogen Spellbomb": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.15
+},
+"Necrogoyf": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Creature — Lhurgoyf",
+"usd": 0.36
+},
+"Necromancy": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 19.68
+},
+"Necromantic Selection": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": 0.27
+},
+"Necropolis Regent": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Creature — Vampire",
+"usd": 0.56
+},
+"Negate": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.33
+},
+"Neoform": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 1.05
+},
+"Nest of Scarabs": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 3.09
+},
+"Nezumi Graverobber // Nighteyes the Desecrator": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Rat Rogue",
+"usd": 0.35
+},
+"Night's Whisper": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Nightscape Familiar": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Zombie",
+"usd": 0.42
+},
+"Ninja of the Deep Hours": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Human Ninja",
+"usd": 2.24
+},
+"Noble Hierarch": {
+"ci": "GUW",
+"cmc": 1.0,
+"type": "Creature — Human Druid",
+"usd": 10.98
+},
+"Nomad Stadium": {
+"ci": "W",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.44
+},
+"Nomads en-Kor": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Creature — Kor Nomad Soldier",
+"usd": 0.58
+},
+"North Pole Patrol": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Soldier Ally",
+"usd": 0.22
+},
+"Notion Thief": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Creature — Human Rogue",
+"usd": 3.05
+},
+"Noxious Revival": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 4.86
+},
+"Null Elemental Blast": {
+"ci": "",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.37
+},
+"Nurturing Peatland": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 6.5
+},
+"Oakhame Adversary": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Warrior",
+"usd": 0.31
+},
+"Obelisk Spider": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Creature — Spider",
+"usd": 2.52
+},
+"Obscuring Haze": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 4.99
+},
+"Obsessive Stitcher": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.21
+},
+"Octopus Form": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant — Lesson",
+"usd": 0.17
+},
+"Of One Mind": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.29
+},
+"Ogre Battledriver": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Creature — Ogre Warrior",
+"usd": 0.32
+},
+"Ominous Cemetery": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.31
+},
+"Omni-Changeling": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.32
+},
+"Once Upon a Time": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.55
+},
+"Oona's Blackguard": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Faerie Rogue",
+"usd": 0.4
+},
+"Open the Way": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.76
+},
+"Oppression": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 3.35
+},
+"Oracle of Mul Daya": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Shaman",
+"usd": 2.44
+},
+"Orcish Lumberjack": {
+"ci": "GR",
+"cmc": 1.0,
+"type": "Creature — Orc",
+"usd": 0.84
+},
+"Ornamental Courage": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.04
+},
+"Ornithopter": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact Creature — Thopter",
+"usd": 0.32
+},
+"Ornithopter of Paradise": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Thopter",
+"usd": 0.45
+},
+"Orochi Soul-Reaver": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Creature — Snake Ninja Rogue",
+"usd": 9.06
+},
+"Orzhov Guildgate": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.1
+},
+"Overflowing Basin": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.26
+},
+"Overgrowth": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 0.25
+},
+"Overpowering Attack": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 1.33
+},
+"Overrun": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.28
+},
+"Overseer of the Damned": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — Demon",
+"usd": 0.24
+},
+"Overwhelming Stampede": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 1.07
+},
+"Oviya, Automech Artisan": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Artificer",
+"usd": 1.01
+},
+"Painful Quandary": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 1.79
+},
+"Panharmonicon": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact",
+"usd": 5.65
+},
+"Panther Pounce": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.14
+},
+"Parting Gust": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.2
+},
+"Passageway Seer": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Tiefling Warlock",
+"usd": 0.2
+},
+"Path to Exile": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.62
+},
+"Patriar's Seal": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 4.14
+},
+"Peat Bog": {
+"ci": "B",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.28
+},
+"Peerless Recycling": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.28
+},
+"Pemmin's Aura": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 7.18
+},
+"Pentad Prism": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.31
+},
+"Perilous Research": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Perplex": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 1.63
+},
+"Persist": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.85
+},
+"Personal Tutor": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 5.48
+},
+"Peter Parker's Camera": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 1.35
+},
+"Petravark": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Creature — Nightmare Beast",
+"usd": 0.19
+},
+"Phantasmal Image": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Illusion",
+"usd": 5.54
+},
+"Phelia, Exuberant Shepherd": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Legendary Creature — Dog",
+"usd": 6.61
+},
+"Phyrexian Arena": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 4.27
+},
+"Phyrexian Censor": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Phyrexian Wizard",
+"usd": 0.35
+},
+"Phyrexian Metamorph": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Artifact Creature — Phyrexian Shapeshifter",
+"usd": 2.2
+},
+"Phyrexian Reclamation": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 2.96
+},
+"Phyrexian Revoker": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Phyrexian Horror",
+"usd": 0.21
+},
+"Phyrexian Walker": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact Creature — Phyrexian Construct",
+"usd": 2.3
+},
+"Pick Your Poison": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.27
+},
+"Pillar Launch": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.13
+},
+"Pinnacle Monk // Mystic Peak": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Creature — Djinn Monk",
+"usd": 2.8
+},
+"Pithing Needle": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.43
+},
+"Plague Myr": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Phyrexian Myr",
+"usd": 2.6
+},
+"Plague Stinger": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Phyrexian Insect Horror",
+"usd": 0.41
+},
+"Plaguecrafter": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Human Shaman",
+"usd": 0.35
+},
+"Plains": {
+"ci": "W",
+"cmc": 0.0,
+"type": "Basic Land — Plains",
+"usd": 0.18
+},
+"Planar Atlas": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.3
+},
+"Planar Incision": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Plumb the Forbidden": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.39
+},
+"Pollywog Prodigy": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Frog Wizard",
+"usd": 5.76
+},
+"Ponder": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 1.88
+},
+"Pongify": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 3.82
+},
+"Port of Karfell": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.26
+},
+"Portent Tracker": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Satyr Scout",
+"usd": 0.28
+},
+"Pox Plague": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.31
+},
+"Preordain": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.85
+},
+"Priest of Titania": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf Druid",
+"usd": 1.87
+},
+"Primordial Sage": {
+"ci": "G",
+"cmc": 6.0,
+"type": "Creature — Spirit",
+"usd": 0.87
+},
+"Prismatic Lens": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.32
+},
+"Prismite": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact Creature — Golem",
+"usd": 0.11
+},
+"Profane Tutor": {
+"ci": "B",
+"cmc": 0.0,
+"type": "Sorcery",
+"usd": 4.39
+},
+"Profaner of the Dead": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Snake Wizard",
+"usd": 0.33
+},
+"Professional Face-Breaker": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Human Warrior",
+"usd": 4.51
+},
+"Prologue to Phyresis": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.81
+},
+"Promising Vein": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Cave",
+"usd": 0.28
+},
+"Prosperous Thief": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Ninja",
+"usd": 0.25
+},
+"Prowess of the Fair": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Kindred Enchantment — Elf",
+"usd": 3.15
+},
+"Psychic Frog": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Creature — Frog",
+"usd": 4.55
+},
+"Psychosis Crawler": {
+"ci": "",
+"cmc": 5.0,
+"type": "Artifact Creature — Phyrexian Horror",
+"usd": 0.85
+},
+"Pull from Tomorrow": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.21
+},
+"Pyrite Spellbomb": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.13
+},
+"Pyroblast": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 8.81
+},
+"Quantum Misalignment": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 3.98
+},
+"Quasiduplicate": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.73
+},
+"Quest for Renewal": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 7.75
+},
+"Quest for the Necropolis": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 0.27
+},
+"Quirion Ranger": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Ranger",
+"usd": 2.23
+},
+"Rabbit Battery": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Artifact Creature — Equipment Rabbit",
+"usd": 0.19
+},
+"Radstorm": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 4.91
+},
+"Rain of Filth": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 5.08
+},
+"Rally the Galadhrim": {
+"ci": "GU",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.68
+},
+"Rampant Growth": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.74
+},
+"Ramunap Excavator": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Snake Cleric",
+"usd": 4.95
+},
+"Rankle, Master of Pranks": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Legendary Creature — Faerie Rogue",
+"usd": 2.7
+},
+"Rapid Hybridization": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.88
+},
+"Ratadrabik of Urborg": {
+"ci": "BW",
+"cmc": 4.0,
+"type": "Legendary Creature — Zombie Wizard",
+"usd": 0.59
+},
+"Raven's Crime": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.17
+},
+"Ravenloft Adventurer": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Human Rogue Assassin",
+"usd": 0.39
+},
+"Razorgrass Ambush // Razorgrass Field": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Razorverge Thicket": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.32
+},
+"Reality Strobe": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 1.11
+},
+"Realmwalker": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Shapeshifter",
+"usd": 2.82
+},
+"Reanimate": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 7.15
+},
+"Reckless Barbarian": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Dragon Barbarian",
+"usd": 0.29
+},
+"Reckless Handling": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.35
+},
+"Reclamation Sage": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Shaman",
+"usd": 0.24
+},
+"Reconnaissance Mission": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 0.5
+},
+"Red Elemental Blast": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 4.34
+},
+"Refocus": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.1
+},
+"Refurbished Familiar": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Artifact Creature — Zombie Rat",
+"usd": 0.34
+},
+"Refute": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Relentless Assault": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 2.27
+},
+"Relic of Legends": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.76
+},
+"Relm's Sketching": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.28
+},
+"Remand": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.33
+},
+"Remote Farm": {
+"ci": "W",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.02
+},
+"Replication Technique": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.24
+},
+"Repudiate // Replicate": {
+"ci": "GU",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 0.31
+},
+"Repurposing Bay": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.62
+},
+"Resculpt": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Reshape": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 3.85
+},
+"Restoration Angel": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Creature — Angel",
+"usd": 0.31
+},
+"Retraction Helix": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.16
+},
+"Retreat to Coralhelm": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.41
+},
+"Return of the Wildspeaker": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 3.09
+},
+"Return the Favor": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.83
+},
+"Reverent Silence": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.36
+},
+"Revitalizing Repast // Old-Growth Grove": {
+"ci": "BG",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.45
+},
+"Ricochet Trap": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Instant — Trap",
+"usd": 0.35
+},
+"Rigo, Streetwise Mentor": {
+"ci": "GUW",
+"cmc": 3.0,
+"type": "Legendary Creature — Cat Citizen",
+"usd": 0.25
+},
+"Rilsa Rael, Kingpin": {
+"ci": "BU",
+"cmc": 5.0,
+"type": "Legendary Creature — Human Rogue",
+"usd": 0.09
+},
+"Ring of Valkas": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 0.41
+},
+"Ringsight": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.32
+},
+"Rionya, Fire Dancer": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Legendary Creature — Human Wizard",
+"usd": 0.47
+},
+"Ripples of Potential": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 5.33
+},
+"Rise of the Dark Realms": {
+"ci": "B",
+"cmc": 9.0,
+"type": "Sorcery",
+"usd": 2.96
+},
+"Rite of Flame": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 5.07
+},
+"Rite of Oblivion": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.36
+},
+"Rite of Replication": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.25
+},
+"River of Tears": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.34
+},
+"Rockfall Vale": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.9
+},
+"Rograkh, Son of Rohgahh": {
+"ci": "R",
+"cmc": 0.0,
+"type": "Legendary Creature — Kobold Warrior",
+"usd": 1.91
+},
+"Rogue's Gloves": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 0.31
+},
+"Rogue's Passage": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.56
+},
+"Roiling Dragonstorm": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.21
+},
+"Roiling Regrowth": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.31
+},
+"Rootbound Crag": {
+"ci": "GR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.35
+},
+"Rotting Rats": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Zombie Rat",
+"usd": 0.76
+},
+"Rumor Gatherer": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Elf Wizard",
+"usd": 0.36
+},
+"Rune-Scarred Demon": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — Demon",
+"usd": 1.36
+},
+"Rydia, Summoner of Mist": {
+"ci": "GR",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Shaman",
+"usd": 0.29
+},
+"Sabotender": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Plant",
+"usd": 0.26
+},
+"Sacrifice": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 4.6
+},
+"Safana, Calimport Cutthroat": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Rogue",
+"usd": 0.23
+},
+"Sage of the Maze": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Wizard",
+"usd": 0.3
+},
+"Saheeli's Artistry": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 0.21
+},
+"Sakashima's Protege": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.44
+},
+"Sakashima's Will": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.4
+},
+"Sakura-Tribe Elder": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Snake Shaman",
+"usd": 0.35
+},
+"Sakura-Tribe Scout": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Snake Shaman Scout",
+"usd": 2.77
+},
+"Samwise the Stouthearted": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Legendary Creature — Halfling Peasant",
+"usd": 0.28
+},
+"Sandstone Needle": {
+"ci": "R",
+"cmc": 0.0,
+"type": "Land",
+"usd": 11.24
+},
+"Saprazzan Skerry": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.9
+},
+"Sardian Avenger": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.86
+},
+"Sarevok's Tome": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact — Book",
+"usd": 2.33
+},
+"Sarinth Steelseeker": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Human Artificer Scout",
+"usd": 0.22
+},
+"Saryth, the Viper's Fang": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Warlock",
+"usd": null
+},
+"Saw in Half": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 6.06
+},
+"Scavenger Grounds": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.52
+},
+"Scientist Supreme of A.I.M.": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Scientist Villain",
+"usd": 0.19
+},
+"Scour for Scrap": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.43
+},
+"Screams from Within": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 0.28
+},
+"Scryb Ranger": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Faerie Ranger",
+"usd": 0.44
+},
+"Sculpting Steel": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 1.68
+},
+"Scurry Oak": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Treefolk",
+"usd": 2.64
+},
+"Sea Gate Restoration // Sea Gate, Reborn": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": 35.92
+},
+"Seachrome Coast": {
+"ci": "UW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.38
+},
+"Search for Glory": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Snow Sorcery",
+"usd": 1.0
+},
+"Seaside Citadel": {
+"ci": "GUW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.25
+},
+"Season of Loss": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 1.55
+},
+"Season of Weaving": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": null
+},
+"See Beyond": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.15
+},
+"See Double": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 1.1
+},
+"Seedborn Muse": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Creature — Spirit",
+"usd": 19.4
+},
+"Seeker of Skybreak": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Elf",
+"usd": 3.43
+},
+"Selesnya Guildgate": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.1
+},
+"Self-Reflection": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 0.15
+},
+"Selfless Safewright": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Creature — Elf Warrior",
+"usd": 0.83
+},
+"Selfless Spirit": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Spirit Cleric",
+"usd": 0.48
+},
+"Semester's End": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.79
+},
+"Serum Snare": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.29
+},
+"Setessan Champion": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Warrior",
+"usd": 3.39
+},
+"Sevinne's Reclamation": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.56
+},
+"Shadowblood Ridge": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.29
+},
+"Shadowgrange Archfiend": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — Demon",
+"usd": 6.78
+},
+"Shadowmage Infiltrator": {
+"ci": "BU",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.71
+},
+"Shalai, Voice of Plenty": {
+"ci": "GW",
+"cmc": 4.0,
+"type": "Legendary Creature — Angel",
+"usd": 1.18
+},
+"Shamanic Revelation": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 1.14
+},
+"Shard of the Void Dragon": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — C'tan",
+"usd": 1.91
+},
+"Shared Animosity": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 4.58
+},
+"Shared Summons": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 1.12
+},
+"Shattered Sanctum": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.53
+},
+"Shefet Dunes": {
+"ci": "W",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.33
+},
+"Sheoldred's Edict": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.16
+},
+"Sheoldred, Whispering One": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Legendary Creature — Phyrexian Praetor",
+"usd": null
+},
+"Shifting Woodland": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Land",
+"usd": 7.22
+},
+"Shigeki, Jukai Visionary": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Legendary Enchantment Creature — Snake Druid",
+"usd": 0.34
+},
+"Shimmerwilds Growth": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 0.26
+},
+"Shineshadow Snarl": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.29
+},
+"Shipwreck Marsh": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 7.11
+},
+"Shire Terrace": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.32
+},
+"Shivan Reef": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.36
+},
+"Shore Up": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Shorikai, Genesis Engine": {
+"ci": "UW",
+"cmc": 4.0,
+"type": "Legendary Artifact — Vehicle",
+"usd": 3.16
+},
+"Shortcut Seeker": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Human Rogue",
+"usd": 0.19
+},
+"Shred Memory": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.84
+},
+"Shrieking Drake": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Drake",
+"usd": 0.16
+},
+"Shrine Steward": {
+"ci": "",
+"cmc": 5.0,
+"type": "Artifact Creature — Construct",
+"usd": 0.25
+},
+"Sigarda's Vanguard": {
+"ci": "W",
+"cmc": 5.0,
+"type": "Creature — Angel",
+"usd": 0.85
+},
+"Sigarda, Font of Blessings": {
+"ci": "GW",
+"cmc": 4.0,
+"type": "Legendary Creature — Angel",
+"usd": null
+},
+"Sign in Blood": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.45
+},
+"Silundi Vision // Silundi Isle": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.4
+},
+"Silver Scrutiny": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.36
+},
+"Simian Spirit Guide": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Ape Spirit",
+"usd": 3.1
+},
+"Simic Signet": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.31
+},
+"Sink into Stupor // Soporific Springs": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 9.29
+},
+"Sire of Stagnation": {
+"ci": "BU",
+"cmc": 6.0,
+"type": "Creature — Eldrazi",
+"usd": 1.88
+},
+"Siren Stormtamer": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Siren Pirate Wizard",
+"usd": 0.4
+},
+"Skeleton Key": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 0.27
+},
+"Skirk Prospector": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin",
+"usd": 0.26
+},
+"Skithiryx, the Blight Dragon": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Legendary Creature — Phyrexian Dragon Skeleton",
+"usd": 13.66
+},
+"Skrelv's Hive": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 2.29
+},
+"Skrelv, Defector Mite": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Legendary Artifact Creature — Phyrexian Mite",
+"usd": 3.17
+},
+"Skullclamp": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 7.32
+},
+"Skullsnatcher": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Rat Ninja",
+"usd": 0.29
+},
+"Sky Diamond": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.28
+},
+"Skyclave Apparition": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Kor Spirit",
+"usd": 0.28
+},
+"Skycloud Expanse": {
+"ci": "UW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.26
+},
+"Skyscanner": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact Creature — Thopter",
+"usd": 0.13
+},
+"Skyshroud Ranger": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Elf Ranger",
+"usd": 0.45
+},
+"Slip On the Ring": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Smallpox": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Smoldering Marsh": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land — Swamp Mountain",
+"usd": 0.36
+},
+"Snake Umbra": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 1.09
+},
+"Snap": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 3.27
+},
+"Snapback": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.36
+},
+"Snuff Out": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 5.55
+},
+"Sodden Verdure": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land — Forest Island",
+"usd": 0.4
+},
+"Sol Ring": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 2.21
+},
+"Solve the Equation": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 3.58
+},
+"Somberwald Sage": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Druid",
+"usd": 0.73
+},
+"Sorcerous Spyglass": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.08
+},
+"Soul Partition": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.55
+},
+"Soul Shatter": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 3.64
+},
+"Soul Snuffers": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Elemental Shaman",
+"usd": 0.26
+},
+"Soul of the Harvest": {
+"ci": "G",
+"cmc": 6.0,
+"type": "Creature — Elemental",
+"usd": 1.65
+},
+"Sowing Mycospawn": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Eldrazi Fungus",
+"usd": 1.98
+},
+"Spark Double": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Illusion",
+"usd": 4.94
+},
+"Spectral Sailor": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Spirit Pirate",
+"usd": 0.1
+},
+"Spell Pierce": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.29
+},
+"Spell Snare": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.36
+},
+"Spellskite": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Artifact Creature — Phyrexian Horror",
+"usd": 7.74
+},
+"Spelunking": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 3.77
+},
+"Sphere of Resistance": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": null
+},
+"Sphinx of Uthuun": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Creature — Sphinx",
+"usd": 0.17
+},
+"Sphinx of the Second Sun": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Creature — Sphinx",
+"usd": 3.9
+},
+"Spider-Sense": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": null
+},
+"Spire of Industry": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.33
+},
+"Spirited Companion": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment Creature — Dog",
+"usd": 0.23
+},
+"Splinter's Technique": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 1.72
+},
+"Split Up": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.77
+},
+"Splitskin Doll": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Artifact Creature — Toy",
+"usd": 0.31
+},
+"Springbloom Druid": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Druid",
+"usd": 0.28
+},
+"Springheart Nantuko": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment Creature — Insect Monk",
+"usd": 6.42
+},
+"Springleaf Drum": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.37
+},
+"Springleaf Parade": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 6.92
+},
+"Stadium Headliner": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin Warrior",
+"usd": 0.56
+},
+"Staff of Compleation": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 4.39
+},
+"Star Compass": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.32
+},
+"Stargaze": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.3
+},
+"Starwinder": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Creature — Leviathan",
+"usd": 1.56
+},
+"Static Orb": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 2.77
+},
+"Step Through": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.28
+},
+"Sterling Grove": {
+"ci": "GW",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 4.48
+},
+"Stitcher's Supplier": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Zombie",
+"usd": 0.31
+},
+"Stock Up": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.2
+},
+"Stolen Identity": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 0.52
+},
+"Stone of Erech": {
+"ci": "",
+"cmc": 1.0,
+"type": "Legendary Artifact",
+"usd": 0.28
+},
+"Stone-Seeder Hierophant": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Human Druid",
+"usd": 0.4
+},
+"Stoneforge Masterwork": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 4.31
+},
+"Stony Silence": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.46
+},
+"Stony Strength": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.12
+},
+"Storage Matrix": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 2.63
+},
+"Storm-Kiln Artist": {
+"ci": "R",
+"cmc": 4.0,
+"type": "Creature — Dwarf Shaman",
+"usd": 1.8
+},
+"Stormcarved Coast": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.31
+},
+"Strike It Rich": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 1.52
+},
+"Strix Serenade": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 2.01
+},
+"Strixhaven Stadium": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.38
+},
+"Stroke of Genius": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Struggle for Project Purity": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 3.47
+},
+"Stump Stomp // Burnwillow Clearing": {
+"ci": "GR",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.37
+},
+"Stunt Double": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Shapeshifter",
+"usd": 4.21
+},
+"Sublime Epiphany": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Instant",
+"usd": 0.26
+},
+"Submerge": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Instant",
+"usd": 3.29
+},
+"Sudden Spinnerets": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.08
+},
+"Sulfur Falls": {
+"ci": "RU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.3
+},
+"Sulfurous Springs": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.37
+},
+"Summoner's Pact": {
+"ci": "G",
+"cmc": 0.0,
+"type": "Instant",
+"usd": 3.19
+},
+"Sundering Eruption // Volcanic Fissure": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 1.76
+},
+"Sungrass Prairie": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.2
+},
+"Sunken Hollow": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land — Island Swamp",
+"usd": 0.38
+},
+"Sunken Ruins": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.39
+},
+"Sunpetal Grove": {
+"ci": "GW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.69
+},
+"Sunscape Familiar": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Wall",
+"usd": 1.32
+},
+"Sunscorched Desert": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.32
+},
+"Supernatural Stamina": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.13
+},
+"Suppression Field": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.66
+},
+"Survivors' Encampment": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Desert",
+"usd": 0.29
+},
+"Suspend": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.48
+},
+"Swamp": {
+"ci": "B",
+"cmc": 0.0,
+"type": "Basic Land — Swamp",
+"usd": 0.21
+},
+"Swan Song": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 10.88
+},
+"Swarmyard": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 4.58
+},
+"Swiftfoot Boots": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Equipment",
+"usd": 2.08
+},
+"Sword of the Paruns": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact — Equipment",
+"usd": 0.87
+},
+"Swords to Plowshares": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.92
+},
+"Sylvan Offering": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.38
+},
+"Sylvan Safekeeper": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Human Wizard",
+"usd": 6.38
+},
+"Sylvan Scrying": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.32
+},
+"Syphon Mind": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.38
+},
+"Tadeas, Juniper Ascendant": {
+"ci": "GW",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Monk",
+"usd": 1.04
+},
+"Taigam, Master Opportunist": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Monk",
+"usd": 0.98
+},
+"Tainted Field": {
+"ci": "BW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.4
+},
+"Tainted Isle": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 3.79
+},
+"Tainted Peak": {
+"ci": "BR",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.73
+},
+"Tainted Strike": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 3.68
+},
+"Tainted Wood": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.3
+},
+"Talion, the Kindly Lord": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Legendary Creature — Faerie Noble",
+"usd": 7.48
+},
+"Talisman of Creativity": {
+"ci": "RU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 2.35
+},
+"Talisman of Curiosity": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.53
+},
+"Talisman of Dominance": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.92
+},
+"Talisman of Hierarchy": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.43
+},
+"Talisman of Indulgence": {
+"ci": "BR",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 1.19
+},
+"Tamiyo, Inquisitive Student // Tamiyo, Seasoned Scholar": {
+"ci": "GU",
+"cmc": 1.0,
+"type": "Legendary Creature — Moonfolk Wizard",
+"usd": 17.8
+},
+"Tannuk, Memorial Ensign": {
+"ci": "GR",
+"cmc": 3.0,
+"type": "Legendary Creature — Kavu Pilot",
+"usd": 1.29
+},
+"Tasigur's Cruelty": {
+"ci": "B",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 0.15
+},
+"Tatyova, Benthic Druid": {
+"ci": "GU",
+"cmc": 5.0,
+"type": "Legendary Creature — Merfolk Druid",
+"usd": 0.28
+},
+"Taurean Mauler": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.91
+},
+"Tax Collector": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Advisor",
+"usd": 0.39
+},
+"Tear Asunder": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Teferi's Ageless Insight": {
+"ci": "U",
+"cmc": 4.0,
+"type": "",
+"usd": 3.58
+},
+"Teferi's Puzzle Box": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact",
+"usd": null
+},
+"Teleportation Circle": {
+"ci": "W",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 5.21
+},
+"Temporal Mastery": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Sorcery",
+"usd": 4.18
+},
+"Temporal Trespass": {
+"ci": "U",
+"cmc": 11.0,
+"type": "Sorcery",
+"usd": 3.7
+},
+"Tempt with Reflections": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 2.18
+},
+"Temur Sabertooth": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Cat",
+"usd": 1.02
+},
+"Tendo Ice Bridge": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.37
+},
+"Terminate": {
+"ci": "BR",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Tetsuko Umezawa, Fugitive": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Rogue",
+"usd": 0.15
+},
+"Teysa, Orzhov Scion": {
+"ci": "BW",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Advisor",
+"usd": 1.4
+},
+"Thalia, Guardian of Thraben": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Legendary Creature — Human Soldier",
+"usd": 0.43
+},
+"The Huntsman's Redemption": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment — Saga",
+"usd": 0.34
+},
+"The Irencrag": {
+"ci": "",
+"cmc": 2.0,
+"type": "Legendary Artifact",
+"usd": 0.6
+},
+"The Last Agni Kai": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 2.02
+},
+"The Thirteenth Doctor": {
+"ci": "GU",
+"cmc": 3.0,
+"type": "Legendary Creature — Time Lord Doctor",
+"usd": null
+},
+"The Unagi of Kyoshi Island": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Legendary Creature — Serpent",
+"usd": 1.1
+},
+"Thirsting Roots": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.57
+},
+"Thorn of Amethyst": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.6
+},
+"Thought Monitor": {
+"ci": "U",
+"cmc": 7.0,
+"type": "Artifact Creature — Construct",
+"usd": 0.36
+},
+"Thought Vessel": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 3.37
+},
+"Thoughtcast": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 2.31
+},
+"Thousand-Faced Shadow": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Creature — Human Ninja",
+"usd": 2.17
+},
+"Thousand-Year Elixir": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 17.15
+},
+"Thran Portal": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Gate",
+"usd": 0.95
+},
+"Thran Quarry": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 3.66
+},
+"Thrasios, Triton Hero": {
+"ci": "GU",
+"cmc": 2.0,
+"type": "Legendary Creature — Merfolk Wizard",
+"usd": 18.29
+},
+"Three Steps Ahead": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 5.43
+},
+"Thrummingbird": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Phyrexian Bird Horror",
+"usd": 0.3
+},
+"Thunderclap Drake": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Drake",
+"usd": 0.85
+},
+"Tidespout Tyrant": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Creature — Djinn",
+"usd": 1.44
+},
+"Time Stretch": {
+"ci": "U",
+"cmc": 10.0,
+"type": "Sorcery",
+"usd": 4.25
+},
+"Tinder Wall": {
+"ci": "GR",
+"cmc": 1.0,
+"type": "Creature — Plant Wall",
+"usd": 1.08
+},
+"Tinybones Joins Up": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Legendary Enchantment",
+"usd": 1.15
+},
+"Tinybones, Bauble Burglar": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Legendary Creature — Skeleton Rogue",
+"usd": 1.82
+},
+"Tinybones, Trinket Thief": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Legendary Creature — Skeleton Rogue",
+"usd": 4.24
+},
+"Tireless Provisioner": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Elf Scout",
+"usd": 1.8
+},
+"Tireless Tracker": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Scout",
+"usd": 0.24
+},
+"Tishana's Tidebinder": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Merfolk Wizard",
+"usd": 2.04
+},
+"Titania, Protector of Argoth": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Legendary Creature — Elemental",
+"usd": 0.36
+},
+"Tithing Blade // Consuming Sepulcher": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 0.47
+},
+"Tocasia's Welcome": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 1.4
+},
+"Tocatli Honor Guard": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Human Soldier",
+"usd": 0.28
+},
+"Tolaria West": {
+"ci": "U",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.47
+},
+"Tolarian Kraken": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Creature — Kraken",
+"usd": 0.15
+},
+"Tomb of Horrors Adventurer": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Creature — Elf Monk",
+"usd": 0.36
+},
+"Tome of Legends": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact — Book",
+"usd": 0.26
+},
+"Torch Courier": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Creature — Goblin",
+"usd": 0.23
+},
+"Tormod's Crypt": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 0.41
+},
+"Torpor Orb": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 4.09
+},
+"Toski, Bearer of Secrets": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Legendary Creature — Squirrel",
+"usd": 6.69
+},
+"Touch the Spirit Realm": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.64
+},
+"Toxic Deluge": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 6.13
+},
+"Toxrill, the Corrosive": {
+"ci": "BU",
+"cmc": 7.0,
+"type": "Legendary Creature — Slug Horror",
+"usd": 16.36
+},
+"Tragic Slip": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.32
+},
+"Trailblazer's Torch": {
+"ci": "",
+"cmc": 4.0,
+"type": "Artifact — Equipment",
+"usd": 0.24
+},
+"Training Grounds": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Enchantment",
+"usd": 8.52
+},
+"Transmogrifying Wand": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact",
+"usd": 0.29
+},
+"Treasure Cruise": {
+"ci": "U",
+"cmc": 8.0,
+"type": "Sorcery",
+"usd": 0.26
+},
+"Treasure Vault": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact Land",
+"usd": 1.27
+},
+"Tribute Mage": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.84
+},
+"Tribute to the World Tree": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 20.37
+},
+"Trinket Mage": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.36
+},
+"Triton Tactics": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.08
+},
+"Trophy Mage": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Wizard",
+"usd": 0.72
+},
+"Tuktuk Rubblefort": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Wall",
+"usd": 0.28
+},
+"Twiddle": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.21
+},
+"Twilight Mire": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.37
+},
+"Twinflame": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.96
+},
+"Tyvar's Stand": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.98
+},
+"Tyvar, Jubilant Brawler": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Legendary Planeswalker — Tyvar",
+"usd": 5.05
+},
+"Ulcerate": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.11
+},
+"Umbral Collar Zealot": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Human Cleric",
+"usd": 0.37
+},
+"Umbral Mantle": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact — Equipment",
+"usd": 7.48
+},
+"Unctus, Grand Metatect": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Legendary Artifact Creature — Phyrexian Vedalken",
+"usd": 0.43
+},
+"Undead Augur": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Zombie Wizard",
+"usd": 0.17
+},
+"Underdark Explorer": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Creature — Lizard Warrior",
+"usd": 0.21
+},
+"Underground River": {
+"ci": "BU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 2.1
+},
+"Underworld Breach": {
+"ci": "R",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 7.02
+},
+"Unearth": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.49
+},
+"Unholy Annex // Ritual Chamber": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Enchantment — Room",
+"usd": 1.47
+},
+"Universal Automaton": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact Creature — Shapeshifter",
+"usd": 0.61
+},
+"Unnatural Growth": {
+"ci": "G",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 2.46
+},
+"Unnerve": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.12
+},
+"Unstoppable Plan": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 2.26
+},
+"Unsubstantiate": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.19
+},
+"Urban Burgeoning": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 0.21
+},
+"Urban Retreat": {
+"ci": "GUW",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.64
+},
+"Urza's Cave": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Urza's Cave",
+"usd": 2.5
+},
+"Uthros Research Craft": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Artifact — Spacecraft",
+"usd": 3.58
+},
+"Utopia Sprawl": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 1.34
+},
+"Valakut Exploration": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": null
+},
+"Valgavoth's Faithful": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Human Cleric",
+"usd": 0.26
+},
+"Valgavoth, Terror Eater": {
+"ci": "B",
+"cmc": 9.0,
+"type": "Legendary Creature — Elder Demon",
+"usd": 18.26
+},
+"Valley Floodcaller": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Otter Wizard",
+"usd": 4.22
+},
+"Vandalblast": {
+"ci": "R",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 1.81
+},
+"Vanishing Verse": {
+"ci": "BW",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 0.24
+},
+"Vault Skyward": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.09
+},
+"Vedalken Aethermage": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Vedalken Wizard",
+"usd": 0.43
+},
+"Veil of Summer": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 2.53
+},
+"Vendetta": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.24
+},
+"Vengeful Bloodwitch": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Vampire Warlock",
+"usd": 0.26
+},
+"Verdant Haven": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Enchantment — Aura",
+"usd": 0.05
+},
+"Verity Circle": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 0.94
+},
+"Vernal Fen": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land — Swamp Forest",
+"usd": 0.46
+},
+"Vesuva": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 3.66
+},
+"Veteran's Reflexes": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.21
+},
+"Vexing Bauble": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 2.98
+},
+"Vexing Shusher": {
+"ci": "GR",
+"cmc": 2.0,
+"type": "Creature — Goblin Shaman",
+"usd": 5.45
+},
+"Vicious Battlerager": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Creature — Dwarf Barbarian",
+"usd": 0.14
+},
+"Vicious Rumors": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Sorcery",
+"usd": 0.25
+},
+"Victimize": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.63
+},
+"Vile Mutilator": {
+"ci": "B",
+"cmc": 7.0,
+"type": "Creature — Demon",
+"usd": 0.22
+},
+"Vilis, Broker of Blood": {
+"ci": "B",
+"cmc": 8.0,
+"type": "Legendary Creature — Demon",
+"usd": 10.34
+},
+"Village Rites": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.36
+},
+"Vineglimmer Snarl": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.23
+},
+"Vines of the Recluse": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.1
+},
+"Viridescent Bog": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.24
+},
+"Viridian Corrupter": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Phyrexian Elf Shaman",
+"usd": 0.35
+},
+"Viridian Longbow": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact — Equipment",
+"usd": 0.66
+},
+"Virtue of Courage // Embereth Blaze": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Enchantment",
+"usd": 2.5
+},
+"Virulent Wound": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.25
+},
+"Virus Beetle": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Artifact Creature — Insect",
+"usd": 0.14
+},
+"Viscera Seer": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Creature — Vampire Wizard",
+"usd": 0.97
+},
+"Vitalize": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 1.27
+},
+"Vizier of Many Faces": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Shapeshifter Cleric",
+"usd": 0.25
+},
+"Vizier of Tumbling Sands": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Creature — Human Cleric",
+"usd": 0.2
+},
+"Vohar, Vodalian Desecrator": {
+"ci": "BU",
+"cmc": 2.0,
+"type": "Legendary Creature — Phyrexian Merfolk Wizard",
+"usd": 0.24
+},
+"Volatile Fault": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land — Cave",
+"usd": 0.33
+},
+"Volatile Stormdrake": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Drake",
+"usd": 0.99
+},
+"Voltaic Key": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 3.25
+},
+"Voyaging Satyr": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Creature — Satyr Druid",
+"usd": 0.28
+},
+"Vraska Joins Up": {
+"ci": "BG",
+"cmc": 2.0,
+"type": "Legendary Enchantment",
+"usd": 0.81
+},
+"Vraska's Fall": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Vraska, the Silencer": {
+"ci": "BG",
+"cmc": 3.0,
+"type": "Legendary Creature — Gorgon Assassin",
+"usd": 3.04
+},
+"Vren, the Relentless": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Legendary Creature — Rat Rogue",
+"usd": 0.48
+},
+"Vryn Wingmare": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Pegasus",
+"usd": 0.18
+},
+"Wall of Omens": {
+"ci": "W",
+"cmc": 2.0,
+"type": "Creature — Wall",
+"usd": 0.28
+},
+"War Room": {
+"ci": "",
+"cmc": 0.0,
+"type": "Land",
+"usd": 4.03
+},
+"Wargate": {
+"ci": "GUW",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 3.72
+},
+"Wash Away": {
+"ci": "U",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.45
+},
+"Waste Not": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": null
+},
+"Waterbender Ascension": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Enchantment",
+"usd": 0.74
+},
+"Waterlogged Grove": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 1.12
+},
+"Waterlogged Teachings // Inundated Archive": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Instant",
+"usd": 0.39
+},
+"Wavebreak Hippocamp": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Enchantment Creature — Horse Fish",
+"usd": 0.63
+},
+"Waxen Shapethief": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Shapeshifter",
+"usd": 0.34
+},
+"Wayfarer's Bauble": {
+"ci": "",
+"cmc": 1.0,
+"type": "Artifact",
+"usd": 0.29
+},
+"Weird Harvest": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 1.0
+},
+"Welcoming Vampire": {
+"ci": "W",
+"cmc": 3.0,
+"type": "Creature — Vampire",
+"usd": null
+},
+"Welding Jar": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 1.47
+},
+"Whir of Invention": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 5.49
+},
+"Whisper of the Dross": {
+"ci": "B",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.34
+},
+"Whispering Madness": {
+"ci": "BU",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 2.44
+},
+"Whispersilk Cloak": {
+"ci": "",
+"cmc": 3.0,
+"type": "Artifact — Equipment",
+"usd": 2.45
+},
+"Wild Beastmaster": {
+"ci": "G",
+"cmc": 3.0,
+"type": "Creature — Human Shaman",
+"usd": 0.24
+},
+"Wild Growth": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Enchantment — Aura",
+"usd": 0.4
+},
+"Wilderness Reclamation": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Enchantment",
+"usd": 4.01
+},
+"Will of the Abzan": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 4.41
+},
+"Will of the Temur": {
+"ci": "U",
+"cmc": 6.0,
+"type": "Sorcery",
+"usd": 1.94
+},
+"Windfall": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 4.82
+},
+"Winged Words": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Sorcery",
+"usd": 0.19
+},
+"Wings of the Cosmos": {
+"ci": "W",
+"cmc": 1.0,
+"type": "Instant",
+"usd": 0.27
+},
+"Winter Orb": {
+"ci": "",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 14.12
+},
+"Wirewood Channeler": {
+"ci": "G",
+"cmc": 4.0,
+"type": "Creature — Elf Druid",
+"usd": 1.36
+},
+"Wirewood Symbiote": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Insect",
+"usd": 0.32
+},
+"Wishclaw Talisman": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Artifact",
+"usd": 2.12
+},
+"Wispdrinker Vampire": {
+"ci": "BW",
+"cmc": 4.0,
+"type": "Creature — Vampire Rogue",
+"usd": 0.23
+},
+"Withering Torment": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 3.17
+},
+"Wizard's Retort": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.31
+},
+"Wolfwillow Haven": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Enchantment — Aura",
+"usd": 0.29
+},
+"Wonder": {
+"ci": "U",
+"cmc": 4.0,
+"type": "Creature — Incarnation",
+"usd": 3.81
+},
+"Woodland Cemetery": {
+"ci": "BG",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.76
+},
+"Words of Waste": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Enchantment",
+"usd": 6.05
+},
+"Worldsoul's Rage": {
+"ci": "GR",
+"cmc": 2.0,
+"type": "Sorcery",
+"usd": 0.23
+},
+"Wrap in Vigor": {
+"ci": "G",
+"cmc": 2.0,
+"type": "Instant",
+"usd": 1.24
+},
+"Yahenni's Expertise": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Sorcery",
+"usd": 0.38
+},
+"Yavimaya Coast": {
+"ci": "GU",
+"cmc": 0.0,
+"type": "Land",
+"usd": 0.36
+},
+"Yawgmoth's Vile Offering": {
+"ci": "B",
+"cmc": 5.0,
+"type": "Legendary Sorcery",
+"usd": 0.33
+},
+"Yawgmoth, Thran Physician": {
+"ci": "B",
+"cmc": 4.0,
+"type": "Legendary Creature — Human Cleric",
+"usd": 24.09
+},
+"You Find the Villains' Lair": {
+"ci": "U",
+"cmc": 3.0,
+"type": "Instant",
+"usd": 0.29
+},
+"Young Wolf": {
+"ci": "G",
+"cmc": 1.0,
+"type": "Creature — Wolf",
+"usd": 0.31
+},
+"Yuan-Ti Fang-Blade": {
+"ci": "B",
+"cmc": 3.0,
+"type": "Creature — Snake Rogue",
+"usd": 0.17
+},
+"Yuan-Ti Malison": {
+"ci": "U",
+"cmc": 2.0,
+"type": "Creature — Snake Rogue",
+"usd": 0.35
+},
+"Zealous Conscripts": {
+"ci": "R",
+"cmc": 5.0,
+"type": "Creature — Human Warrior",
+"usd": 0.32
+},
+"Zell Dincht": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Legendary Creature — Human Monk",
+"usd": 0.42
+},
+"Zndrsplt's Judgment": {
+"ci": "U",
+"cmc": 5.0,
+"type": "Sorcery",
+"usd": 0.3
+},
+"Zulaport Cutthroat": {
+"ci": "B",
+"cmc": 2.0,
+"type": "Creature — Human Rogue Ally",
+"usd": 1.36
+},
+"Zuran Orb": {
+"ci": "",
+"cmc": 0.0,
+"type": "Artifact",
+"usd": 2.75
+},
+"_____ Goblin": {
+"ci": "R",
+"cmc": 3.0,
+"type": "Creature — Goblin Guest",
+"usd": 0.38
+}
+}

@@ -1,7 +1,7 @@
 """Shared HTTP client: polite per-host rate limiting and a small in-memory TTL cache.
 
 Scryfall asks for a User-Agent, an Accept header, and roughly 50-100 ms between
-requests. EDHREC and Commander Spellbook get the same courtesy.
+requests. EDHREC, Commander Spellbook and Archidekt get the same courtesy.
 """
 
 from __future__ import annotations
@@ -24,6 +24,8 @@ HOST_INTERVALS = {
     "api.scryfall.com": 0.1,
     "json.edhrec.com": 0.5,
     "backend.commanderspellbook.com": 0.25,
+    "archidekt.com": 1.0,
+    "api2.moxfield.com": 1.0,
 }
 
 
@@ -99,6 +101,7 @@ class HttpClient:
         json_body: Any = None,
         ttl: float = 0,
         allow_404: bool = False,
+        headers: dict[str, str] | None = None,
     ) -> Any:
         key = None
         if ttl > 0:
@@ -110,7 +113,7 @@ class HttpClient:
         for attempt in range(3):
             await self._throttle(url)
             try:
-                resp = await self._client.request(method, url, params=params, json=json_body)
+                resp = await self._client.request(method, url, params=params, json=json_body, headers=headers)
             except httpx.HTTPError as exc:
                 if attempt == 2:
                     raise ApiError(f"Network error calling {urlparse(url).netloc}: {exc}") from exc

@@ -118,7 +118,26 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["land_color_sources"]["G"], 46)
         self.assertEqual(r["game_changers"], ["Demonic Tutor", "Rhystic Study"])
         self.assertEqual(r["price"]["most_expensive"][0], {"card": "Doubling Season", "usd": 45.0})
-        self.assertTrue(any(g.startswith("lands: 91") for g in r["gaps_vs_typical_commander_deck"]))
+        t = r["template"]
+        self.assertEqual(t["categories"]["lands"], {"target": 38, "actual": 91, "status": "53 over"})
+        self.assertEqual(t["categories"]["ramp"]["cards"], ["Cultivate", "Sol Ring"])
+        self.assertEqual(t["categories"]["mass_disruption"]["cards"], ["Wrath of God"])
+        self.assertEqual(t["categories"]["targeted_disruption"]["cards"], ["Counterspell", "Swords to Plowshares"])
+        self.assertIn("Doubling Season", t["categories"]["plan"]["cards"])
+        self.assertNotIn("Atraxa, Praetors' Voice", t["categories"]["plan"]["cards"])
+        self.assertTrue(any(g.startswith("lands: 91") for g in t["gaps"]))
+        self.assertEqual(t["cards_doing_double_duty"], 9)
+
+    def test_custom_template(self):
+        r = analyze(parse_decklist(atraxa_list()), CARDS, template={"lands": 91, "ramp": 2})
+        cats = r["template"]["categories"]
+        self.assertEqual(cats["lands"]["status"], "on target")
+        self.assertEqual(cats["ramp"]["status"], "on target")
+        self.assertFalse(any(g.startswith(("lands", "ramp")) for g in r["template"]["gaps"]))
+        with self.assertRaises(ValueError):
+            analyze(parse_decklist(atraxa_list()), CARDS, template={"wincons": 3})
+        with self.assertRaises(ValueError):
+            analyze(parse_decklist(atraxa_list()), CARDS, template={"lands": -1})
 
     def test_illegal_things_flagged(self):
         text = "1 Atraxa, Praetors' Voice *CMDR*\n2 Sol Ring\n1 Lightning Bolt\n1 Mana Crypt\n"
@@ -157,9 +176,69 @@ class ToolTests(unittest.TestCase):
         posts = [c for c in self.fake.calls if c[0] == "POST"]
         self.assertEqual(len(posts), 1)
 
+    def test_deckbuilding_template_tool(self):
+        r = run(server.deckbuilding_template())
+        self.assertEqual({k: v["target"] for k, v in r["categories"].items()},
+                         {"lands": 38, "ramp": 10, "card_advantage": 12, "targeted_disruption": 12,
+                          "mass_disruption": 6, "plan": 30})
+        self.assertIsNone(r["customized"])
+        self.assertEqual(r["cards_doing_double_duty"], 9)
+        r = run(server.deckbuilding_template({"lands": 36, "plan": 34}, color_identity="WUB"))
+        self.assertEqual(r["customized"], ["lands", "plan"])
+        self.assertEqual(r["categories"]["ramp"]["search_query"], "otag:ramp f:commander id<=wub")
+        self.assertNotIn("search_query", r["categories"]["plan"])
+        self.assertIn("error", run(server.deckbuilding_template({"lands": "lots"})))
+        self.assertIn("error", run(server.analyze_deck(atraxa_list(), template={"bogus": 1})))
+
+    def test_deckbuilding_principles_tool(self):
+        r = run(server.deckbuilding_principles())
+        keys = [p["key"] for p in r["principles"]]
+        self.assertEqual(keys, ["commander", "win_condition", "build_backwards", "mana_curve", "synergy",
+                                "no_rigid_templates", "interaction"])
+        by_key = {p["key"]: p for p in r["principles"]}
+        self.assertEqual(by_key["mana_curve"]["target_average_mana_value"], 2.0)
+        self.assertEqual(by_key["no_rigid_templates"]["land_range"], [29, 34])
+        self.assertIn("Budget Pub Stomper", r["source"])
+        process = r["build_process"]
+        self.assertIn("Budget Bros", process["source"])
+        self.assertEqual([st["key"] for st in process["steps"]],
+                         ["analyze_commander", "win_condition_first", "fill_the_veggies", "synergy_in_every_slot"])
+        self.assertEqual([st["step"] for st in process["steps"]], [1, 2, 3, 4])
+        self.assertEqual({i["key"] for i in process["insights"]}, {"avoid_cookie_cutter", "budget_mana_bases"})
+
+    def test_simulate_deck_tool(self):
+        r = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season", "Cultivate"], ["Not In Deck"]],
+                                     turns=6, trials=500, seed=1))
+        self.assertEqual(r["trials"], 500)
+        self.assertEqual(r["commander"]["names"], ["Atraxa, Praetors' Voice"])
+        by_turn = r["commander"]["castable_by_turn"]
+        self.assertEqual(list(by_turn), ["1", "2", "3", "4", "5", "6"])
+        self.assertTrue(all(a <= b for a, b in zip(list(by_turn.values()), list(by_turn.values())[1:])))
+        self.assertEqual(len(r["win_lines"]), 1)
+        self.assertEqual(r["win_line_cards_not_in_deck"], ["Not In Deck"])
+        self.assertIn("Sol Ring", r["classified"]["mana_sources"])
+        self.assertIn("Cultivate", r["classified"]["land_ramp"])
+        self.assertIn("Demonic Tutor", r["classified"]["tutors"])
+        same = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season", "Cultivate"]],
+                                        turns=6, trials=500, seed=1))
+        self.assertEqual(same["win_lines"], r["win_lines"])
+        self.assertIn("error", run(server.simulate_deck(atraxa_list(), trials=5)))
+        alt = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season | Rhystic Study"]], trials=200, seed=2))
+        self.assertEqual(alt["win_lines"][0]["cards"], ["Doubling Season | Rhystic Study"])
+        either = alt["win_lines"][0]["assembled_by_turn"]["8"]
+        one = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season"]], trials=200, seed=2))
+        self.assertGreaterEqual(either, one["win_lines"][0]["assembled_by_turn"]["8"])
+
     def test_analyze_reports_unknown_cards(self):
         r = run(server.analyze_deck("1 Sol Ring\n1 Not A Real Card"))
         self.assertEqual(r["cards_not_found"], ["Not A Real Card"])
+
+    def test_flavor_names_resolve(self):
+        r = run(server.price_decklist("1 Thrum of the Vestige\n1 S.H.I.E.L.D. Spy Satellite\n1 Not A Real Card"))
+        self.assertEqual(r["cards_not_found"], ["Not A Real Card"])
+        self.assertAlmostEqual(r["total_usd"], 2.5)
+        named = [c[1] for c in self.fake.calls if "/cards/named" in c[1]]
+        self.assertTrue(all("exact=" in u for u in named))  # never fuzzy: no silent swaps
 
     def test_collection_batches_of_75(self):
         text = "\n".join(f"1 Fake Card {i}" for i in range(160))
@@ -213,6 +292,157 @@ class ToolTests(unittest.TestCase):
         self.assertIn("no page", r["error"])
 
 
+class ArchidektTests(unittest.TestCase):
+    def setUp(self):
+        self.fake = FakeApis()
+        server.set_http_client(self.fake.client())
+
+    def test_parse_deck_id(self):
+        from mtg_mcp.archidekt import parse_deck_id
+        self.assertEqual(parse_deck_id("https://archidekt.com/decks/123456/my-deck"), 123456)
+        self.assertEqual(parse_deck_id("987"), 987)
+        self.assertIsNone(parse_deck_id("moxfield.com/decks/abc"))
+
+    def test_search_params_and_format_filter(self):
+        r = run(server.archidekt_search_decks(commander="atraxa", colors="gwu", bracket=3, limit=10))
+        self.assertEqual([d["id"] for d in r["decks"]], [1, 2, 3])  # modern deck filtered out
+        self.assertEqual(r["decks"][0]["colors"], "WUG")
+        self.assertEqual(r["decks"][0]["format"], "Commander")
+        call = next(c[1] for c in self.fake.calls if "/api/decks/v3/" in c[1])
+        self.assertIn("commanderName=Atraxa", call)
+        self.assertIn("deckFormat=3", call)
+        self.assertIn("edhBracket=3", call)
+        self.assertIn("colors=Green%2CWhite%2CBlue", call)
+
+    def test_search_bad_format(self):
+        r = run(server.archidekt_search_decks(format="hearthstone"))
+        self.assertIn("Unknown format", r["error"])
+
+    def test_get_deck(self):
+        r = run(server.archidekt_get_deck("https://archidekt.com/decks/1/test"))
+        self.assertEqual(r["commanders"], ["Atraxa, Praetors' Voice"])
+        self.assertEqual(r["card_count"], 1 + 1 + 20 + 1 + 45)
+        self.assertEqual(r["other_boards"], {"Maybeboard": 1})
+        self.assertNotIn("Doubling Season", r["decklist"])
+        self.assertEqual(r["category_counts"]["Land"], 20)
+        # The decklist round-trips through our own parser.
+        d = parse_decklist(r["decklist"])
+        self.assertEqual(d.commanders[0].name, "Atraxa, Praetors' Voice")
+        self.assertEqual(d.card_count, r["card_count"])
+
+    def test_get_deck_missing(self):
+        r = run(server.archidekt_get_deck("424242"))
+        self.assertIn("not found", r["error"])
+
+    def test_popular_cards(self):
+        r = run(server.archidekt_popular_cards("atraxa", decks=5, decklist="1 Sol Ring"))
+        self.assertEqual(r["decks_sampled"], 2)  # deck 3 has a different commander
+        names = {c["name"]: c for c in r["cards"]}
+        self.assertNotIn("Sol Ring", names)      # excluded: already in decklist
+        self.assertNotIn("Forest", names)        # basics hidden by default
+        self.assertNotIn("Doubling Season", names)  # maybeboard only
+        self.assertEqual(names["Rhystic Study"]["inclusion_pct"], 100.0)
+        self.assertEqual(names["Filler Card 0"]["usual_category"], "Plan")
+
+
+class ReferenceLibraryTests(unittest.TestCase):
+    """The bundled NeRo library (src/mtg_mcp/data/library/nero) and the reference_* tools."""
+
+    @classmethod
+    def setUpClass(cls):
+        from mtg_mcp.library import Library
+        cls.lib = Library()
+
+    def test_library_loads_complete_decks(self):
+        self.assertIn("nero", self.lib.sources)
+        self.assertGreaterEqual(len(self.lib.active_decks()), 27)
+        for d in self.lib.decks:
+            total = sum(q for _, q, b, _ in d["cards"] if b in ("main", "commander"))
+            self.assertEqual(total, 100, d["name"])
+            for name, _, _, _ in d["cards"]:
+                self.assertIn(name, self.lib.cards, f"{name} has no metadata")
+
+    def test_win_lines_are_in_their_decks(self):
+        for d in self.lib.decks:
+            names = {n for n, _, b, _ in d["cards"] if b in ("main", "commander")}
+            for line in d.get("notes", {}).get("win_lines", []):
+                self.assertTrue(set(line) <= names, (d["name"], line))
+
+    def test_principles_present(self):
+        res = run(server.reference_principles("nero"))
+        principles = res["sources"][0]["principles"]
+        self.assertGreaterEqual(len(principles), 10)
+        self.assertTrue(all(p["guidance"] and p["evidence"] for p in principles))
+
+    def test_reference_cards_filters(self):
+        res = run(server.reference_cards(role="counter", color_identity="UB", min_decks=3))
+        names = [c["name"] for c in res["cards"]]
+        self.assertIn("Arcane Denial", names)
+        self.assertTrue(all(set(c["color_identity"]) <= set("UB") for c in res["cards"]))
+        counts = [c["deck_count"] for c in res["cards"]]
+        self.assertEqual(counts, sorted(counts, reverse=True))
+        cheap = run(server.reference_cards(max_price=0.5, min_decks=2))
+        self.assertTrue(all(c["usd_at_capture"] is None or c["usd_at_capture"] <= 0.5 for c in cheap["cards"]))
+        self.assertIn("error", run(server.reference_cards(role="banana")))
+
+    def test_reference_card_and_deck(self):
+        card = run(server.reference_card("sol ring"))
+        self.assertTrue(card["in_library"])
+        self.assertGreater(card["deck_count"], 20)
+        self.assertFalse(run(server.reference_card("Definitely Not A Card"))["in_library"])
+        deck = run(server.reference_deck("Hapatra"))
+        self.assertEqual(deck["commanders"], ["Hapatra, Vizier of Poisons"])
+        self.assertTrue(deck["notes"]["win_lines"])
+        parsed = parse_decklist(deck["decklist"])
+        self.assertEqual(parsed.card_count, 100)
+        self.assertEqual([e.name for e in parsed.commanders], ["Hapatra, Vizier of Poisons"])
+        self.assertIn("error", run(server.reference_deck("zzzz no such deck")))
+
+    def test_reference_library_overview(self):
+        res = run(server.reference_library())
+        self.assertGreaterEqual(len(res["decks"]), 28)
+        kefka = [d for d in res["decks"] if d["deck"].startswith("Kefka (2026")][0]
+        self.assertEqual(kefka["cards"], 100)
+        self.assertAlmostEqual(kefka["average_mana_value_nonland"], 2.04, places=2)
+
+
+class ReferenceCompareAndImportTests(unittest.TestCase):
+    def setUp(self):
+        self.fake = FakeApis()
+        server.set_http_client(self.fake.client())
+
+    def test_compare_suggests_staples_in_identity(self):
+        res = run(server.reference_compare(atraxa_list(), min_decks=5))
+        self.assertEqual(res["commanders"], ["Atraxa, Praetors' Voice"])
+        suggested = {c["name"] for cards in res["missing_staples_by_role"].values() for c in cards}
+        self.assertIn("Arcane Signet", suggested)
+        self.assertNotIn("Sol Ring", suggested)  # already in the deck
+        self.assertNotIn("Lightning Bolt", suggested)  # red is outside Atraxa's identity
+
+    def test_moxfield_import_writes_source(self):
+        import os
+        import tempfile
+        from mtg_mcp import library
+        with tempfile.TemporaryDirectory() as tmp:
+            os.environ["MTG_MCP_LIBRARY_DIR"] = tmp
+            try:
+                res = run(server.moxfield_import_user("SomeUser"))
+                self.assertEqual(res["decks_imported"], 1)  # the modern deck is skipped
+                self.assertEqual(res["primers_saved"], 1)
+                lib = library.get_library()
+                deck = lib.find_decks("Vren")[0]
+                self.assertEqual(deck["name"], "Test Deck")
+                self.assertIn(["Counterspell", 1, "main", ["counter"]], deck["cards"])
+                self.assertIn(["Negate", 1, "considering", []], deck["cards"])
+                self.assertEqual(lib.cards["Counterspell"]["ci"], "U")
+                primers = list((Path(tmp) / "someuser" / "primers").glob("*.md"))
+                self.assertEqual(len(primers), 1)
+                self.assertIn("Counter everything", primers[0].read_text())
+            finally:
+                del os.environ["MTG_MCP_LIBRARY_DIR"]
+                library.reload_library()
+
+
 class McpProtocolTest(unittest.TestCase):
     """Start the real server over stdio and list its tools."""
 
@@ -237,7 +467,10 @@ class McpProtocolTest(unittest.TestCase):
             set(names),
             {"search_cards", "get_card", "get_card_rulings", "get_card_printings", "autocomplete_card_name",
              "random_card", "analyze_deck", "find_combos", "search_combos", "edhrec_recommendations",
-             "edhrec_card", "price_decklist"},
+             "edhrec_card", "price_decklist", "deckbuilding_template", "deckbuilding_principles", "simulate_deck",
+             "archidekt_search_decks", "archidekt_get_deck", "archidekt_popular_cards",
+             "reference_library", "reference_principles", "reference_cards", "reference_card", "reference_deck",
+             "reference_compare", "moxfield_import_user"},
         )
 
 

@@ -11,6 +11,9 @@ BASE = "https://api.scryfall.com"
 # Card data changes rarely; prices update about once a day.
 CARD_TTL = 6 * 3600
 SEARCH_TTL = 3600
+# Per call, retry at most this many names the collection endpoint missed
+# (one request each), so a pasted list full of typos stays quick.
+MAX_ALIAS_LOOKUPS = 25
 
 
 def oracle_text(card: dict[str, Any]) -> str:
@@ -139,6 +142,10 @@ class Scryfall:
     async def collection(self, names: Iterable[str]) -> tuple[dict[str, dict[str, Any]], list[str]]:
         """Fetch many cards by name via /cards/collection (75 per request).
 
+        Names the collection endpoint misses (alternate "flavor names" such as
+        Black Panther's Redirection, or split cards written another way) are
+        retried one by one through /cards/named; see `_lookup_alias`.
+
         Returns ({requested_name_lower: card}, [names not found]).
         """
         unique: list[str] = []
@@ -173,7 +180,37 @@ class Scryfall:
                 else:
                     found[requested.lower()] = card
             not_found.extend(n for n in chunk if n.lower() in missing)
-        return found, not_found
+
+        still_missing: list[str] = []
+        for i, requested in enumerate(not_found):
+            card = await self._lookup_alias(requested) if i < MAX_ALIAS_LOOKUPS else None
+            if card is None:
+                still_missing.append(requested)
+            else:
+                found[requested.lower()] = card
+        return found, still_missing
+
+    async def _lookup_alias(self, name: str) -> dict[str, Any] | None:
+        """Find a card that /cards/collection missed, or None.
+
+        /cards/collection only matches Oracle names. Universes Beyond and Secret Lair
+        printings carry alternate "flavor names" (Black Panther's Redirection is
+        Narset's Reversal, Thrum of the Vestige is Lightning Bolt), which
+        /cards/named?exact= does match. A split/MDFC name is also retried by its
+        front face. Exact matching only, so a typo is never silently swapped for a
+        different card.
+        """
+        candidates = [name]
+        if "//" in name:
+            front = name.split("//", 1)[0].strip()
+            if front:
+                candidates.append(front)
+        for candidate in candidates:
+            try:
+                return await self.named(candidate, fuzzy=False)
+            except ApiError:
+                continue
+        return None
 
 
 def _index_by_names(cards: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:

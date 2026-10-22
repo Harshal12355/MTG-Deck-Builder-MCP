@@ -67,6 +67,14 @@ CARDS = {
 }
 
 
+# Universes Beyond / Secret Lair "flavor names": /cards/named matches them,
+# /cards/collection does not (mirrors the real Scryfall API).
+FLAVOR_NAMES = {
+    "thrum of the vestige": "lightning bolt",
+    "s.h.i.e.l.d. spy satellite": "sol ring",
+}
+
+
 def spellbook_response() -> dict[str, Any]:
     def variant(vid, cards, produces, identity, pop):
         return {
@@ -127,6 +135,105 @@ EDHREC_PAGE = {
 }
 
 
+def archidekt_card(name, qty=1, cats=("Uncategorized",), cmc=0, types=("Instant",), tcg=1.0):
+    return {
+        "quantity": qty,
+        "categories": list(cats),
+        "deletedAt": None,
+        "card": {
+            "prices": {"tcg": tcg, "ck": tcg + 0.5},
+            "edition": {"editioncode": "tst"},
+            "oracleCard": {"name": name, "cmc": cmc, "types": list(types), "colorIdentity": []},
+        },
+    }
+
+
+def archidekt_deck(deck_id, commander="Atraxa, Praetors' Voice", extra=()):
+    filler = [archidekt_card(f"Filler Card {i}", cats=("Plan",)) for i in range(45)]
+    return {
+        "id": deck_id,
+        "name": f"Deck {deck_id}",
+        "deckFormat": 3,
+        "edhBracket": 3,
+        "viewCount": 1000 - deck_id,
+        "owner": {"username": "tester"},
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2026-01-02T00:00:00Z",
+        "description": "A test deck.",
+        "categories": [
+            {"name": "Commander", "includedInDeck": True, "isPremier": True},
+            {"name": "Ramp", "includedInDeck": True},
+            {"name": "Maybeboard", "includedInDeck": False},
+            {"name": "Sideboard", "includedInDeck": False},
+        ],
+        "cards": [
+            archidekt_card(commander, cats=("Commander",), cmc=4, types=("Creature",), tcg=5.0),
+            archidekt_card("Sol Ring", cats=("Ramp",), cmc=1, types=("Artifact",), tcg=1.5),
+            archidekt_card("Forest", qty=20, cats=("Land",), types=("Land",), tcg=0),
+            archidekt_card("Doubling Season", cats=("Maybeboard",), cmc=5, types=("Enchantment",), tcg=45.0),
+            *[archidekt_card(n, cats=c) for n, c in extra],
+            *filler,
+        ],
+    }
+
+
+ARCHIDEKT_DECKS = {
+    1: archidekt_deck(1, extra=[("Rhystic Study", ("Draw",))]),
+    2: archidekt_deck(2, extra=[("Rhystic Study", ("Card Advantage", "Draw"))]),
+    3: archidekt_deck(3, commander="Some Other Commander"),
+}
+
+
+def archidekt_search(params) -> dict[str, Any]:
+    results = [
+        {"id": i, "name": d["name"], "deckFormat": 3, "size": 100, "viewCount": d["viewCount"],
+         "edhBracket": 3, "owner": {"username": "tester"}, "colors": {"W": 1, "U": 2, "B": 0, "R": 0, "G": 3},
+         "tags": [], "private": False, "updatedAt": d["updatedAt"]}
+        for i, d in ARCHIDEKT_DECKS.items()
+    ]
+    results.append({"id": 99, "name": "Modern deck", "deckFormat": 2, "viewCount": 5, "owner": {"username": "x"}})
+    return {"count": len(results), "next": None, "results": results}
+
+
+def moxfield_card(name, type_line="Instant", cmc=1, ci=(), usd=1.0):
+    return {"name": name, "type_line": type_line, "cmc": cmc, "color_identity": list(ci), "prices": {"usd": usd}}
+
+
+MOXFIELD_DECK = {
+    "id": "int123", "publicId": "PUB1", "name": "Test Deck ", "publicUrl": "https://moxfield.com/decks/PUB1",
+    "description": "desc", "likeCount": 3, "viewCount": 99, "lastUpdatedAtUtc": "2026-10-01T00:00:00Z",
+    "colorIdentity": ["U", "B"], "bracket": 4,
+    "authorTags": {"Counterspell": ["counter"], "Sol Ring": ["ramp"]},
+    "boards": {
+        "commanders": {"count": 1, "cards": {"a": {"quantity": 1, "card": moxfield_card(
+            "Vren, the Relentless", "Legendary Creature — Rat Rogue", 4, "UB")}}},
+        "mainboard": {"count": 3, "cards": {
+            "b": {"quantity": 1, "card": moxfield_card("Counterspell", ci="U", cmc=2)},
+            "c": {"quantity": 1, "card": moxfield_card("Sol Ring", "Artifact", 1)},
+            "d": {"quantity": 1, "card": moxfield_card("Island", "Basic Land — Island", 0, "U", 0.2)},
+        }},
+        "maybeboard": {"count": 1, "cards": {"e": {"quantity": 1, "card": moxfield_card("Negate", ci="U")}}},
+        "tokens": {"count": 0, "cards": {}},
+    },
+}
+
+
+def moxfield_route(request: httpx.Request) -> httpx.Response:
+    ua = request.headers.get("user-agent", "")
+    assert ua.startswith("Mozilla/"), "Moxfield needs a browser user agent"
+    path = request.url.path
+    if path == "/v2/decks/search":
+        return httpx.Response(200, json={"totalPages": 1, "data": [
+            {"publicId": "PUB1", "format": "commander", "hasPrimer": True},
+            {"publicId": "PUB2", "format": "modern", "hasPrimer": False},
+        ]})
+    if path == "/v3/decks/all/PUB1":
+        return httpx.Response(200, json=MOXFIELD_DECK)
+    if path == "/v1/decks/int123/primer":
+        return httpx.Response(200, json={"content": "## Plan\nCounter everything."})
+    return httpx.Response(404, json={"details": "unmocked"})
+
+
 class FakeApis:
     def __init__(self):
         self.calls: list[tuple[str, str, Any]] = []
@@ -135,8 +242,10 @@ class FakeApis:
         url = request.url
         body = json.loads(request.content) if request.content else None
         self.calls.append((request.method, str(url), body))
-        assert request.headers.get("user-agent", "").startswith("mtg-deckbuilder-mcp/"), "User-Agent missing"
         host, path = url.host, url.path
+        if host == "api2.moxfield.com":
+            return moxfield_route(request)
+        assert request.headers.get("user-agent", "").startswith("mtg-deckbuilder-mcp/"), "User-Agent missing"
 
         if host == "api.scryfall.com":
             if path == "/cards/collection":
@@ -147,7 +256,9 @@ class FakeApis:
                 return httpx.Response(200, json={"object": "list", "data": data, "not_found": nf})
             if path == "/cards/named":
                 q = (url.params.get("fuzzy") or url.params.get("exact") or "").lower()
-                match = CARDS.get(q) or next((c for k, c in CARDS.items() if k.startswith(q)), None)
+                match = CARDS.get(q) or CARDS.get(FLAVOR_NAMES.get(q, ""))
+                if match is None and "fuzzy" in url.params:
+                    match = next((c for k, c in CARDS.items() if k.startswith(q)), None)
                 if match:
                     return httpx.Response(200, json=match)
                 return httpx.Response(404, json={"object": "error", "status": 404, "details": f"No cards found matching “{q}”"})
@@ -176,6 +287,14 @@ class FakeApis:
             if path == "/pages/commanders/atraxa-praetors-voice.json":
                 return httpx.Response(200, json=EDHREC_PAGE)
             return httpx.Response(404, text="not found")
+
+        if host == "archidekt.com":
+            if path == "/api/decks/v3/":
+                return httpx.Response(200, json=archidekt_search(dict(url.params)))
+            m = path.strip("/").split("/")
+            if len(m) == 3 and m[:2] == ["api", "decks"] and m[2].isdigit():
+                deck = ARCHIDEKT_DECKS.get(int(m[2]))
+                return httpx.Response(200, json=deck) if deck else httpx.Response(404, json={"detail": "Not found."})
 
         return httpx.Response(404, json={"details": f"unmocked {request.method} {url}"})
 
