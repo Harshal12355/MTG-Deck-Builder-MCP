@@ -116,6 +116,14 @@ Restart Claude Desktop fully.
 claude mcp add mtg-deckbuilder -- mtg-mcp
 ```
 
+### Cursor
+
+`.cursor/mcp.json` runs `${workspaceFolder}/.venv/bin/mtg-mcp`, so create the venv in the repo root once:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -e .
+```
+
 ### HTTP (for hosting later)
 
 ```bash
