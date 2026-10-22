@@ -12,7 +12,7 @@ description: >
 
 NeRo (@_NeRo) builds ~$100 high-power Bracket 4. The test is his primers, not the Command Zone template and not the EDHREC top list.
 
-If `reference_principles` is not in this session, say so and stop. Do not invent the report.
+If `reference_principles` is not in this session, read `src/mtg_mcp/data/library/nero/source.json`, or `get_library()` with `PYTHONPATH=src` from the repo root. Same fallback for `reference_deck` and `reference_cards`. Say that you used the files. Do not recite principles from memory.
 
 ## Order
 
@@ -40,8 +40,8 @@ reference_deck(commander)               his list, if he already built it
 5. `search_combos` for overlapping 2–4 card lines. Every piece must be good alone. Most lines should work without the commander. Do not make Thoracle / Breach the plan unless the user asked for that budget.
 6. `reference_cards` with `color_identity` set, `min_decks=3`, `sort="decks"`. Pull interaction, ramp, draw, protection, stax, tutors. `max_mana_value=3` unless the bend needs a bigger card. These are candidates. Check each one against the jobs.
 7. `get_card` (and `get_card_rulings` if the line depends on timing) before a card is in the list. `f:commander` and `id<=` the commander's colours on every `search_cards`.
-8. Lands last. Count follows the plan (dork turbo vs landfall), not 38. Utility lands and MDFCs count as both a land and a spell.
-9. `analyze_deck`, `price_decklist`, `find_combos`, then `simulate_deck` with the win lines. Default budget is about $100 for the deck. Re-price before telling anyone to buy.
+8. Lands last, then the mana skill on the finished list. Count follows the plan (dork turbo vs landfall), not 38.
+9. `analyze_deck`, `price_decklist`, `find_combos`, then the goldfish skill with the win lines. Default budget is about $100 for the deck. Re-price before telling anyone to buy. If `simulate_deck` is missing, write "not simulated".
 
 `deckbuilding_template` is the wrong ruler here. Land count, interaction, and tutors come from `reference_principles` rules of thumb and from `analyze_deck`. `edhrec_recommendations` is a check for the cookie-cutter shell, not the shopping list. Call it with `budget="budget"` only after the list exists, and only to see what everyone else plays.
 

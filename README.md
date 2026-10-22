@@ -123,6 +123,12 @@ claude mcp add mtg-deckbuilder -- mtg-mcp
 mtg-mcp --http --host 0.0.0.0 --port 8000   # serves streamable HTTP at /mcp
 ```
 
+Behind another hostname (Cloudflare, a tunnel), the SDK rejects any Host that is not localhost. Pass each extra name twice: `name:*` matches `name:port`, and the bare name matches what browsers send on port 443.
+
+```bash
+mtg-mcp --http --allowed-host mtg.internal:* --allowed-host mtg.internal
+```
+
 ### Docker
 
 The image runs the same `mtg-mcp` command. No extra args means stdio. Pass the HTTP flags to listen on a port.

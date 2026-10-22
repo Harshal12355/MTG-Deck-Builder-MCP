@@ -11,6 +11,7 @@ import argparse
 from typing import Any, Literal
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 from .analysis import TEMPLATE_CATEGORIES, analyze, card_roles, resolve_template, template_overlap
 from .archidekt import Archidekt, parse_deck_id
@@ -739,10 +740,18 @@ def main() -> None:
     parser.add_argument("--http", action="store_true", help="Serve streamable HTTP instead of stdio")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--allowed-host", action="append", default=[],
+                        help="Extra Host header to accept, e.g. mtg.example.com:* (repeatable)")
     args = parser.parse_args()
     if args.http:
         mcp.settings.host = args.host
         mcp.settings.port = args.port
+        if args.allowed_host:
+            mcp.settings.transport_security = TransportSecuritySettings(
+                enable_dns_rebinding_protection=True,
+                allowed_hosts=["127.0.0.1:*", "localhost:*", "[::1]:*", *args.allowed_host],
+                allowed_origins=["http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*"],
+            )
         mcp.run(transport="streamable-http")
     else:
         mcp.run()

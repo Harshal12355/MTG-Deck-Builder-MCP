@@ -534,5 +534,52 @@ class McpProtocolTest(unittest.TestCase):
         self.assertIn("reference_principles", text)
 
 
+class HttpHostAllowlistTest(unittest.TestCase):
+    """`--allowed-host` extends the SDK localhost Host check and changes nothing otherwise."""
+
+    def setUp(self):
+        self.settings = server.mcp.settings
+        self.saved = (self.settings.host, self.settings.port, self.settings.transport_security)
+
+    def tearDown(self):
+        self.settings.host, self.settings.port, self.settings.transport_security = self.saved
+
+    def _main(self, argv):
+        from unittest.mock import patch
+
+        with patch.object(server.mcp, "run"), patch("sys.argv", argv):
+            server.main()
+
+    def test_flag_adds_a_host_and_keeps_localhost(self):
+        from mcp.server.transport_security import TransportSecurityMiddleware
+
+        self._main(["mtg-mcp", "--http", "--allowed-host", "mtg.internal:*", "--allowed-host", "mtg.internal"])
+        check = TransportSecurityMiddleware(self.settings.transport_security)._validate_host
+        self.assertTrue(check("127.0.0.1:8000"))
+        self.assertTrue(check("localhost:8000"))
+        self.assertTrue(check("[::1]:8000"))
+        self.assertTrue(check("mtg.internal:443"))
+        self.assertTrue(check("mtg.internal"))
+        self.assertFalse(check("evil.example:443"))
+
+    def test_wildcard_pattern_does_not_match_a_bare_host(self):
+        from mcp.server.transport_security import TransportSecurityMiddleware
+
+        self._main(["mtg-mcp", "--http", "--allowed-host", "mtg.internal:*"])
+        check = TransportSecurityMiddleware(self.settings.transport_security)._validate_host
+        self.assertTrue(check("mtg.internal:443"))
+        self.assertFalse(check("mtg.internal"))
+
+    def test_no_flag_leaves_the_default_allowlist(self):
+        from mcp.server.transport_security import TransportSecurityMiddleware
+
+        before = self.settings.transport_security
+        self._main(["mtg-mcp", "--http"])
+        self.assertIs(self.settings.transport_security, before)
+        check = TransportSecurityMiddleware(before)._validate_host
+        self.assertTrue(check("127.0.0.1:8000"))
+        self.assertFalse(check("mtg.internal:443"))
+
+
 if __name__ == "__main__":
     unittest.main()

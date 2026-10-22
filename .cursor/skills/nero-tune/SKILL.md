@@ -12,7 +12,7 @@ description: >
 
 NeRo (@_NeRo) builds ~$100 high-power Bracket 4. A swap is a 1-for-1 quality bump that still does the deck's jobs. Ten better cards beat one bomb. A staple he plays is a candidate, not an automatic add.
 
-If `reference_principles` is not in this session, say so and stop. Do not invent the report.
+If `reference_principles` is not in this session, read `src/mtg_mcp/data/library/nero/source.json`, or `get_library()` with `PYTHONPATH=src` from the repo root. Same fallback for `reference_deck`, `reference_compare`, and `reference_cards` (`decks.json` via `get_library()`, not by reading the whole file). Say that you used the files. Do not recite principles from memory.
 
 Get the list as text first. Moxfield has no public API. For an Archidekt URL, `archidekt_get_deck` and use its `decklist`. For one of his decks, `reference_deck` and use its `decklist`.
 
@@ -28,7 +28,8 @@ get_card(commander)                     the bend, in one sentence
 reference_deck(commander)               his plan, if he built this commander
 find_combos                             in the deck, then one card away
 reference_compare(min_decks=3)          his staples this list skips
-simulate_deck                           only if win lines are known
+goldfish skill                          cast-by-turn, or "not simulated"
+mana skill                              only if a color is short
 get_card on every swap                  oracle, identity, Commander legal
 ```
 
@@ -38,10 +39,23 @@ get_card on every swap                  oracle, identity, Commander legal
 4. `reference_deck` for this commander. Use his plan, mulligan, and `notes.win_lines` as the comparison, not as cards to copy blindly.
 5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone.
 6. `reference_compare` with the decklist, `min_decks=3`. Raise `min_decks` for only his real staples. Set `max_price` when the user names a budget. Check each candidate against the deck's jobs.
-7. `simulate_deck` when you have win lines (his notes, or lines you just confirmed). Compare versions. It is not a win rate.
+7. Curve percents come from the goldfish skill. If `simulate_deck` is missing, write "not simulated". Do not invent a percent.
 8. `get_card` before you name any add or cut. `get_card_rulings` if the line depends on timing.
+9. If one color's pips sit well above its land sources, do that pass with the mana skill before you stop. Do not invent a source count.
 
-`edhrec_recommendations` comes after the scorecard, with the decklist passed in, and only to show the cookie-cutter shell this deck should not become. Do not lead with those adds. Do not fill a gap the report does not show.
+## Gaps that are not gaps
+
+`roles.note` says the tags are a heuristic. A low count is not an order to add that role.
+
+- The commander already draws when the plan happens (a counter on your creature draws a card). Add more of that action. Do not add a generic draw spell because `card_draw` looks low.
+- A card that puts counters on each creature is the wipe, even when `board_wipe` is 0.
+- The 20–25 interaction thumb is for a control shell. A combo-tempo list is not that shell.
+- The sideboard is cards they already own. Check it against the jobs before you name a card to buy.
+- No `reference_deck` for this commander: use the engine creature's deck for lines only. A card in that deck which fails this commander's jobs stays out.
+- His flagship price at capture can sit above the ~$100 thumb. Report both. Do not cut the combo piece to hit $100.
+- `no_price_listed` means the total is missing those cards. Say so.
+
+`edhrec_recommendations` comes after the scorecard, with the decklist passed in, and only to show the cookie-cutter shell. Do not lead with those adds. An empty recommendation list means there is nothing to copy.
 
 ## Hand back
 
@@ -53,7 +67,8 @@ Lands:       __ / curve says __
 Interaction: __    (thumb from the tool, if this is a control shell)
 Tutors:      __
 Lines:       in the deck / one card away / pieces that are dead alone
-Curve:       commander cast by the ideal turn, in %   (or "not simulated")
+Curve:       from the goldfish skill, or "not simulated"
+Mana:        pips/sources, or "mana skill not run"
 
 Change:      cut X → add Y, because <one number or one combo>
 Then:        at most four more, each tied to a number
