@@ -1,0 +1,35 @@
+---
+description: Use the mtg-deckbuilder MCP for every card fact, deck list, combo, and upgrade. Never answer Magic questions from memory.
+alwaysApply: true
+---
+
+# Use the MTG deckbuilder MCP
+
+Card text, prices, legality, and EDHREC numbers change. Memory is wrong often enough to matter. Look them up.
+
+The server is `mtg-deckbuilder` (this repo: `mtg-mcp`). If its tools are not in the session, say so and stop. Do not invent the report.
+
+## When a deck shows up
+
+A deck is a paste, a file, or a Moxfield / Archidekt / MTGO link. Get the list as text first (Moxfield has no public API; curl often gets blocked). Then, in this order:
+
+1. `analyze_deck` on the full list. This is the picture: size, colours, curve, lands, roles, gaps, Game Changers, price.
+2. `find_combos` on the same list. Say what is already in the deck, then what is one card away.
+3. `edhrec_recommendations` with the commander **and** the decklist, so cards already in the deck are skipped.
+4. `get_card` or `search_cards` on every card you suggest adding or cutting. `get_card_rulings` if the line of play depends on timing.
+
+Do not name a replacement until step 4 confirms the oracle text, colour identity, and Commander legality.
+
+## How to search
+
+Scryfall syntax, Commander-scoped:
+
+```text
+id<=ubr t:instant o:haste f:commander usd<5
+```
+
+`id<=` is the commander's colours. `f:commander` keeps illegal cards out.
+
+## What to hand back
+
+Lead with the one change that fixes the deck's actual plan. Then at most four more, each tied to a number from `analyze_deck` or a combo from `find_combos`. Skip generic "add ramp and draw" if the report does not show that gap.

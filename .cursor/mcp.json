@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "mtg-deckbuilder": {
+      "command": "/Users/harshal/MTG-Deck-Builder-MCP/.venv/bin/mtg-mcp"
+    }
+  }
+}
