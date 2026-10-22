@@ -22,6 +22,7 @@ from .library import ROLES, decklist_text, deck_label, get_library, library_dir,
 from .moxfield import import_user
 from .principles import principles as build_principles
 from .scryfall import Scryfall, price_usd, summarize_card
+from .skills import fetch_skill, register_prompts, tool_description
 from .spellbook import Spellbook
 
 INSTRUCTIONS = """\
@@ -55,10 +56,22 @@ Tools for Magic: The Gathering questions and deckbuilding.
   identity / price, reference_deck for a full list with its win lines (pass them to simulate_deck),
   reference_card to see how a card was used, and reference_compare to find proven staples a deck is missing.
   Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
+- Deckbuilding skills: call get_skill before building or tuning a deck, then follow what it returns.
+  nero-build when there is a commander and no list. nero-tune when a decklist or a deck link is already here.
+  The same text is available as MCP prompts under those names.
 Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
 """
 
 mcp = FastMCP("mtg-deckbuilder", instructions=INSTRUCTIONS)
+
+
+@mcp.tool(description=tool_description())
+def get_skill(name: str) -> dict[str, Any]:
+    """Load one deckbuilding skill and follow the instructions it returns."""
+    return fetch_skill(name)
+
+
+register_prompts(mcp)
 
 _http: HttpClient | None = None
 

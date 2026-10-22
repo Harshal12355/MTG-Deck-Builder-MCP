@@ -477,6 +477,26 @@ class ReferenceCompareAndImportTests(unittest.TestCase):
                 library.reload_library()
 
 
+class SkillTest(unittest.TestCase):
+    def test_packaged_skills_parse(self):
+        from mtg_mcp.skills import fetch_skill, load_skills
+
+        loaded = load_skills()
+        self.assertEqual(set(loaded), {"nero-build", "nero-tune"})
+        for skill in loaded.values():
+            self.assertIn("reference_principles", skill.instructions)
+            self.assertTrue(skill.description)
+        missing = fetch_skill("ponytail")
+        self.assertIn("error", missing)
+        self.assertEqual(set(missing["skills"]), {"nero-build", "nero-tune"})
+
+    def test_frontmatter_required(self):
+        from mtg_mcp.skills import parse_skill
+
+        with self.assertRaises(ValueError):
+            parse_skill("# no frontmatter\n")
+
+
 class McpProtocolTest(unittest.TestCase):
     """Start the real server over stdio and list its tools."""
 
@@ -492,11 +512,14 @@ class McpProtocolTest(unittest.TestCase):
                 async with ClientSession(r, w) as s:
                     init = await s.initialize()
                     tools = await s.list_tools()
-                    return init, [t.name for t in tools.tools]
+                    prompts = await s.list_prompts()
+                    tune = await s.get_prompt("nero-tune")
+                    return init, [t.name for t in tools.tools], prompts, tune
 
-        init, names = run(go())
+        init, names, prompts, tune = run(go())
         self.assertEqual(init.serverInfo.name, "mtg-deckbuilder")
         self.assertIn("Never answer card text from memory", init.instructions)
+        self.assertIn("get_skill", init.instructions)
         self.assertEqual(
             set(names),
             {"search_cards", "get_card", "get_card_rulings", "get_card_printings", "autocomplete_card_name",
@@ -504,8 +527,11 @@ class McpProtocolTest(unittest.TestCase):
              "edhrec_card", "price_decklist", "deckbuilding_template", "deckbuilding_principles", "simulate_deck",
              "archidekt_search_decks", "archidekt_get_deck", "archidekt_popular_cards",
              "reference_library", "reference_principles", "reference_cards", "reference_card", "reference_deck",
-             "reference_compare", "moxfield_import_user"},
+             "reference_compare", "moxfield_import_user", "get_skill"},
         )
+        self.assertEqual({p.name for p in prompts.prompts}, {"nero-build", "nero-tune"})
+        text = tune.messages[0].content.text
+        self.assertIn("reference_principles", text)
 
 
 if __name__ == "__main__":

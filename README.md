@@ -42,6 +42,7 @@ An MCP server that lets Claude (or any MCP client) help build and tune Magic: Th
 | `reference_deck` | One reference deck: plan, mulligan guide, win lines (ready for `simulate_deck`), key cards, stats and full `decklist` |
 | `reference_compare` | Proven staples in a deck's colour identity that it doesn't play yet, grouped by role |
 | `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, primers) of a Moxfield user as a library source |
+| `get_skill` | Load a deckbuilding skill and follow it. `nero-build` (commander, no list) or `nero-tune` (a list or a link). Same text is also an MCP prompt |
 
 ## Reference library
 

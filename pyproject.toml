@@ -19,3 +19,7 @@ mtg-mcp = "mtg_mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mtg_mcp"]
+
+[tool.hatch.build.targets.wheel.force-include]
+".cursor/skills/nero-build/SKILL.md" = "mtg_mcp/skills/nero-build/SKILL.md"
+".cursor/skills/nero-tune/SKILL.md" = "mtg_mcp/skills/nero-tune/SKILL.md"
