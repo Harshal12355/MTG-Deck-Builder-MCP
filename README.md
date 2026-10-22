@@ -150,7 +150,7 @@ Claude Desktop, without a local Python install. `-i` keeps stdin open so the cli
 HTTP, endpoint `http://localhost:8000/mcp`:
 
 ```bash
-docker run --rm -p 8000:8000 mtg-mcp --http --host 0.0.0.0 --port 8000
+docker run --rm -p 8000:8000 mtg-mcp --http --host 0.0.0.0 --port 8000 --allowed-host mtg.internal:* --allowed-host mtg.internal
 ```
 
 ## Try it
