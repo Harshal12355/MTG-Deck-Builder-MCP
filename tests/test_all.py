@@ -229,6 +229,30 @@ class ToolTests(unittest.TestCase):
         one = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season"]], trials=200, seed=2))
         self.assertGreaterEqual(either, one["win_lines"][0]["assembled_by_turn"]["8"])
 
+    def test_unpaid_rituals_do_not_cast_the_commander(self):
+        # The hand keeps (3 lands) but turn 1 plays one land. Two rituals cost 4,
+        # so neither can be cast. Adding their leftover mana anyway would pretend
+        # a commander that costs 3 is cast.
+        from mtg_mcp.goldfish import SimCard, _play_game
+
+        class _KeepOrder:
+            def shuffle(self, seq):
+                pass
+
+        def library(rituals):
+            cards = [SimCard("Mountain", "land") for _ in range(3)]
+            cards += rituals
+            cards += [SimCard(f"Filler {i}", "other") for i in range(7 - len(cards))]
+            return cards
+
+        too_expensive = SimCard("Big Ritual", "ritual", cmc=4, mana=5)
+        missed = _play_game(library([too_expensive, too_expensive]), _KeepOrder(), 3, 1, True, 0, [])
+        self.assertIsNone(missed["commander_turn"])
+
+        dark_ritual = SimCard("Dark Ritual", "ritual", cmc=1, mana=3)
+        cast = _play_game(library([dark_ritual]), _KeepOrder(), 3, 1, True, 0, [])
+        self.assertEqual(cast["commander_turn"], 1)
+
     def test_analyze_reports_unknown_cards(self):
         r = run(server.analyze_deck("1 Sol Ring\n1 Not A Real Card"))
         self.assertEqual(r["cards_not_found"], ["Not A Real Card"])
@@ -313,6 +337,12 @@ class ArchidektTests(unittest.TestCase):
         self.assertIn("deckFormat=3", call)
         self.assertIn("edhBracket=3", call)
         self.assertIn("colors=Green%2CWhite%2CBlue", call)
+
+    def test_color_letters_with_commas(self):
+        from mtg_mcp.archidekt import color_param
+        self.assertEqual(color_param("w,u"), "White,Blue")
+        self.assertEqual(color_param("gwu"), "Green,White,Blue")
+        self.assertEqual(color_param("White,Blue"), "White,Blue")
 
     def test_search_bad_format(self):
         r = run(server.archidekt_search_decks(format="hearthstone"))
@@ -418,6 +448,10 @@ class ReferenceCompareAndImportTests(unittest.TestCase):
         self.assertIn("Arcane Signet", suggested)
         self.assertNotIn("Sol Ring", suggested)  # already in the deck
         self.assertNotIn("Lightning Bolt", suggested)  # red is outside Atraxa's identity
+
+    def test_compare_needs_a_resolved_commander(self):
+        res = run(server.reference_compare("1 Sol Ring", commanders=["Not A Real Commander"]))
+        self.assertIn("Couldn't look up", res["error"])
 
     def test_moxfield_import_writes_source(self):
         import os

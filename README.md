@@ -122,6 +122,30 @@ claude mcp add mtg-deckbuilder -- mtg-mcp
 mtg-mcp --http --host 0.0.0.0 --port 8000   # serves streamable HTTP at /mcp
 ```
 
+### Docker
+
+The image runs the same `mtg-mcp` command. No extra args means stdio. Pass the HTTP flags to listen on a port.
+
+```bash
+docker build -t mtg-mcp .
+docker run --rm mtg-mcp --help
+```
+
+Claude Desktop, without a local Python install. `-i` keeps stdin open so the client can talk:
+
+```json
+"mtg-deckbuilder": {
+  "command": "docker",
+  "args": ["run", "-i", "--rm", "mtg-mcp"]
+}
+```
+
+HTTP, endpoint `http://localhost:8000/mcp`:
+
+```bash
+docker run --rm -p 8000:8000 mtg-mcp --http --host 0.0.0.0 --port 8000
+```
+
 ## Try it
 
 - "Analyze this deck:" + paste a Moxfield export

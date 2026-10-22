@@ -117,9 +117,6 @@ class Scryfall:
             params["set"] = set_code
         return await self.http.get(f"{BASE}/cards/named", params=params, ttl=CARD_TTL)
 
-    async def by_id(self, card_id: str) -> dict[str, Any]:
-        return await self.http.get(f"{BASE}/cards/{card_id}", ttl=CARD_TTL)
-
     async def rulings(self, card: dict[str, Any]) -> list[dict[str, Any]]:
         url = card.get("rulings_uri") or f"{BASE}/cards/{card['id']}/rulings"
         data = await self.http.get(url, ttl=CARD_TTL)

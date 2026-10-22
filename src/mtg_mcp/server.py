@@ -680,10 +680,16 @@ async def reference_compare(
         deck, cards, not_found = await _resolve_deck(decklist, commanders)
     except ApiError as exc:
         return _error(exc)
-    identity = "".join(sorted({c for e in deck.commanders for c in (cards.get(e.name.lower()) or {}).get("color_identity", [])},
-                              key="WUBRG".index))
     if not deck.commanders:
         return {"error": "Couldn't tell the commander; pass commanders=[...]."}
+    known = []
+    for entry in deck.commanders:
+        card = cards.get(entry.name.lower())
+        if card is None:
+            return {"error": f"Couldn't look up commander {entry.name!r}.", "unresolved_cards": not_found}
+        known.append(card)
+    colors = {c for card in known for c in (card.get("color_identity") or [])}
+    identity = "".join(c for c in "WUBRG" if c in colors)
     names = [(cards.get(e.name.lower()) or {}).get("name", e.name) for e in deck.commanders + deck.main]
     result = lib.compare(names, identity, min_decks=max(1, min_decks), max_price=max_price, limit=limit_per_role)
     result["commanders"] = [e.name for e in deck.commanders]

@@ -175,16 +175,23 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
                 tapped_pending += 1
         available = lands + permanent_mana
         if commander_cmc is not None and commander_turn is None:
-            rituals = [c for c in hand if c.kind == "ritual"]
-            boost = sum(c.mana - c.cmc for c in rituals) if available >= 1 else 0
             if available >= commander_cmc:
                 commander_turn = turn
                 available -= commander_cmc
-            elif available + boost >= commander_cmc:
-                commander_turn = turn
-                for c in rituals:
-                    hand.remove(c)
-                available = 0
+            elif available >= 1:
+                # Pay for cheap rituals one at a time. A ritual you cannot cast adds nothing.
+                pool, paid = available, []
+                for ritual in sorted((c for c in hand if c.kind == "ritual"), key=lambda c: c.cmc):
+                    if pool >= commander_cmc:
+                        break
+                    if ritual.cmc <= pool:
+                        pool = pool - ritual.cmc + ritual.mana
+                        paid.append(ritual)
+                if pool >= commander_cmc:
+                    commander_turn = turn
+                    for ritual in paid:
+                        hand.remove(ritual)
+                    available = 0
         for c in sorted((c for c in hand if c.kind in ("source", "land_ramp")), key=lambda c: c.cmc):
             if c.cmc <= available:
                 hand.remove(c)

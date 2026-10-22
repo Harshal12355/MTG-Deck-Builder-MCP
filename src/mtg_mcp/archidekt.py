@@ -25,11 +25,30 @@ SEARCH_TTL = 6 * 3600
 DECK_TTL = 6 * 3600
 
 FORMATS = {
-    1: "Standard", 2: "Modern", 3: "Commander", 4: "Legacy", 5: "Vintage", 6: "Pauper",
-    7: "Custom", 8: "Frontier", 9: "Future Standard", 10: "Penny Dreadful",
-    11: "1v1 Commander", 12: "Duel Commander", 13: "Brawl", 14: "Oathbreaker",
-    15: "Pioneer", 16: "Historic", 17: "Pauper EDH", 18: "Alchemy", 19: "Explorer",
-    20: "Historic Brawl", 21: "Gladiator", 22: "Premodern", 23: "PreDH", 24: "Timeless",
+    1: "Standard",
+    2: "Modern",
+    3: "Commander",
+    4: "Legacy",
+    5: "Vintage",
+    6: "Pauper",
+    7: "Custom",
+    8: "Frontier",
+    9: "Future Standard",
+    10: "Penny Dreadful",
+    11: "1v1 Commander",
+    12: "Duel Commander",
+    13: "Brawl",
+    14: "Oathbreaker",
+    15: "Pioneer",
+    16: "Historic",
+    17: "Pauper EDH",
+    18: "Alchemy",
+    19: "Explorer",
+    20: "Historic Brawl",
+    21: "Gladiator",
+    22: "Premodern",
+    23: "PreDH",
+    24: "Timeless",
 }
 FORMAT_IDS = {v.lower(): k for k, v in FORMATS.items()}
 FORMAT_IDS.update({"edh": 3, "cedh": 3, "duel": 12})
@@ -75,16 +94,21 @@ def format_id(fmt: str | int | None) -> int | None:
 
 
 def color_param(colors: str | None) -> str | None:
-    """'wub' -> 'White,Blue,Black'. Also accepts 'White,Blue'."""
-    if not colors:
+    """'wub', 'w,u' or 'White,Blue' -> 'White,Blue' (Archidekt's colour names)."""
+    if not colors or not colors.strip():
         return None
-    if "," in colors or len(colors) > 6:
-        return ",".join(c.strip().capitalize() for c in colors.split(",") if c.strip())
+    raw = colors.strip()
+    # A long string or a comma list is names ("White,Blue"). Short text is letters ("wub").
+    tokens = [t.strip() for t in raw.split(",") if t.strip()] if ("," in raw or len(raw) > 6) else list(raw)
     out = []
-    for ch in colors.lower():
-        if ch not in COLOR_NAMES:
-            raise ValueError(f"Unknown colour letter {ch!r}; use letters from WUBRGC.")
-        out.append(COLOR_NAMES[ch])
+    for token in tokens:
+        if len(token) == 1:
+            key = token.lower()
+            if key not in COLOR_NAMES:
+                raise ValueError(f"Unknown colour letter {key!r}; use letters from WUBRGC.")
+            out.append(COLOR_NAMES[key])
+        else:
+            out.append(token[:1].upper() + token[1:])
     return ",".join(dict.fromkeys(out))
 
 

@@ -71,9 +71,6 @@ class ParsedDeck:
     def card_count(self) -> int:
         return sum(e.quantity for e in self.playing)
 
-    def all_names(self) -> list[str]:
-        return [e.name for e in self.commanders + self.main + self.sideboard + self.companion]
-
 
 def _section_for(line: str) -> str | None:
     m = _SECTION_LINE.match(line)
@@ -84,6 +81,12 @@ def _section_for(line: str) -> str | None:
 
 def parse_decklist(text: str, commanders: list[str] | None = None) -> ParsedDeck:
     deck = ParsedDeck()
+    buckets = {
+        "commander": deck.commanders,
+        "sideboard": deck.sideboard,
+        "companion": deck.companion,
+        "maybe": deck.maybe,
+    }
     section = "main"
     saw_any_card = False
     blank_after_cards = False
@@ -151,7 +154,7 @@ def parse_decklist(text: str, commanders: list[str] | None = None) -> ParsedDeck
         if target == "main":
             main_blocks[-1].append(entry)
         else:
-            getattr(deck, {"commander": "commanders"}.get(target, target)).append(entry)
+            buckets[target].append(entry)
         blank_after_cards = False
         saw_any_card = True
 
