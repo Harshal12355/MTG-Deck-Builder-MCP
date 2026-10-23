@@ -2,83 +2,182 @@
 
 [![tests](https://github.com/Harshal12355/MTG-Deck-Builder-MCP/actions/workflows/tests.yml/badge.svg)](https://github.com/Harshal12355/MTG-Deck-Builder-MCP/actions/workflows/tests.yml)
 
-An MCP server that lets Claude (or any MCP client) help build and tune Magic: The Gathering decks with real data instead of memory:
+An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code, or any MCP client build, tune, goldfish, and publish Magic: The Gathering decks with live card data instead of LLM memory.
 
-- **Scryfall**: card search with full Scryfall syntax, card lookup, rulings, printings, prices
-- **Decklists**: paste a list from Moxfield, Arena, Archidekt, MTGO or plain text
-  (alternate printing names such as *Black Panther's Redirection* or *Thrum of the Vestige* are resolved to the real card)
-- **Deck analysis**: legality, mana curve, colour pips vs land sources, card roles (ramp / draw / removal / wipes / tutors…), fit against the deckbuilding template, Game Changers, price
-- **Deckbuilding template**: Commander decks are built and checked against The Command Zone's template, and the player can change any of its numbers (see below)
-- **Commander Spellbook**: combos already in your deck, and combos one card away
-- **EDHREC**: high-synergy and top cards for a commander, by theme or budget, skipping cards you already run
-- **Archidekt**: search public decks by commander, card, owner, colours or bracket, pull any deck's full list, and tally what the most-viewed decks for a commander actually run
+```text
+┌───────────────────┬───────────────────────┬──────────────┬───────────────┬───────────────────┐
+│     Scryfall      │  Commander Spellbook  │    EDHREC    │   Archidekt   │ Reference Library │
+│ Cards • Rulings   │  In-Deck & 1-Card-    │ High-Synergy │ Public Decks  │ NeRo's 28 Tested  │
+│ Printings • Price │  Away Combo Lines     │ & Top Cards  │ & Meta Share  │ ~$100 B4 Lists    │
+└─────────┬─────────┴───────────┬───────────┴──────┬───────┴───────┬───────┴─────────┬─────────┘
+          └─────────────────────┴──────────────────┼───────────────┴─────────────────┘
+                                                   ▼
+                               ┌───────────────────────────────────────┐
+                               │     mtg-deckbuilder MCP (23 Tools)    │
+                               │  + 12 Deckbuilding Skills & Prompts   │
+                               │  + Monte Carlo Goldfish Simulator     │
+                               └───────────────────┬───────────────────┘
+                                                   ▼
+             ┌─────────────────────────────────────┼─────────────────────────────────────┐
+             ▼                                     ▼                                     ▼
+┌─────────────────────────┐           ┌─────────────────────────┐           ┌─────────────────────────┐
+│    1. NeRo School       │           │    2. Defcat School     │           │  3. Moxfield Export     │
+│ • Commander's bend      │           │ • Turn window (1st/2nd  │           │ • Bulk-paste list with  │
+│ • Win line before cards │           │   main vs. their turn)  │           │   #tags on every card   │
+│ • Veggies + double-duty │           │ • MV bar & free-cast    │           │ • Copy-paste Markdown   │
+│ • Pips vs. land sources │           │   fuel (Delve/Pitch)    │           │   primer & mulligans    │
+└─────────────────────────┘           └─────────────────────────┘           └─────────────────────────┘
+```
 
-## Tools
+## Highlights
+
+- **Scryfall**: full Scryfall syntax search, fuzzy card lookup, official Gatherer rulings, cheapest printings, and daily USD prices.
+- **Universal Decklist Parser**: accepts pastes from Moxfield (including printings, foils, `#tags`, and trailing commander blocks), MTG Arena, Archidekt (`[Category]` tags), MTGO, Deckstats (`*CMDR*`), or plain `1 Card Name` lines. Secret Lair and Universes Beyond alternate names (e.g. *Black Panther's Redirection*, *Thrum of the Vestige*) resolve automatically to their oracle card.
+- **Deck Analysis & Custom Templates**: checks format legality (deck size, singleton/copy limits, colour identity, banlist), mana curve, colour pips vs. land sources, heuristic card roles (ramp, draw, removal, counterspells, wipes, tutors, protection, recursion), WotC Game Changers, total USD price, and fit against The Command Zone's template (or custom category targets).
+- **Monte Carlo Goldfish Simulator (`simulate_deck`)**: shuffles and plays out up to 50,000 games with multiplayer Commander free-mulligan rules, untapped/tapped land sequencing, mana dorks (with summoning sickness), mana rocks, rituals, land ramp, and tutors standing in for missing combo pieces.
+- **Commander Spellbook**: finds combos already in your deck, combos you are one card away from, and searches the full Spellbook database.
+- **EDHREC & Archidekt**: fetches high-synergy and top cards by theme or budget (filtering out cards already in your list), searches public Archidekt decks by commander/card/owner/bracket, pulls full categorized decklists, and tallies card inclusion % across top-viewed decks.
+- **Reference Library & Moxfield Importer**: ships with 28 tested ~$100 high-power Bracket 4 / budget cEDH decks from [NeRo (`@_NeRo`)](https://moxfield.com/users/_NeRo), complete with author role tags, capture-time prices, distilled principles, mulligan guides, and win lines. Import or refresh any Moxfield builder with `moxfield_import_user`.
+- **12 Built-in Deckbuilding Skills (`get_skill` & MCP Prompts)**: encodes a complete two-school deckbuilding pass (**NeRo / Budget Bros** + **Defcat**) plus automated **Moxfield `#tag` + Primer** generation.
+
+---
+
+## MCP Tools (23 Tools)
+
+### Cards & Scryfall
 
 | Tool | What it does |
 |---|---|
-| `search_cards` | Scryfall search, e.g. `id<=bg o:"sacrifice" t:creature usd<3 f:commander` |
-| `get_card` | One card by (fuzzy) name, with oracle text, legalities, price and deck roles |
-| `get_card_rulings` | Official rulings for a card |
-| `get_card_printings` | All printings, cheapest first |
-| `autocomplete_card_name` | Real card names for a partial/misspelled name |
-| `random_card` | Random card, optionally filtered |
-| `analyze_deck` | Full deck report (see above) |
-| `price_decklist` | Per-card and total USD price |
-| `deckbuilding_template` | The Commander template to build to, with optional custom numbers and colour-limited Scryfall searches per category |
-| `deckbuilding_principles` | Principles for focused, powerful budget decks: engine commander, win line first, build backwards, average mana value ~2.0, synergy over staples, 29-34 lands, interaction that protects the win. Also a Budget Bros build for greedy high-power Bracket 4 at ~$100: read the commander past the theme, win before synergy, more draw/ramp/interaction than a video list, utility cards that also do the plan, cut blank-this-turn enablers, untapped duals (five colors is fine) |
-| `simulate_deck` | Goldfish a deck thousands of times: keep rate, chance to cast the commander by each turn, and chance each win line is assembled by each turn |
-| `find_combos` | Combos in the deck / one card away (Commander Spellbook) |
-| `search_combos` | Search Commander Spellbook, e.g. `card:"Thassa's Oracle"` |
-| `edhrec_recommendations` | EDHREC suggestions for a commander; pass `decklist` to get only *new* cards |
-| `edhrec_card` | EDHREC data for a single card |
-| `archidekt_search_decks` | Search public Archidekt decks by commander, card, title, owner, format, colours or bracket |
-| `archidekt_get_deck` | One Archidekt deck by id or URL: commanders, category counts, cards by category, price, and a `decklist` for the other tools |
-| `archidekt_popular_cards` | Sample the top Archidekt decks for a commander and report each card's inclusion %; pass `decklist` to see only new cards |
-| `reference_library` | Overview of the reference library: builders and every deck with archetype, lands, average MV and price |
-| `reference_principles` | The reference builders' principles, distilled from their primers, with evidence decks |
-| `reference_cards` | Proven card choices ranked by how many reference decks play them; filter by role, colour identity, price, mana value, theme |
-| `reference_card` | How one card is used across the reference decks (roles, decks, decks considering it) |
-| `reference_deck` | One reference deck: plan, mulligan guide, win lines (ready for `simulate_deck`), key cards, stats and full `decklist` |
-| `reference_compare` | Proven staples in a deck's colour identity that it doesn't play yet, grouped by role |
-| `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, primers) of a Moxfield user as a library source |
-| `get_skill` | Load a deckbuilding skill from `deck_skills/` and follow it. One pass runs both schools: `nero-build`, `nero-read`, `defcat-read`, `nero-lines`, `nero-hunt`, `defcat-turn`, `defcat-fuel` (only with a mana-value bar), `nero-tune`, `nero-mana`, `nero-goldfish`, `moxfield-primer` (tagged list + primer). Same text is also an MCP prompt |
+| `search_cards` | Scryfall search (`query`, `order`, `direction`, `limit`, `detail`), e.g. `id<=bg o:"sacrifice" t:creature usd<3 f:commander` |
+| `get_card` | One card by (fuzzy or exact) name and optional `set_code`, with oracle text, legalities, USD price, and heuristic deck roles |
+| `get_card_rulings` | Official Gatherer/Scryfall rulings for a card, plus oracle text for context |
+| `get_card_printings` | All printings of a card sorted cheapest USD first, with set code, collector number, and foil prices |
+| `autocomplete_card_name` | Up to 20 real card name suggestions for a partial or misspelled name |
+| `random_card` | Random card, optionally restricted by a Scryfall query (e.g. `is:commander id:ur`) |
 
-## Reference library
+### Deck Analysis, Pricing, Principles & Goldfish Simulation
 
-`src/mtg_mcp/data/library/<source>/` holds real, tested decklists from builders worth learning from, with the
-builder's own card tags, card metadata at capture time, and hand-written notes distilled from their primers
-(plan, ideal turn, mulligan guide, win lines, key cards). The first source is
-[NeRo](https://moxfield.com/users/_NeRo): 28 decks, mostly ~$100 high-power Bracket 4 / budget cEDH, captured 2026-10-20.
+| Tool | What it does |
+|---|---|
+| `analyze_deck` | Full deck report: format legality, mana curve, average nonland MV, colour pips vs. land sources, heuristic roles, template comparison, Game Changers, and USD price |
+| `price_decklist` | Quick price check of a decklist: per-card and total USD price sorted most expensive first, plus unpriced cards |
+| `deckbuilding_template` | The Command Zone's Commander template (38 lands, 10 ramp, 12 card advantage, 12 targeted disruption, 6 mass disruption, 30 plan), custom overrides, overlap calculation, and colour-scoped Scryfall queries |
+| `deckbuilding_principles` | Budget Pub Stomper & Budget Bros MTG principles for ~$100 high-power Bracket 4 builds: engine commander, win line first, build backwards from ideal turn, average MV ~2.0, 29–34 lands, veggies before theme, and cutting blank-this-turn enablers |
+| `simulate_deck` | Goldfish a deck 100–50,000 times (`turns`, `trials`, `on_play`, `extra_cards_per_turn`, `seed`): reports 7-card keep rate, commander cast rate by turn, and assembly rate by turn for each win line (`[["Card A", "Card B | Card C"]]`) |
 
-Readable versions for browsing (and for agents without the MCP): [`docs/library/`](docs/library/README.md):
-principles, the full card library by role, and every deck's plan and win lines.
+### Combos (Commander Spellbook)
 
-- Refresh or add a builder: call `moxfield_import_user` (or rerun it later to pick up changes; hand-written notes are kept),
-  then add principles/notes and run `python scripts/build_library_docs.py` to regenerate the markdown.
-- Keep the library outside the package with `MTG_MCP_LIBRARY_DIR=/path/to/library`.
-- Prices in the library are snapshots for the exact printings listed. Re-check with `price_decklist`.
+| Tool | What it does |
+|---|---|
+| `find_combos` | Combos already in a decklist and combos one card away, with step-by-step execution instructions |
+| `search_combos` | Search Commander Spellbook combos by query, e.g. `card:"Thassa's Oracle"`, `result:"infinite mana" id<=bg`, `cards=2` |
 
-## Deckbuilding template
+### EDHREC & Archidekt
 
-Claude builds and tunes Commander decks against The Command Zone's deckbuilding template:
+| Tool | What it does |
+|---|---|
+| `edhrec_recommendations` | EDHREC recommendations for a commander (and optional `partner`), filtered by `theme`, `budget` (`any`/`budget`/`expensive`), or `categories`; pass `decklist` to exclude cards already in the deck |
+| `edhrec_card` | EDHREC profile for a single card: top commanders that play it and high-synergy pairings |
+| `archidekt_search_decks` | Search public Archidekt decks by `commander`, `card`, `name`, `owner`, `format`, `colors`, `exact_colors`, `bracket` (1–5), and `order` (`views`, `newest`, `updated`, `name`) |
+| `archidekt_get_deck` | Fetch one public Archidekt deck by ID or URL: commanders, builder category counts, cards by category, approximate price, and a ready-to-use `decklist` string |
+| `archidekt_popular_cards` | Sample 1–30 top Archidekt decks for a commander (optionally filtered by `bracket`) and compute card inclusion % and most common builder category; pass `decklist` to see only new cards |
+
+### Reference Library & Skills
+
+| Tool | What it does |
+|---|---|
+| `reference_library` | Overview of all reference builders and every deck in the library with archetype, land count, average MV, win-line count, and capture-time price |
+| `reference_principles` | Distilled deckbuilding principles and rules of thumb from the reference builders' primers, with evidence decks |
+| `reference_cards` | Proven cards from the reference library ranked by deck count, price, or MV; filter by `role`, `color_identity`, `min_decks`, `max_price`, `max_mana_value`, `query`, or `theme` |
+| `reference_card` | How a single card is used across the reference library: decks playing it, roles tagged by the builder, commander usage, and decks `considering` it |
+| `reference_deck` | Full reference deck entry by commander, name, or Moxfield ID: plan, ideal turn, mulligan guide, `win_lines` (ready for `simulate_deck`), key cards, stats, and full `decklist` |
+| `reference_compare` | Compare a decklist against the reference library to surface proven staples in its colour identity that it isn't running yet, grouped by role |
+| `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, card metadata, and raw Markdown primers) of a Moxfield user into the reference library |
+| `get_skill` | Load one of the 12 deckbuilding skills from `src/mtg_mcp/deck_skills/` (also exposed as MCP prompts via `prompts/list` and `prompts/get`) |
+
+---
+
+## Deckbuilding Skills & The Two-School Pass
+
+Every build or tune runs **two deckbuilding schools on the same list** via `get_skill` (or MCP prompts):
+
+1. **NeRo / Budget Bros School**: finds the rule the commander bends past its surface EDHREC theme, locks the win condition first (one spell, an edict/effect pile, or overlapping 2–4 card combos where every piece works alone), fills draw/ramp/interaction ("veggies") at higher-than-usual counts, and demands that utility cards do two jobs the turn they are cast.
+2. **Defcat School**: evaluates *when* in the turn each card wants to resolve (first main, second main, or an opponent's turn), checks whether casting one card makes another card better, and—when the commander sets a mana-value bar (e.g. Rashmi, cascade, top-of-library)—pairs cheap alternate-cost high-MV fuel (delve, pitch, evoke, convoke, affinity) with 1–3 MV flash/ETB hits.
+
+```text
+New Commander ("Build a $100 Rowan")           Existing Decklist / Link ("Tune my Vren list")
+                │                                                      │
+                ▼                                                      ▼
+   1. deckbuilding_principles                             1. nero-tune (load decklist text)
+   2. nero-build + reference_deck check                   2. reference_principles(source="nero")
+   3. nero-read  ──► Surface vs. Bend, Trap, Jobs         3. analyze_deck + price_decklist
+   4. defcat-read ─► Turn window & MV Bar (or "none")     4. get_card(commander) + defcat-read
+   5. nero-lines ──► 1 spell / pile / overlapping combos  5. reference_deck + find_combos
+   6. nero-hunt  ──► Veggies first + double-duty cards    6. reference_compare(min_decks=3)
+   7. defcat-turn ─► Rescore keeps for turn timing        7. nero-hunt + defcat-turn (for new adds)
+   8. defcat-fuel ─► High-MV / low-pay fuel (if Bar)      8. nero-goldfish (before vs. after seed)
+   9. nero-mana  ──► Colour pips vs. land sources         9. nero-mana (if a colour is short)
+  10. analyze_deck + price_decklist + find_combos        10. moxfield-primer (on request)
+  11. nero-goldfish (simulate_deck)
+  12. edhrec_recommendations + archidekt_popular_cards
+  13. moxfield-primer (#tags + Markdown primer)
+```
+
+### All 12 Skills (`src/mtg_mcp/deck_skills/`)
+
+| Skill | School | When to use |
+|---|---|---|
+| `nero-build` | NeRo + Defcat | Master build order for a new commander at ~$100 high-power Bracket 4 |
+| `nero-tune` | NeRo + Defcat | Evaluate and tune an existing decklist: one plan-fixing swap first, then at most four more tied to tool numbers |
+| `nero-read` | NeRo | Read a commander past its EDHREC theme: what locks, what mana you still pay, the trap card, win shape, and 3–4 jobs |
+| `nero-lines` | NeRo | Pick the win: one finisher spell, a pile of the same effect, or overlapping 2–4 card combos with no dead pieces |
+| `nero-hunt` | NeRo | Find ~$100 Bracket 4 veggies and double-duty cards; cut 4-mana enablers that do nothing the turn they enter |
+| `nero-mana` | NeRo | Fix colour pips vs. land sources and cut taplands using land counts matched to commander MV and plan |
+| `nero-goldfish` | NeRo | Run `simulate_deck` to test 7-card keep rate, commander cast turn, and win-line assembly by turn |
+| `defcat-build` | Defcat | Second-school pass inside `nero-build`: turn timing, mana-value bar check, and fuel/hit separation |
+| `defcat-read` | Defcat | Read commanders that compare mana value, reveal the top card, or trigger on the first spell each turn |
+| `defcat-turn` | Defcat | Rescore cards for the moment they resolve (1st main, 2nd main, or free on an opponent's turn) |
+| `defcat-fuel` | Defcat | Find high printed-MV spells that cost little mana to pay (delve, pitch, evoke, convoke, affinity) when a bar exists |
+| `moxfield-primer` | Publishing | Tag every card in the final list (`#ramp`, `#draw`, `#combo`, `#land`...) for Moxfield bulk paste and generate a full Markdown primer |
+
+---
+
+## Reference Library
+
+`src/mtg_mcp/data/library/<source>/` stores real, tested decklists with the builder's own card tags, capture-time card metadata, and primer notes (plan, ideal turn, mulligan guide, win lines, key cards).
+
+- **Bundled source**: [NeRo (`@_NeRo` on Moxfield)](https://moxfield.com/users/_NeRo) — 28 decks (mostly ~$100 high-power Bracket 4 / budget cEDH), captured `2026-10-20`.
+- **Canonical roles** (`ROLES`): `ramp`, `draw`, `tutor`, `counter`, `removal`, `wipe`, `protection`, `stax`, `combo`, `recursion`, `untap`, `clone`, `tokens`, `evasion`, `land`.
+- **Browsable Markdown docs**: [`docs/library/`](docs/library/README.md) contains human- and agent-readable [principles](docs/library/nero/PRINCIPLES.md), the full [card library by role](docs/library/nero/CARD_LIBRARY.md), and [every deck's plan and win lines](docs/library/nero/DECKS.md).
+- **Add or refresh a Moxfield builder**: call `moxfield_import_user(username="...")` (hand-written deck notes are preserved), then regenerate the Markdown docs:
+  ```bash
+  python scripts/build_library_docs.py
+  ```
+- **Custom library path**: set `MTG_MCP_LIBRARY_DIR=/path/to/library` to store or load the library outside `src/mtg_mcp/data/library/`.
+- **Price note**: library prices are capture-time snapshots for the exact printings in the builder's list. Always re-check live prices with `price_decklist` and cheapest copies with `get_card_printings`.
+
+---
+
+## Deckbuilding Template
+
+For standard Commander builds, `deckbuilding_template` and `analyze_deck` check lists against The Command Zone's template:
 
 | Category | Default | What counts |
 |---|---|---|
-| Lands | 38 | Land cards |
-| Ramp | 10 | Mana rocks and dorks, land fetch, Treasure, extra land drops |
-| Card advantage | 12 | Draw and other sources of extra cards |
-| Targeted disruption | 12 | Spot removal, counterspells, bounce, edicts |
-| Mass disruption | 6 | Board wipes |
-| Plan | 30 | Cards for the deck's own strategy |
+| `lands` | 38 | Land cards |
+| `ramp` | 10 | Mana rocks and dorks, land fetch, Treasure makers, extra land drops |
+| `card_advantage` | 12 | Draw and impulse-draw sources |
+| `targeted_disruption` | 12 | Spot removal, counterspells, bounce, edicts, fights |
+| `mass_disruption` | 6 | Board wipes and sweepers |
+| `plan` | 30 | Cards advancing the deck's strategy (any nonland card not matching the above) |
 
-The targets add up to 108 for 99 slots, so about 9 cards should fill two roles.
+The targets sum to **108 for 99 slots**, meaning ~9 cards should fill two roles. Any category target can be overridden per call by passing `template={"lands": 34, "ramp": 12}` to `deckbuilding_template` or `analyze_deck`.
 
-To change the numbers, just tell Claude, for example "use 36 lands and 12 ramp". It passes them as `template`, e.g. `{"lands": 36, "ramp": 12}`, to `deckbuilding_template` and `analyze_deck`. The `template` section of `analyze_deck` shows target, actual count and the cards in each category. A card with none of the other roles counts as a plan card.
+---
 
-## Install
+## Install & Client Setup
 
-Requires Python 3.10+.
+Requires **Python 3.10+**.
 
 ```bash
 cd mtg-deckbuilder-mcp
@@ -86,9 +185,38 @@ pip install -e .          # or: uv pip install -e .
 mtg-mcp --help
 ```
 
+### Cursor IDE
+
+This repo includes [`.cursor/mcp.json`](.cursor/mcp.json) and workspace rules in `.cursor/rules/` (`use-mtg-mcp.mdc`, `full-deck-pass.mdc`, `ponytail.mdc`).
+
+To run against the hosted server (default in `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "mtg-deckbuilder": {
+      "url": "https://mcp.swag31415.com/mcp"
+    }
+  }
+}
+```
+
+Or to run locally via stdio in `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mtg-deckbuilder": {
+      "command": "uv",
+      "args": ["--directory", "/absolute/path/to/MTG-Deck-Builder-MCP", "run", "mtg-mcp"]
+    }
+  }
+}
+```
+
 ### Claude Desktop
 
-Settings → Developer → Edit Config, then add:
+Open **Settings → Developer → Edit Config** and add:
 
 ```json
 {
@@ -100,16 +228,18 @@ Settings → Developer → Edit Config, then add:
 }
 ```
 
-If `mtg-mcp` isn't on the PATH Claude Desktop sees, use the full path (`which mtg-mcp`), or with uv:
+If `mtg-mcp` is not on the `PATH` Claude Desktop sees, use the full binary path (`which mtg-mcp`) or `uv`:
 
 ```json
-"mtg-deckbuilder": {
-  "command": "uv",
-  "args": ["--directory", "/absolute/path/to/mtg-deckbuilder-mcp", "run", "mtg-mcp"]
+{
+  "mcpServers": {
+    "mtg-deckbuilder": {
+      "command": "uv",
+      "args": ["--directory", "/absolute/path/to/MTG-Deck-Builder-MCP", "run", "mtg-mcp"]
+    }
+  }
 }
 ```
-
-Restart Claude Desktop fully.
 
 ### Claude Code
 
@@ -117,28 +247,28 @@ Restart Claude Desktop fully.
 claude mcp add mtg-deckbuilder -- mtg-mcp
 ```
 
-### HTTP (for hosting later)
+### Streamable HTTP Server
 
 ```bash
-mtg-mcp --http --host 0.0.0.0 --port 8000   # serves streamable HTTP at /mcp
+mtg-mcp --http --host 0.0.0.0 --port 8000   # serves streamable HTTP at http://0.0.0.0:8000/mcp
 ```
 
-Behind another hostname (Cloudflare, a tunnel), the SDK rejects any Host that is not localhost. Pass each extra name twice: `name:*` matches `name:port`, and the bare name matches what browsers send on port 443.
+When running behind a reverse proxy or tunnel (Cloudflare, nginx, Tailscale), the MCP SDK rejects non-localhost `Host` headers by default. Pass `--allowed-host` twice per hostname (`name:*` for `host:port` and bare `name` for default port 443):
 
 ```bash
-mtg-mcp --http --allowed-host mtg.internal:* --allowed-host mtg.internal
+mtg-mcp --http --host 0.0.0.0 --port 8000 --allowed-host mtg.internal:* --allowed-host mtg.internal
 ```
 
 ### Docker
 
-The image runs the same `mtg-mcp` command. No extra args means stdio. Pass the HTTP flags to listen on a port.
+The `Dockerfile` runs `mtg-mcp` as an unprivileged user (`nobody`). With no arguments it runs over stdio; pass `--http` flags to expose port `8000`:
 
 ```bash
 docker build -t mtg-mcp .
 docker run --rm mtg-mcp --help
 ```
 
-Claude Desktop, without a local Python install. `-i` keeps stdin open so the client can talk:
+**Stdio (Claude Desktop / Cursor without local Python):**
 
 ```json
 "mtg-deckbuilder": {
@@ -147,55 +277,92 @@ Claude Desktop, without a local Python install. `-i` keeps stdin open so the cli
 }
 ```
 
-HTTP, endpoint `http://localhost:8000/mcp`:
+**Streamable HTTP (`http://localhost:8000/mcp`):**
 
 ```bash
 docker run --rm -p 8000:8000 mtg-mcp --http --host 0.0.0.0 --port 8000 --allowed-host mtg.internal:* --allowed-host mtg.internal
 ```
 
-## Try it
+*(Note: because the container runs as `nobody`, mount a writable directory and set `-e MTG_MCP_LIBRARY_DIR=/data/library` if you want to run `moxfield_import_user` inside Docker.)*
 
-- "Analyze this deck:" + paste a Moxfield export
-- "What combos am I one card away from?"
-- "Give me 10 EDHREC high-synergy cards for my Atraxa deck under $5 that I'm not already running."
-- "Find the five most viewed Archidekt decks for Atraxa in bracket 3 and tell me which cards most of them run that I don't."
-- "Find green ramp creatures under $1 legal in Commander."
-- "How does Rhystic Study interact with a player who has no untapped mana?"
+---
+
+## Example Prompts
+
+- *"Build me a $100 Rowan, Scion of War Bracket 4 deck with a Moxfield primer and tagged decklist."*
+- *"Tune this deck the NeRo way:"* + paste a Moxfield export or Archidekt URL.
+- *"What combos am I one card away from in this list?"*
+- *"Simulate this deck 10,000 times with `seed=42` and compare the turn-3 commander cast rate before and after cutting 2 taplands for pain lands."*
+- *"Find the 15 most viewed Archidekt decks for Atraxa in Bracket 3 and show which cards most of them run that I don't."*
+- *"What are NeRo's most-played Dimir interaction and ramp staples under $3?"*
+
+---
 
 ## Tests
 
-Offline (no network needed; all APIs are faked):
+The test suite (`tests/test_all.py`) is 100% offline using deterministic API fakes (`tests/fakes.py`):
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## Notes and limits
+---
 
-- **Scryfall** is used as intended: User-Agent + Accept headers, ~100 ms between requests, batched `/cards/collection` lookups (75 cards per request), and caching. Prices are Scryfall's daily USD prices for the printing it returns (not always the cheapest; use `get_card_printings` for that).
-- **EDHREC has no official API.** This reads the JSON its own website loads, slowly and with a 24 h cache. It may break if EDHREC changes those pages. Ask EDHREC before building a public product on it.
-- **Archidekt has no documented public API either.** This uses the JSON its website loads (deck search and deck pages), at most one request per second with a 6 h cache. Only public decks are visible. `archidekt_popular_cards` makes one request per sampled deck, so 15 decks takes about 15 seconds.
-- **Moxfield has no public API**, so decks come in by paste/export rather than URL.
-- **Role tagging** is a regex heuristic over oracle text: good for spotting gaps, not perfect.
-- Wizards' Fan Content Policy and Scryfall's terms: keep anything built on this free to use, and don't imply endorsement.
+## Notes, Caching & Rate Limits
 
-## Layout
+| Upstream Source | Min Request Interval | Cache TTL | Notes |
+|---|---|---|---|
+| **Scryfall** (`api.scryfall.com`) | `100 ms` | `1–24 h` | Uses `/cards/collection` in batches of 75 cards. Prices are daily TCGplayer USD market prices for the returned printing. |
+| **Commander Spellbook** (`backend.commanderspellbook.com`) | `250 ms` | `6–12 h` | Official combo search and deck combo detection API. |
+| **EDHREC** (`json.edhrec.com`) | `500 ms` | `24 h` | Unofficial JSON endpoints loaded by EDHREC's web pages. Best-effort; may change if EDHREC updates its frontend. |
+| **Archidekt** (`archidekt.com`) | `1.0 s` | `6 h` | Unofficial JSON endpoints for public deck search and deck pages. `archidekt_popular_cards` fetches 1 request per sampled deck (~15s for 15 decks). |
+| **Moxfield** (`api2.moxfield.com`) | `1.0 s` | — | Unofficial API used by `moxfield_import_user` (~2 requests per deck). Often blocked by Cloudflare on datacenter IPs; paste decklists directly when blocked. |
 
-```
+- **Role tagging** in `analysis.py` is a regex heuristic over oracle text—great for spotting structural gaps, always verified with `get_card` during the skill pass.
+- **Fan Content Policy**: follows Wizards of the Coast's Fan Content Policy and Scryfall's API terms. Keep projects built on this free and do not imply official endorsement.
+
+---
+
+## Roadmap
+
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the upcoming 10-phase plan:
+
+1. **Part 1 (Phases 1–5 — Foundation & Moxfield Loop)**: `captured_at` provenance on library tools, one-call `moxfield_get_deck`, deterministic `tag_decklist`, persistent SQLite HTTP cache (`~/.cache/mtg-mcp/http_cache.sqlite3`), and golden-deck CI regression evals.
+2. **Part 2 (Phase 6 — Speed & Richer Reports)**: per-card cache inside `Scryfall.collection()`, parallel host calls via `asyncio.gather`, automatic WotC Bracket 1–5 estimation in `analyze_deck`, and EUR + cheapest-printing budget swap finder in `price_decklist`.
+3. **Part 3 (Phases 7–10 — EDHcheck Tool Suite)**: `analyze_mana_base` (exact `math.comb` hypergeometric on-curve cast rates & land cycle classification), `search_lands`, color-aware goldfish + custom `mulligan_targets`, `compare_decks` (A/B deck diff), `check_pod` (4-deck Rule 0 pod checker), and `find_tokens`.
+
+---
+
+## Repository Layout
+
+```text
 src/mtg_mcp/
-  server.py     MCP tools + entry point
-  http.py       rate-limited, cached HTTP client
-  scryfall.py   Scryfall API
-  decklist.py   decklist parser
-  analysis.py   deck analysis + role heuristics
-  spellbook.py  Commander Spellbook
-  edhrec.py     EDHREC (unofficial)
-  archidekt.py  Archidekt deck search and deck lists (unofficial)
-  library.py    reference library loader and queries
-  moxfield.py   Moxfield user importer (unofficial)
-  deck_skills/  one folder per deckbuilding skill (SKILL.md)
-  data/library/ reference library sources (decks, cards, principles, notes)
-scripts/build_library_docs.py   regenerate docs/library/ markdown
-docs/library/   readable principles, card library and deck notes
-tests/          offline tests with faked APIs
+  __init__.py         package version
+  server.py           FastMCP server, 23 MCP tools, CLI entry point (--http / stdio)
+  http.py             per-host rate-limited, retrying async HTTP client + in-memory TTLCache
+  scryfall.py         Scryfall API client (search, named, collection batches, rulings, printings)
+  decklist.py         multi-format decklist parser (Moxfield, Arena, Archidekt, MTGO, plain text)
+  analysis.py         legality, mana curve, pips vs. sources, role heuristics, template report
+  goldfish.py         Monte Carlo goldfish simulator (mulligans, mana sources, rituals, tutors, win lines)
+  principles.py       Budget Pub Stomper & Budget Bros MTG ~$100 Bracket 4 deckbuilding principles
+  skills.py           SKILL.md frontmatter parser, get_skill loader, and MCP prompt registration
+  spellbook.py        Commander Spellbook API client (find_my_combos, search)
+  edhrec.py           EDHREC client (commander recommendations, themes, budget, single-card stats)
+  archidekt.py        Archidekt client (deck search, full deck summary, popular cards across top decks)
+  library.py          reference library loader, role normalizer, card/deck search, staple comparison
+  moxfield.py         Moxfield user importer for reference library sources
+  deck_skills/        12 deckbuilding skills (nero-*, defcat-*, moxfield-primer)
+  data/library/       bundled reference library data (nero/source.json, decks.json, cards.json)
+scripts/
+  build_library_docs.py   regenerate docs/library/ Markdown files from src/mtg_mcp/data/library/
+docs/
+  ROADMAP.md          10-phase architecture, performance, and EDHcheck tool suite roadmap
+  library/            browsable Markdown reference library (PRINCIPLES.md, CARD_LIBRARY.md, DECKS.md)
+.cursor/
+  mcp.json            Cursor MCP server config
+  rules/              Cursor workspace rules (full-deck-pass.mdc, use-mtg-mcp.mdc, ponytail.mdc)
+  skills/             Ponytail engineering workflow skills
+tests/
+  fakes.py            deterministic offline HTTP fakes for Scryfall, Spellbook, EDHREC, Archidekt, Moxfield
+  test_all.py         offline unit and integration test suite
 ```
