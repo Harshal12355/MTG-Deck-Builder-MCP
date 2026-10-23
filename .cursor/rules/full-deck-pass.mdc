@@ -21,12 +21,15 @@ Every build runs both schools on the same list. NeRo picks the bend, the win, an
 6. `get_skill("nero-mana")` on the finished list.
 7. `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")`. Re-price before telling anyone to buy.
 8. After the list exists: `edhrec_recommendations` with `budget="budget"`, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list.
+9. `get_skill("moxfield-primer")`. Tagged decklist for Moxfield bulk paste plus markdown primer (plan, mulligan, lines, key cards). Skip only if the user said they do not want a primer or tags.
 
 ## Evaluate a list
 
 Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck`, `price_decklist`, `get_card`, `reference_deck`, `find_combos`, `reference_compare`, the goldfish skill, and the mana skill when one color's pips sit well above its sources. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real.
 
 `get_card` before you name an add or a cut. `get_card_rulings` if the line depends on timing. `get_card_printings` before telling anyone which copy to buy.
+
+When the user wants to publish or copy into Moxfield after a tune, run `get_skill("moxfield-primer")` on the updated list.
 
 ## Use the tool that owns the fact
 

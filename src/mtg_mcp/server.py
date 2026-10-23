@@ -66,6 +66,7 @@ Tools for Magic: The Gathering questions and deckbuilding.
   defcat-turn rescores those cards for when in the turn they want to resolve.
   defcat-fuel only when defcat-read finds a mana-value bar (Rashmi, cascade, the first spell each turn).
   nero-mana for a mana-base pass. nero-goldfish calls simulate_deck. Do not stop a build or a tune before it, or before analyze_deck, price_decklist, and find_combos.
+  moxfield-primer after the list is final: Moxfield `#tags` on every card plus a markdown primer to paste.
   The same text is available as MCP prompts under those names.
 Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
 """

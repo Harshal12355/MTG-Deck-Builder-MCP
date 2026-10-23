@@ -489,7 +489,7 @@ class SkillTest(unittest.TestCase):
 
         loaded = load_skills()
         names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
-                 "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn"}
+                 "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn", "moxfield-primer"}
         self.assertEqual(set(loaded), names)
         for skill in loaded.values():
             self.assertTrue(skill.description)
@@ -508,6 +508,8 @@ class SkillTest(unittest.TestCase):
         self.assertIn("Treasure Cruise", loaded["defcat-fuel"].instructions)
         self.assertIn("Leyline of Anticipation", loaded["defcat-turn"].instructions)
         self.assertIn("defcat-fuel", loaded["defcat-build"].instructions)
+        self.assertIn("#land", loaded["moxfield-primer"].instructions)
+        self.assertIn("analyze_deck", loaded["moxfield-primer"].instructions)
         missing = fetch_skill("ponytail")
         self.assertIn("error", missing)
         self.assertEqual(set(missing["skills"]), names)
@@ -554,7 +556,7 @@ class McpProtocolTest(unittest.TestCase):
         self.assertEqual(
             {p.name for p in prompts.prompts},
             {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
-             "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn"},
+             "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn", "moxfield-primer"},
         )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)

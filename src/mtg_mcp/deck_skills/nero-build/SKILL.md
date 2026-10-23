@@ -37,6 +37,7 @@ reference_deck(commander)               his list, if he already built it
          analyze_deck + price_decklist + find_combos
          get_skill nero-goldfish        calls simulate_deck
          edhrec_recommendations + archidekt_popular_cards
+         get_skill moxfield-primer          tagged list + markdown primer
 ```
 
 1. `reference_principles(source="nero")`. Grade the list against what the tool returns. Do not recite principles from memory.
@@ -50,6 +51,7 @@ reference_deck(commander)               his list, if he already built it
 8. Lands last, then `get_skill("nero-mana")` on the finished list. Count follows the plan (dork turbo vs landfall), not 38.
 9. `analyze_deck`, `price_decklist`, `find_combos`, then `get_skill("nero-goldfish")`. That skill calls `simulate_deck`. Copy its hand-back into Curve. Do not invent a percent. If `simulate_deck` is missing, write "not simulated".
 10. `edhrec_recommendations` with `budget="budget"` and the decklist, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list. `get_card_printings` before naming a printing to buy. `price_decklist` again before telling anyone to buy. Default budget is about $100 for the deck.
+11. `get_skill("moxfield-primer")` unless the user said they do not want a primer or Moxfield tags. That skill owns the tagged list and the copy-paste primer.
 
 `deckbuilding_template` is the wrong ruler here. Land count, interaction, and tutors come from `reference_principles` rules of thumb and from `analyze_deck`. `edhrec_recommendations` is a check for the cookie-cutter shell, not the shopping list. Call it with `budget="budget"` only after the list exists, and only to see what everyone else plays.
 
@@ -69,9 +71,10 @@ Lines:    <2–4 overlapping lines; which pieces are dead alone>
 Curve:    nero-goldfish block (kept 7, cast by ideal turn, each line)
 
 List:     plain `1 Card Name` lines, commander first
+Moxfield: moxfield-primer blocks (tagged list + markdown), when step 11 ran
 ```
 
-Lead with the bend, the turn, and the bar. Then the list. Then at most four cuts you almost made, each tied to a job or a number from the tools.
+Lead with the bend, the turn, and the bar. Then the list (or the Moxfield tagged list if step 11 ran). Then at most four cuts you almost made, each tied to a job or a number from the tools. Put the full primer after the list when step 11 ran.
 
 ## Example
 
