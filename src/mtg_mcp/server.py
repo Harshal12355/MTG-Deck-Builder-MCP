@@ -45,7 +45,8 @@ Tools for Magic: The Gathering questions and deckbuilding.
   near or below 2.0, synergy over staples, 29-34 lands rather than a rigid template, and interaction
   that protects your own win first. Its build_process gives the order to build in: analyze what the
   commander really enables, choose the win condition, fill ramp/draw/interaction at higher-than-usual
-  counts, then pick synergistic cards for every slot. Don't copy EDHREC lists wholesale.
+  counts, then pick synergistic cards for every slot. Cut the enabler that does nothing the turn you cast it.
+  Don't copy EDHREC lists wholesale.
 - To test how a deck plays, call simulate_deck with its win lines (groups of card names). Compare runs
   before and after changes rather than reading the numbers as win rates.
 - Real decks people have built: archidekt_search_decks (by commander, card, name, owner, colours, bracket),
@@ -59,6 +60,8 @@ Tools for Magic: The Gathering questions and deckbuilding.
   Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
 - Deckbuilding skills: call get_skill and follow what it returns.
   nero-build when there is a commander and no list. nero-tune when a decklist or a link is already here.
+  nero-read before naming cards. nero-lines for the win (one spell, a pile, or overlapping combos).
+  nero-hunt for draw, ramp, interaction, then cards that also do the plan.
   nero-mana for a mana-base pass. nero-goldfish for speed, mulligans, or a curve check.
   The same text is available as MCP prompts under those names.
 Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
@@ -293,9 +296,11 @@ async def deckbuilding_principles() -> dict[str, Any]:
 
     Engine commander, win line first, build backwards from the ideal turn, average mana value near 2.0,
     synergy over staples, 29-34 lands instead of a rigid template, interaction that protects the win.
-    Also returns `build_process` (Budget Bros MTG): analyze the commander beyond its surface theme,
-    start with the win condition, fill ramp/draw/interaction at higher-than-usual counts, make every
-    utility card synergistic, avoid cookie-cutter EDHREC lists, and use untapped budget dual lands.
+    Also returns `build_process` (Budget Bros MTG) for a greedy high-power Bracket 4 list at ~$100:
+    read the commander past the theme (what locks, which mana you still pay), pick the win before synergy,
+    fill draw/ramp/interaction above a normal video list, then utility cards that also do the plan.
+    Cut the 4-mana enabler that does nothing the turn you cast it. Five colors is allowed.
+    Search with get_skill: nero-read, nero-lines, nero-hunt.
     Use with deckbuilding_template and analyze_deck when building or tuning a deck.
     """
     return build_principles()

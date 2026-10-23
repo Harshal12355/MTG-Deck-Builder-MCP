@@ -37,7 +37,7 @@ get_card on every swap                  oracle, identity, Commander legal
 2. `analyze_deck` on the full list. Pass `commanders` if the list does not mark them. `price_decklist` for the real total. The ~$100 cap is the deck, not a per-card cap.
 3. `get_card` on the commander. One sentence: the rule it breaks. If the list is built around the surface theme (Rat tribal for Vren, landfall tokens for Tannuk), that is the first cut.
 4. `reference_deck` for this commander. Use his plan, mulligan, and `notes.win_lines` as the comparison, not as cards to copy blindly.
-5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone.
+5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone. A new card uses `get_skill("nero-hunt")`. A new line uses `get_skill("nero-lines")`. An enabler that does nothing the turn it enters is a cut, even when EDHREC likes it.
 6. `reference_compare` with the decklist, `min_decks=3`. Raise `min_decks` for only his real staples. Set `max_price` when the user names a budget. Check each candidate against the deck's jobs.
 7. Curve percents come from the goldfish skill. If `simulate_deck` is missing, write "not simulated". Do not invent a percent.
 8. `get_card` before you name any add or cut. `get_card_rulings` if the line depends on timing.

@@ -26,7 +26,7 @@ An MCP server that lets Claude (or any MCP client) help build and tune Magic: Th
 | `analyze_deck` | Full deck report (see above) |
 | `price_decklist` | Per-card and total USD price |
 | `deckbuilding_template` | The Commander template to build to, with optional custom numbers and colour-limited Scryfall searches per category |
-| `deckbuilding_principles` | Principles for focused, powerful budget decks: engine commander, win line first, build backwards, average mana value ~2.0, synergy over staples, 29-34 lands, interaction that protects the win. Also a step-by-step build process (Budget Bros MTG): analyze the commander, win condition first, more ramp/draw/interaction than usual, synergy in every slot, no cookie-cutter lists, untapped budget duals |
+| `deckbuilding_principles` | Principles for focused, powerful budget decks: engine commander, win line first, build backwards, average mana value ~2.0, synergy over staples, 29-34 lands, interaction that protects the win. Also a Budget Bros build for greedy high-power Bracket 4 at ~$100: read the commander past the theme, win before synergy, more draw/ramp/interaction than a video list, utility cards that also do the plan, cut blank-this-turn enablers, untapped duals (five colors is fine) |
 | `simulate_deck` | Goldfish a deck thousands of times: keep rate, chance to cast the commander by each turn, and chance each win line is assembled by each turn |
 | `find_combos` | Combos in the deck / one card away (Commander Spellbook) |
 | `search_combos` | Search Commander Spellbook, e.g. `card:"Thassa's Oracle"` |
@@ -42,7 +42,7 @@ An MCP server that lets Claude (or any MCP client) help build and tune Magic: Th
 | `reference_deck` | One reference deck: plan, mulligan guide, win lines (ready for `simulate_deck`), key cards, stats and full `decklist` |
 | `reference_compare` | Proven staples in a deck's colour identity that it doesn't play yet, grouped by role |
 | `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, primers) of a Moxfield user as a library source |
-| `get_skill` | Load a deckbuilding skill from `deck_skills/` and follow it. `nero-build`, `nero-tune`, `nero-mana`, `nero-goldfish`. Same text is also an MCP prompt |
+| `get_skill` | Load a deckbuilding skill from `deck_skills/` and follow it. `nero-build`, `nero-read`, `nero-lines`, `nero-hunt`, `nero-tune`, `nero-mana`, `nero-goldfish`. Same text is also an MCP prompt |
 
 ## Reference library
 

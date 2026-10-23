@@ -14,50 +14,90 @@ SOURCE = "Budget Pub Stomper, '(Budget Commander) Build Broken Decks on a Budget
 
 BUILD_PROCESS_SOURCE = "Budget Bros MTG, framework for high-power ~$100 Commander decks (YouTube, 2026)"
 
+# The table this process is building for. Bracket 4 is greedy about its own plan.
+# cEDH spends slots answering a meta. ~$100 sits at the Bracket 4 table.
+BUILD_PROCESS_FRAME: dict[str, str] = {
+    "table": "high-power Bracket 4",
+    "budget": "~$100",
+    "guidance": "Bracket 4 spends its slots on the deck's own plan. cEDH spends slots answering a known meta. "
+                "Build the ~$100 list for the Bracket 4 table. It will not have Rhystic Study, a free counter, "
+                "or a Mox, and it will not cast a 3 or 4 mana commander on turn 1. That is not a power cut "
+                "when the plan does not need those cards.",
+}
+
 # Step-by-step process from Budget Bros MTG, as summarised by the player.
 # It complements the principles above: the principles say what a strong
 # budget deck looks like, the process says in which order to build it.
+# `test` is the check that step has to pass before the next one starts.
 BUILD_PROCESS: list[dict[str, Any]] = [
     {
         "step": 1,
         "key": "analyze_commander",
         "title": "Analyze the commander beyond its surface theme",
-        "guidance": "Read what the commander actually enables, not the obvious theme. Example: Rowan, Scion of War "
-                    "can be a storm-style deck, not just a big X-spell deck. Name the engine the commander really is.",
+        "guidance": "Read the ability that is not the obvious theme, then the ruling that decides the sequence. "
+                    "Rowan, Scion of War looks like big X spells. She discounts every black and/or red spell you "
+                    "cast this turn by the life you lost this turn, and only as a sorcery. X locks when the "
+                    "ability resolves, and only generic mana is reduced. Lose 3 or 4 life first, then activate. "
+                    "Big Score ({3}{R}) then costs {R} and still makes two Treasures.",
+        "test": "Name the surface theme and the line it hides, including what locks and which mana you still pay. "
+                "Phyrexian Arena loses 1 life at the next upkeep. That counts, and it is not the storm turn. "
+                "Life you lose after the ability resolves does not raise the discount.",
     },
     {
         "step": 2,
         "key": "win_condition_first",
         "title": "Start with the win condition",
-        "guidance": "Pick how the deck wins first, then work backwards to the pieces it needs: the combo or "
-                    "finisher, the cards that enable it, and the cards that find it.",
+        "guidance": "Pick the win, then the cards that make that win castable. Do not add synergy in this step. "
+                    "The win is not always a combo. Rowan wins with one black/red finisher once the generic cost "
+                    "is gone (Torment of Hailfire is the video's finisher). Vren wins by having enough edicts "
+                    "that each end step makes the most Rats.",
+        "test": "One sentence: the card, or the pile of the same effect, that ends the game.",
     },
     {
         "step": 3,
         "key": "fill_the_veggies",
         "title": "Fill the 'veggies' at higher counts than usual",
-        "guidance": "Ramp, card draw and interaction (removal and counterspells) come next. Run more of them "
-                    "than typical decklists do: consistency comes from these, not from expensive bombs.",
+        "guidance": "Card draw, mana, and interaction come before any card that is only the theme. Run more of "
+                    "them than a typical video list. The best card in the format dies to one cheap answer. "
+                    "The win attempt does not matter if the deck cannot play up to that turn.",
+        "test": "Draw, ramp, and interaction are in the list. A theme-only card is not.",
     },
     {
         "step": 4,
         "key": "synergy_in_every_slot",
         "title": "Make utility cards synergistic",
-        "guidance": "Prefer cards that fill a role and also advance the theme. Example: Lofty Denial in a "
-                    "flying-heavy deck is efficient counter-magic that also rewards the plan.",
+        "guidance": "A counter, a removal spell, and a draw spell should each also be the plan. In a deck that "
+                    "already wants fliers, Lofty Denial replaces Counterspell: one blue pip, tax {1}, or tax {4} "
+                    "if you control a flyer. A type card can be right when the deck is not that type. Naban, Dean "
+                    "of Iteration doubles a Wizard's own enter-the-battlefield trigger. Kefka, Court Mage is not "
+                    "a Wizard deck, and Kefka and Dualcaster Mage are Wizards, so Dualcaster's copy trigger "
+                    "happens twice.",
+        "test": "Each utility card does its job and one of the commander's jobs. A 4-mana enabler that is blank "
+                "the turn you cast it is out, even if you can afford it. Mondrak, Glory Dominus is that card: "
+                "tokens you make later are doubled, and the turn you play it nothing happens.",
     },
 ]
 
 BUILD_PROCESS_INSIGHTS: list[dict[str, str]] = [
     {
         "key": "avoid_cookie_cutter",
-        "guidance": "Don't copy EDHREC averages wholesale. High-cost 'enabler' cards that appear in many lists "
-                    "often do too little on the turn they are played. Judge each card by its impact that turn.",
+        "guidance": "Don't copy EDHREC averages wholesale. High inclusion is how a do-nothing enabler gets into the list. "
+                    "Judge the card by what it does the turn you cast it.",
+    },
+    {
+        "key": "nothing_this_turn",
+        "guidance": "Cut the enabler that is blank the turn it enters. Mondrak, Glory Dominus is the picture: 4 mana, "
+                    "doubles tokens you make later. Re-check the price with get_card. Out even when you can afford it.",
+    },
+    {
+        "key": "missing_fast_mana",
+        "guidance": "Do not spend slots imitating cards the budget cannot buy. No Rhystic Study, no free counter, no Mox. "
+                    "Build the turn the deck can actually take.",
     },
     {
         "key": "budget_mana_bases",
-        "guidance": "Modern budget lands (pathways, slow lands, fast lands and similar untapped duals) make "
-                    "consistent multicolour mana possible for ~$100. Prefer them over taplands.",
+        "guidance": "Untapped multicolor lands are cheap enough that five colors is a real ~$100 deck. Pathways, fast "
+                    "lands, slow lands, pain lands. Prefer them over taplands. Color count is a choice.",
     },
 ]
 
@@ -115,18 +155,19 @@ def principles() -> dict[str, Any]:
         "principles": PRINCIPLES,
         "build_process": {
             "source": BUILD_PROCESS_SOURCE,
+            "frame": BUILD_PROCESS_FRAME,
             "steps": BUILD_PROCESS,
             "insights": BUILD_PROCESS_INSIGHTS,
         },
         "how_to_use": [
-            "Follow build_process in order: analyze the commander, pick the win condition, fill ramp/draw/interaction "
-            "at higher-than-usual counts, then choose synergistic cards for every slot.",
-            "State the commander's role and the exact win line before suggesting cards.",
-            "Work backwards from the ideal turn; check every card against that plan.",
+            "Call get_skill in order when building a ~$100 list: nero-read, nero-lines, nero-hunt. nero-build is the order around them.",
+            "Follow build_process in order. Draw, ramp, and interaction are in the list before a card that is only the theme.",
+            "State the commander's bend, including what locks and which mana you still pay, before suggesting cards.",
+            "Work backwards from the win. A win can be one spell or a pile of the same effect. It does not have to be a combo.",
             "Pass a template with 29-34 lands to deckbuilding_template / analyze_deck when building to these principles, "
             "and check analyze_deck's average_cmc_nonland against the ~2.0 target.",
             "Count interaction by whether it protects the win, not only by raw removal numbers.",
-            "Use EDHREC and Archidekt data as a starting pool, not a list to copy; cut expensive enablers that do "
-            "little the turn they land, and prefer untapped budget duals over taplands.",
+            "Use EDHREC after candidates exist, to see the cookie-cutter shell. Cut the enabler that does nothing the "
+            "turn it enters. Prefer untapped budget duals over taplands. Five colors is allowed at ~$100.",
         ],
     }

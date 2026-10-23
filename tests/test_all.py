@@ -204,7 +204,13 @@ class ToolTests(unittest.TestCase):
         self.assertEqual([st["key"] for st in process["steps"]],
                          ["analyze_commander", "win_condition_first", "fill_the_veggies", "synergy_in_every_slot"])
         self.assertEqual([st["step"] for st in process["steps"]], [1, 2, 3, 4])
-        self.assertEqual({i["key"] for i in process["insights"]}, {"avoid_cookie_cutter", "budget_mana_bases"})
+        self.assertTrue(all(st.get("test") for st in process["steps"]))
+        self.assertEqual(process["frame"]["table"], "high-power Bracket 4")
+        self.assertEqual(process["frame"]["budget"], "~$100")
+        self.assertIn("Mondrak", process["steps"][3]["test"])
+        self.assertEqual({i["key"] for i in process["insights"]},
+                         {"avoid_cookie_cutter", "budget_mana_bases", "nothing_this_turn", "missing_fast_mana"})
+        self.assertIn("nero-read", " ".join(r["how_to_use"]))
 
     def test_simulate_deck_tool(self):
         r = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season", "Cultivate"], ["Not In Deck"]],
@@ -482,14 +488,19 @@ class SkillTest(unittest.TestCase):
         from mtg_mcp.skills import fetch_skill, load_skills
 
         loaded = load_skills()
-        self.assertEqual(set(loaded), {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"})
+        names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt"}
+        self.assertEqual(set(loaded), names)
         for skill in loaded.values():
             self.assertTrue(skill.description)
             self.assertTrue(skill.instructions)
         self.assertIn("reference_principles", loaded["nero-tune"].instructions)
+        self.assertIn("nero-read", loaded["nero-build"].instructions)
+        self.assertIn("get_card_rulings", loaded["nero-read"].instructions)
+        self.assertIn("search_combos", loaded["nero-lines"].instructions)
+        self.assertIn("Lofty Denial", loaded["nero-hunt"].instructions)
         missing = fetch_skill("ponytail")
         self.assertIn("error", missing)
-        self.assertEqual(set(missing["skills"]), {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"})
+        self.assertEqual(set(missing["skills"]), names)
 
     def test_frontmatter_required(self):
         from mtg_mcp.skills import parse_skill
@@ -532,7 +543,7 @@ class McpProtocolTest(unittest.TestCase):
         )
         self.assertEqual(
             {p.name for p in prompts.prompts},
-            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish"},
+            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt"},
         )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)

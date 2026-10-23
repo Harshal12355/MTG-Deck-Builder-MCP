@@ -27,18 +27,18 @@ reference_deck(commander)               his list, if he already built it
     +-- yes --> start from that decklist. Do not rebuild it.
     |
     +-- no
-         search_combos                   overlapping lines, pieces good alone
-         reference_cards                 his cards in these colours
-         get_card on every add           oracle, identity, Commander legal
+         get_skill nero-read             bend, trap, jobs, win shape
+         get_skill nero-lines            lines, or "no combo package"
+         get_skill nero-hunt             veggies first, then double-duty cards
          analyze_deck + price_decklist + find_combos + simulate_deck
 ```
 
 1. `reference_principles(source="nero")`. Grade the list against what the tool returns. Do not recite principles from memory.
 2. `get_card` on the commander. Write the rule it breaks in one sentence. Vren is a removal deck that makes Rats. If you cannot name the bend, stop and say so.
 3. `reference_deck` with the commander name. A hit means start from his `decklist` and his `notes.win_lines`. Say which deck. Then switch to the tune skill's scorecard on that list.
-4. No hit: write 3–4 jobs a card must do for this commander. A card that does none is out. A card that does two is in.
-5. `search_combos` for overlapping 2–4 card lines. Every piece must be good alone. Most lines should work without the commander. Do not make Thoracle / Breach the plan unless the user asked for that budget.
-6. `reference_cards` with `color_identity` set, `min_decks=3`, `sort="decks"`. Pull interaction, ramp, draw, protection, stax, tutors. `max_mana_value=3` unless the bend needs a bigger card. These are candidates. Check each one against the jobs.
+4. No hit: `get_skill("nero-read")`. Its jobs and win shape are the test for every later card. If you cannot name the bend, stop.
+5. `get_skill("nero-lines")` before any synergy card. A one-spell or edict-pile win does not get a combo package.
+6. `get_skill("nero-hunt")`. Draw, ramp, and interaction first. Then cards that do a job and the plan. `reference_cards` is inside that skill.
 7. `get_card` (and `get_card_rulings` if the line depends on timing) before a card is in the list. `f:commander` and `id<=` the commander's colours on every `search_cards`.
 8. Lands last, then the mana skill on the finished list. Count follows the plan (dork turbo vs landfall), not 38.
 9. `analyze_deck`, `price_decklist`, `find_combos`, then the goldfish skill with the win lines. Default budget is about $100 for the deck. Re-price before telling anyone to buy. If `simulate_deck` is missing, write "not simulated".
