@@ -31,7 +31,7 @@ The session agent (you) must gather all git context BEFORE spawning the review a
 Run this single command to collect everything the review agent needs:
 
 ```bash
-BASE=$(git log --oneline HEAD ^master --grep="Merge branch 'master'" | head -1 | cut -d' ' -f1); if [ -z "$BASE" ]; then BASE=$(git merge-base master HEAD); fi; echo "=== BASE: $BASE ===" && echo "=== BRANCH: $(git branch --show-current) ===" && echo "=== CHANGED FILES ===" && git diff --name-only ${BASE}..HEAD && echo "=== DIFF ===" && git diff ${BASE}..HEAD
+BASE=$(git merge-base origin/master HEAD); echo "=== BASE: $BASE ===" && echo "=== BRANCH: $(git branch --show-current) ===" && echo "=== CHANGED FILES ===" && git diff --name-only ${BASE}..HEAD && echo "=== DIFF ===" && git diff ${BASE}..HEAD
 ```
 
 Then pass the output (changed file list + diff) directly into the review agent's prompt. The review agent should NOT need to run any git commands.

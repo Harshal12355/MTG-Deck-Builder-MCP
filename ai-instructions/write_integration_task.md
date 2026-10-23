@@ -57,16 +57,16 @@ Ask the user for:
    - `VESON_VOYAGE_INSTRUCTIONS` = `"veson-voyage-instructions"`
    - Or a new slug (will need to be added as a constant)
 4. **Schedule interval** — How often should it run? (e.g., every 30 minutes, every hour, daily)
-5. **Lock timeout** — How long should the cache lock last? Default: 600 seconds (10 minutes). Use longer for tasks that process large datasets.
+5. **Lock timeout** — How long should the cache lock last? Default: 600 seconds (10 minutes). Must exceed the task's expected max runtime.
 6. **Default company_id** — The default company to process (e.g., 420 for EM).
 
 ---
 
 ## Step 2: Write the Scheduled Task
 
-Add the task to the provider's `scheduled_tasks.py` file. Follow this boilerplate exactly.
+Put the orchestration shell in `scheduled_tasks.py` and the business logic in `helpers.py`.
 
-### Task Boilerplate
+### Task Boilerplate (`scheduled_tasks.py`)
 
 ```python
 @shared_task(name="<task_name>")
@@ -82,72 +82,70 @@ def <task_name>(company_id=<default_company_id>):
 
     try:
         company = webatds_models.Company.objects.get(id=company_id)
-        send_tasks_to_dd("<task_name>", company.name)
-
-        # Get integration settings
-        settings = models.CompanyIntegrationSetting.objects.filter(
-            company=company,
-            slug=models.CompanyIntegrationSetting.<SLUG_CONSTANT>,
-        ).first()
-
-        if not settings:
-            logger.warning(
-                f"Integrations: <provider> no settings found for company {company_id}"
-            )
-            return {"status": "no_settings"}
-
-        # Acquire lock to prevent concurrent runs
-        lock_id = f"<task_name>_{company_id}"
-        if not cache.add(lock_id, True, timeout=<lock_timeout>):
-            logger.info(
-                "Integrations: <provider> <task_name> failed to acquire lock",
-                extra={"company_id": company.id},
-            )
-            return {"status": "lock_failed", "message": "Task already running"}
-
-        try:
-            # === BUSINESS LOGIC GOES HERE ===
-            # TODO: Implement task logic
-            result = {}
-
-            logger.info(
-                "Integrations: <provider> <task_name> completed",
-                extra={"company_id": company.id, "result": result},
-            )
-            return {"status": "success", **result}
-
-        except Exception as e:
-            logger.exception(
-                "Integrations: <provider> <task_name> failed",
-                extra={"company_id": company.id, "error": str(e)},
-            )
-            raise
-        finally:
-            cache.delete(lock_id)
-
     except webatds_models.Company.DoesNotExist:
         logger.error(f"Integrations: <provider> company {company_id} does not exist")
         return {"status": "error", "message": "Company not found"}
+
+    send_tasks_to_dd("<task_name>", company.name)
+
+    settings = models.CompanyIntegrationSetting.objects.filter(
+        company=company,
+        slug=models.CompanyIntegrationSetting.<SLUG_CONSTANT>,
+    ).first()
+
+    if not settings:
+        logger.warning(
+            f"Integrations: <provider> no settings found for company {company_id}"
+        )
+        return {"status": "no_settings"}
+
+    lock_id = f"<task_name>_{company_id}"
+    lock_token = uuid.uuid4().hex
+    if not cache.add(lock_id, lock_token, timeout=<lock_timeout>):
+        logger.info(
+            "Integrations: <provider> <task_name> failed to acquire lock",
+            extra={"company_id": company.id},
+        )
+        return {"status": "lock_failed", "message": "Task already running"}
+
+    try:
+        result = helpers.run_<task_name>(company=company, settings=settings)
+
+        logger.info(
+            "Integrations: <provider> <task_name> completed",
+            extra={"company_id": company.id, "result": result},
+        )
+        return {"status": "success", **result}
+
+    except Exception as e:
+        logger.exception(
+            "Integrations: <provider> <task_name> failed",
+            extra={"company_id": company.id, "error": str(e)},
+        )
+        raise
+    finally:
+        if cache.get(lock_id) == lock_token:
+            cache.delete(lock_id)
 ```
 
 ### Required Imports
 
-Ensure these imports are at the top of `scheduled_tasks.py`:
+Ensure these imports are at the top of `scheduled_tasks.py` (only add imports the task uses):
 
 ```python
 import logging
+import uuid
 
 from celery import shared_task
 from django.core.cache import cache
 
 from webatds import models as webatds_models
 from webatds.integrations import models
+from webatds.integrations.providers.<provider> import helpers
 from webatds.integrations.utils import send_tasks_to_dd
 
 logger = logging.getLogger(__name__)
 ```
-
-Only add imports that the task actually uses. Don't add speculative imports.
 
 ---
 
@@ -189,21 +187,22 @@ logger.info(
 
 ### Cache Lock Pattern
 
-Every scheduled task MUST use a cache lock to prevent concurrent execution:
+Every scheduled task MUST use a token-checked cache lock to prevent concurrent execution without accidentally releasing a newer worker's lock if a run exceeds `<lock_timeout>`:
 
 ```python
 lock_id = f"<task_name>_{company_id}"
-if not cache.add(lock_id, True, timeout=<seconds>):
-    # Lock not acquired — task is already running
+lock_token = uuid.uuid4().hex
+if not cache.add(lock_id, lock_token, timeout=<seconds>):
     return {"status": "lock_failed", "message": "Task already running"}
 
 try:
-    # ... task logic ...
+    result = helpers.run_<task_name>(company=company, settings=settings)
 finally:
-    cache.delete(lock_id)  # Always release lock
+    if cache.get(lock_id) == lock_token:
+        cache.delete(lock_id)
 ```
 
-**Lock timeout guidelines:**
+**Lock timeout guidelines (must exceed worst-case task duration):**
 - Quick tasks (API call + small DB update): 600 seconds (10 minutes)
 - Medium tasks (batch processing): 1200 seconds (20 minutes)
 - Long tasks (full data sync): 1800+ seconds
@@ -223,16 +222,9 @@ send_tasks_to_dd("<task_name>", company.name)
 Return a dictionary with at least a `status` key:
 
 ```python
-# Success
 return {"status": "success", "processed_count": 10, "updated_count": 3}
-
-# No settings found
 return {"status": "no_settings"}
-
-# Lock failed
 return {"status": "lock_failed", "message": "Task already running"}
-
-# Error
 return {"status": "error", "message": "Company not found"}
 ```
 
@@ -242,14 +234,14 @@ return {"status": "error", "message": "Company not found"}
 
 | Don't | Do Instead |
 |-------|------------|
-| Forget the cache lock | Always use `cache.add` / `cache.delete` pattern |
+| Forget the cache lock or delete unconditionally | Use `cache.add(lock_id, lock_token, timeout=...)` and verify `lock_token` before `cache.delete` |
 | Hardcode company IDs in task body | Use `company_id` parameter with a default |
 | Hardcode API credentials | Use `CompanyIntegrationSetting.api_key` and `.api_url` |
 | Call external APIs without timeout | Always pass `timeout=` to `requests.get/post` |
 | Swallow exceptions silently | Log with `logger.exception()` then re-raise or return error status |
-| Put business logic directly in the task function | Extract into helper functions in the same file or `helpers.py` |
+| Put business logic directly in the task function | Extract into `helpers.py` (`helpers.run_<task_name>`) |
 | Skip DataDog metrics | Always call `send_tasks_to_dd` for observability |
-| Use `print()` for logging | Use the `logger` with structured `extra` data |
+| Use `print()` for logging | Use `logger` with structured `extra` data |
 
 ---
 
@@ -257,9 +249,9 @@ return {"status": "error", "message": "Company not found"}
 
 After creating the task, verify:
 
-- [ ] Task is in `providers/<provider>/scheduled_tasks.py`
+- [ ] Task shell is in `providers/<provider>/scheduled_tasks.py` and logic is in `helpers.py`
 - [ ] `@shared_task(name="<unique_name>")` decorator is set
-- [ ] Cache lock is implemented with appropriate timeout
+- [ ] Token-checked cache lock is implemented with appropriate timeout
 - [ ] `send_tasks_to_dd` is called for DataDog metrics
 - [ ] `CompanyIntegrationSetting` is fetched (not hardcoded credentials)
 - [ ] Structured logging with `extra` dicts is used throughout

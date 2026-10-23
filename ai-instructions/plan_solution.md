@@ -191,7 +191,7 @@ docs/solutions/{problem_name}_solution.md already exists.
 
 What do you want to do?
 1. Overwrite - Replace existing file
-2. Version - Create {problem_name}_solution_v2.md
+2. Version - Create docs/solutions/{problem_name}_solution_v2.md
 3. Rename - Specify a new name
 4. Cancel - Don't save, review existing file first
 ```
@@ -236,6 +236,6 @@ Before considering planning complete:
 - [ ] Solution document covers all required sections
 - [ ] Solution reviewed and iterated
 - [ ] User has confirmed the approach
-- [ ] Solution written to `{problem_name}_solution.md`
+- [ ] Solution written to `docs/solutions/{problem_name}_solution.md`
 
 ---

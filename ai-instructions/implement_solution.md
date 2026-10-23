@@ -1,6 +1,6 @@
 # Solution Implementation
 
-After completing `/plan_solution` and having a confirmed `{problem_name}_solution.md`, follow these steps to implement.
+After completing `/plan_solution` and having a confirmed `docs/solutions/{problem_name}_solution.md`, follow these steps to implement.
 
 ---
 
@@ -30,75 +30,36 @@ Solution
 
 ### Output format
 
-Write epics and tickets in JSON:
+Append an `## Implementation Plan` section to `docs/solutions/{problem_name}_solution.md`:
 
-```json
-{
-  "solution": "{problem_name}",
-  "epics": [
-    {
-      "epic_id": "EPIC-1",
-      "name": "Epic Name",
-      "description": "What this epic delivers",
-      "tickets": [
-        {
-          "ticket_id": "T1.1",
-          "title": "Ticket Title",
-          "description": "What this ticket accomplishes",
-          "implementation_details": {
-            "files": ["path/to/file1.py", "path/to/file2.py"],
-            "approach": "Description of implementation approach",
-            "key_considerations": ["Consideration 1", "Consideration 2"]
-          },
-          "acceptance_criteria": [
-            "Criterion 1 - specific, testable",
-            "Criterion 2 - specific, testable",
-            "Criterion 3 - specific, testable"
-          ],
-          "prerequisite_tickets": [],
-          "completion_status": "not_started"
-        },
-        {
-          "ticket_id": "T1.2",
-          "title": "Another Ticket",
-          "description": "What this ticket accomplishes",
-          "implementation_details": {
-            "files": ["path/to/file.py"],
-            "approach": "Description",
-            "key_considerations": []
-          },
-          "acceptance_criteria": [
-            "Criterion 1",
-            "Criterion 2"
-          ],
-          "prerequisite_tickets": ["T1.1"],
-          "completion_status": "not_started"
-        }
-      ]
-    }
-  ]
-}
+```markdown
+## Implementation Plan
+
+### EPIC-1: [Epic Name]
+What this epic delivers.
+
+#### [ ] T1.1: [Ticket Title]
+- **Prerequisites:** None
+- **Files:** `path/to/file1.py`, `path/to/file2.py`
+- **Approach:** Description of implementation approach and key considerations
+- **Acceptance criteria:**
+  - [ ] Criterion 1 - specific, testable
+  - [ ] Criterion 2 - specific, testable
+
+#### [ ] T1.2: [Another Ticket]
+- **Prerequisites:** T1.1
+- **Files:** `path/to/file.py`
+- **Approach:** Description
+- **Acceptance criteria:**
+  - [ ] Criterion 1
+  - [ ] Criterion 2
 ```
-
-### Ticket fields explained
-
-| Field | Purpose |
-|-------|---------|
-| `ticket_id` | Unique ID: T{epic#}.{ticket#} |
-| `title` | Short, descriptive name |
-| `description` | What the ticket accomplishes |
-| `implementation_details` | Files to touch, approach, considerations |
-| `acceptance_criteria` | Specific, testable conditions for "done" |
-| `prerequisite_tickets` | Tickets that must complete first |
-| `completion_status` | `not_started`, `in_progress`, `completed` |
 
 ---
 
 ## Step 7: Epic and Ticket Review
 
-Before implementing, review the breakdown:
-
-### Check for
+Before implementing, verify the breakdown:
 
 - [ ] **Coverage** - Do tickets fully implement the solution?
 - [ ] **Gaps** - Any missing pieces?
@@ -130,7 +91,7 @@ Present the epic/ticket breakdown to the user:
 Does this breakdown look right? Any tickets to add, remove, or restructure?
 ```
 
-After user confirms, write the breakdown to: `{problem_name}_tickets.json`
+After user confirms, save the `## Implementation Plan` section into `docs/solutions/{problem_name}_solution.md`.
 
 ---
 
@@ -140,10 +101,10 @@ Implement tickets one at a time, in order.
 
 ### Setup (once per solution)
 
-Ask the user for the branch number, then create the branch:
+Ask the user for the branch name/number, then create the branch (or run `/create_worktree <branch-name>`):
 
 ```bash
-git checkout -b problem-name-DEV-####
+git checkout -b problem-name-DEV-#### origin/master
 ```
 
 ### Per-ticket workflow
@@ -151,9 +112,8 @@ git checkout -b problem-name-DEV-####
 #### 8.1 Context Loading
 
 Read:
-- The ticket details from `{problem_name}_tickets.json`
-- The full solution from `{problem_name}_solution.md`
-- Any relevant AGENTS.md files for the modules being touched
+- The ticket details and full solution in `docs/solutions/{problem_name}_solution.md`
+- `ai-instructions/conventions.md` and any relevant `AGENTS.md` files for the modules being touched
 
 #### 8.2 Verify Ticket Readiness
 
@@ -177,7 +137,7 @@ Before implementing T1.2, I need to confirm:
 
 Write the code following:
 - Patterns in the codebase
-- Conventions in AGENTS.md files
+- Conventions in `ai-instructions/conventions.md` and module `AGENTS.md` files
 - The approach specified in the ticket
 
 #### 8.5 User Verification
@@ -200,47 +160,21 @@ Ready for me to proceed with tests?
 
 #### 8.6 Write Tests
 
-Follow `write_tests.md` and `webatds/tests/AGENTS.md`:
+Follow `ai-instructions/write_tests.md` and `webatds/tests/AGENTS.md`:
 
 - Write tests covering the acceptance criteria
 - Run tests to verify they pass
 - Ensure no existing tests are broken
 
 ```bash
-python manage.py test webatds.tests.{module}.{test_file}
+python manage.py test webatds.tests.{module}.{test_file} --keepdb
 ```
 
-#### 8.7 Document Implementation
+#### 8.7 Update Ticket Status
 
-Write implementation notes to: `{problem_name}_T{ticket_id}_implementation.md`
+In `docs/solutions/{problem_name}_solution.md`, mark the ticket and its acceptance criteria complete (`#### [x] T1.2: ...`) and note any variance from the original plan under the ticket entry.
 
-```markdown
-# T1.2 Implementation Summary
-
-## Changes Made
-- file1.py: Added X method for Y
-- file2.py: Modified Z to support W
-
-## Variances from Plan
-- Changed approach from A to B because [reason]
-
-## Notes
-- Important consideration for future work
-- Known limitation
-
-## Tests Added
-- test_feature_does_x
-- test_feature_handles_edge_case
-```
-
-#### 8.8 Update Ticket Status
-
-In `{problem_name}_tickets.json`, update:
-```json
-"completion_status": "completed"
-```
-
-#### 8.9 Commit
+#### 8.8 Commit
 
 ```bash
 git add [specific files]
@@ -249,13 +183,11 @@ T1.2: [Concise description of changes]
 
 - Detail 1
 - Detail 2
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 ```
 
-#### 8.10 Next Ticket
+#### 8.9 Next Ticket
 
 Move to the next ticket and repeat from step 8.1.
 
@@ -265,9 +197,9 @@ Move to the next ticket and repeat from step 8.1.
 
 After all tickets are complete:
 
-1. Verify all ticket statuses are `completed`
-2. Run full test suite for affected modules
-3. Create PR following standard process
+1. Verify all tickets in `docs/solutions/{problem_name}_solution.md` are checked off
+2. Run the test suite and `ruff check` on affected modules
+3. Create PR following standard process:
 
 ```bash
 gh pr create --title "[Problem Name]" --body "$(cat <<'EOF'
@@ -275,7 +207,7 @@ gh pr create --title "[Problem Name]" --body "$(cat <<'EOF'
 [Brief description of what this PR delivers]
 
 ## Solution Document
-See: {problem_name}_solution.md
+See: `docs/solutions/{problem_name}_solution.md`
 
 ## Tickets Completed
 - T1.1: [Title]
@@ -285,8 +217,6 @@ See: {problem_name}_solution.md
 ## Test Plan
 - [ ] Unit tests pass
 - [ ] Manual verification of [key flows]
-
-Generated with Claude Code
 EOF
 )"
 ```

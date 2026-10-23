@@ -299,10 +299,9 @@ class InvoiceListTests(CustomAPITestCase):
     def test_list_returns_only_company_invoices(self):
         self.client.force_login(user=self.user)
 
-        response = self.client.get("/api/invoices/")
+        response = self.client.get(reverse("invoice"))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Verify filtering works
         for invoice in response.data:
             self.assertEqual(invoice["company"], self.company.id)
 ```
