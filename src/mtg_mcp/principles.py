@@ -160,7 +160,8 @@ def principles() -> dict[str, Any]:
             "insights": BUILD_PROCESS_INSIGHTS,
         },
         "how_to_use": [
-            "Call get_skill in order when building a ~$100 list: nero-read, nero-lines, nero-hunt. nero-build is the order around them.",
+            "Call get_skill in order when building a ~$100 list: nero-read, defcat-read, nero-lines, nero-hunt, defcat-turn. "
+            "defcat-fuel only when the commander sets a mana-value bar. nero-build is the order around them.",
             "Follow build_process in order. Draw, ramp, and interaction are in the list before a card that is only the theme.",
             "State the commander's bend, including what locks and which mana you still pay, before suggesting cards.",
             "Work backwards from the win. A win can be one spell or a pile of the same effect. It does not have to be a combo.",

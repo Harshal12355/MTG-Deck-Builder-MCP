@@ -488,16 +488,26 @@ class SkillTest(unittest.TestCase):
         from mtg_mcp.skills import fetch_skill, load_skills
 
         loaded = load_skills()
-        names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt"}
+        names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+                 "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn"}
         self.assertEqual(set(loaded), names)
         for skill in loaded.values():
             self.assertTrue(skill.description)
             self.assertTrue(skill.instructions)
         self.assertIn("reference_principles", loaded["nero-tune"].instructions)
         self.assertIn("nero-read", loaded["nero-build"].instructions)
+        self.assertIn("defcat-read", loaded["nero-build"].instructions)
+        self.assertIn("nero-goldfish", loaded["nero-build"].instructions)
+        self.assertIn("defcat-turn", loaded["nero-tune"].instructions)
+        self.assertIn("nero-goldfish", loaded["nero-tune"].instructions)
+        self.assertIn("nero-goldfish", loaded["defcat-build"].instructions)
         self.assertIn("get_card_rulings", loaded["nero-read"].instructions)
         self.assertIn("search_combos", loaded["nero-lines"].instructions)
         self.assertIn("Lofty Denial", loaded["nero-hunt"].instructions)
+        self.assertIn("lesser mana value", loaded["defcat-read"].instructions)
+        self.assertIn("Treasure Cruise", loaded["defcat-fuel"].instructions)
+        self.assertIn("Leyline of Anticipation", loaded["defcat-turn"].instructions)
+        self.assertIn("defcat-fuel", loaded["defcat-build"].instructions)
         missing = fetch_skill("ponytail")
         self.assertIn("error", missing)
         self.assertEqual(set(missing["skills"]), names)
@@ -543,7 +553,8 @@ class McpProtocolTest(unittest.TestCase):
         )
         self.assertEqual(
             {p.name for p in prompts.prompts},
-            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt"},
+            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+             "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn"},
         )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)

@@ -28,20 +28,21 @@ get_card(commander)                     the bend, in one sentence
 reference_deck(commander)               his plan, if he built this commander
 find_combos                             in the deck, then one card away
 reference_compare(min_decks=3)          his staples this list skips
-goldfish skill                          cast-by-turn, or "not simulated"
-mana skill                              only if a color is short
-get_card on every swap                  oracle, identity, Commander legal
+get_skill nero-goldfish                 calls simulate_deck
+get_skill nero-mana                     only if a color is short
+get_card + get_card_printings           before a buy
 ```
 
 1. `reference_principles(source="nero")`. Grade against the tool result. Do not recite principles from memory.
 2. `analyze_deck` on the full list. Pass `commanders` if the list does not mark them. `price_decklist` for the real total. The ~$100 cap is the deck, not a per-card cap.
 3. `get_card` on the commander. One sentence: the rule it breaks. If the list is built around the surface theme (Rat tribal for Vren, landfall tokens for Tannuk), that is the first cut.
 4. `reference_deck` for this commander. Use his plan, mulligan, and `notes.win_lines` as the comparison, not as cards to copy blindly.
-5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone. A new card uses `get_skill("nero-hunt")`. A new line uses `get_skill("nero-lines")`. An enabler that does nothing the turn it enters is a cut, even when EDHREC likes it.
+5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone. A new card uses `get_skill("nero-hunt")`, then `get_skill("defcat-turn")`. A new line uses `get_skill("nero-lines")`. An enabler that does nothing the turn it enters is a cut, even when EDHREC likes it.
+5b. `get_skill("defcat-read")` on the commander. `Bar: none` means the swap only has to name its turn: first main, second main, or an opponent's turn. A real bar means `get_skill("defcat-fuel")` before a high mana value add, and that add still does a job the turn you cast it.
 6. `reference_compare` with the decklist, `min_decks=3`. Raise `min_decks` for only his real staples. Set `max_price` when the user names a budget. Check each candidate against the deck's jobs.
-7. Curve percents come from the goldfish skill. If `simulate_deck` is missing, write "not simulated". Do not invent a percent.
-8. `get_card` before you name any add or cut. `get_card_rulings` if the line depends on timing.
-9. If one color's pips sit well above its land sources, do that pass with the mana skill before you stop. Do not invent a source count.
+7. `get_skill("nero-goldfish")`. That skill calls `simulate_deck`. If `simulate_deck` is missing, write "not simulated". Do not invent a percent. After the swap, that skill reruns with the same seed.
+8. `get_card` before you name any add or cut. `get_card_rulings` if the line depends on timing. `get_card_printings` before naming a printing to buy.
+9. If one color's pips sit well above its land sources, `get_skill("nero-mana")` before you stop. Do not invent a source count.
 
 ## Gaps that are not gaps
 
@@ -67,9 +68,11 @@ Lands:       __ / curve says __
 Interaction: __    (thumb from the tool, if this is a control shell)
 Tutors:      __
 Lines:       in the deck / one card away / pieces that are dead alone
-Curve:       from the goldfish skill, or "not simulated"
+Curve:       nero-goldfish block, or "not simulated"
 Mana:        pips/sources, or "mana skill not run"
 
+When:        first main | second main | their turn
+Bar:         none | what a cast spell sets
 Change:      cut X → add Y, because <one number or one combo>
 Then:        at most four more, each tied to a number
 ```

@@ -28,8 +28,9 @@ simulate_deck                same seed when comparing two lists
    - `opening_hand.kept_seven` and `average_mulligans`
    - `commander.castable_by_turn` at the ideal turn, and `median_turn`
    - each line's `assembled_by_turn` at the turn the plan wants to win
-5. Quote `assumptions` from the result. Mana is counted by amount, not color. A deck that is short a color can still "cast" the commander here. If pips per source are lopsided, say the cast rate ignores that and hand the mana pass to the mana skill.
-6. Do not set `extra_cards_per_turn` to fake a commander who draws off a combat or a counter. The goldfish does not play those triggers. Leave it at 0 unless the user asks for a draw-engine guess, and label the guess.
+5. Quote `assumptions` from the result. Mana is counted by amount, not color. A deck that is short a color can still "cast" the commander here. If pips per source are lopsided, say the cast rate ignores that and `get_skill("nero-mana")`.
+6. Do not set `extra_cards_per_turn` to fake a commander who draws off a combat, a counter, or a free spell off the top. The goldfish does not play those triggers. Leave it at 0 unless the user asks for a draw-engine guess, and label the guess.
+7. A comparison commander (a mana-value bar, the first spell each turn) still gets this sim. Report the commander cast rate, and say the free casts are not in it. When `nero-lines` said `no combo package`, pass no `win_lines` and write `Line: no combo package`.
 
 ## Hand back
 

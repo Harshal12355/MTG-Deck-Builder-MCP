@@ -60,9 +60,12 @@ Tools for Magic: The Gathering questions and deckbuilding.
   Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
 - Deckbuilding skills: call get_skill and follow what it returns.
   nero-build when there is a commander and no list. nero-tune when a decklist or a link is already here.
-  nero-read before naming cards. nero-lines for the win (one spell, a pile, or overlapping combos).
+  Both schools run on the same list. nero-read, then defcat-read, before naming cards.
+  nero-lines for the win (one spell, a pile, or overlapping combos).
   nero-hunt for draw, ramp, interaction, then cards that also do the plan.
-  nero-mana for a mana-base pass. nero-goldfish for speed, mulligans, or a curve check.
+  defcat-turn rescores those cards for when in the turn they want to resolve.
+  defcat-fuel only when defcat-read finds a mana-value bar (Rashmi, cascade, the first spell each turn).
+  nero-mana for a mana-base pass. nero-goldfish calls simulate_deck. Do not stop a build or a tune before it, or before analyze_deck, price_decklist, and find_combos.
   The same text is available as MCP prompts under those names.
 Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
 """
@@ -300,7 +303,8 @@ async def deckbuilding_principles() -> dict[str, Any]:
     read the commander past the theme (what locks, which mana you still pay), pick the win before synergy,
     fill draw/ramp/interaction above a normal video list, then utility cards that also do the plan.
     Cut the 4-mana enabler that does nothing the turn you cast it. Five colors is allowed.
-    Search with get_skill: nero-read, nero-lines, nero-hunt.
+    Search with get_skill: nero-read, defcat-read, nero-lines, nero-hunt, defcat-turn.
+    defcat-fuel only when the commander sets a mana-value bar.
     Use with deckbuilding_template and analyze_deck when building or tuning a deck.
     """
     return build_principles()

@@ -7,22 +7,24 @@ alwaysApply: true
 
 A new commander (no list yet) or a deck to evaluate (paste, file, Moxfield, Archidekt, MTGO) runs the whole pass. One lookup is not the pass. If a named tool is missing, say so and stop. Do not fill the gap from memory.
 
+Every build runs both schools on the same list. NeRo picks the bend, the win, and the cards that do a job the turn you cast them. Defcat then asks when in the turn that card wants to resolve, and whether casting it makes another card better. A card that fails either school is out.
+
 ## New commander
 
 `get_skill` and follow it. Do not skip a skill because the commander looks obvious.
 
-1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order.
+1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order, including the Defcat steps.
 2. `reference_principles(source="nero")`, `get_card` the commander, `reference_deck`. A hit starts from his list and switches to the evaluate pass. Do not brew a second one.
-3. `get_skill("nero-read")`. `get_card_rulings` when the ability uses X, "this turn", or a timing word.
+3. `get_skill("nero-read")`, then `get_skill("defcat-read")`. `get_card_rulings` when the ability uses X, "this turn", "each turn", or a timing word. `Bar: none` is a complete answer when the commander does not compare mana value.
 4. `get_skill("nero-lines")`. `search_combos` or `search_cards` as that skill says. A one-spell or edict-pile win does not get a combo package.
-5. `get_skill("nero-hunt")`. `reference_cards` and `search_cards`. Draw, ramp, and interaction before a theme-only card.
+5. `get_skill("nero-hunt")`, then `get_skill("defcat-turn")` on those keeps. `get_skill("defcat-fuel")` only when the bar is real. A fuel card still has to do a NeRo job the turn you cast it.
 6. `get_skill("nero-mana")` on the finished list.
 7. `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")`. Re-price before telling anyone to buy.
 8. After the list exists: `edhrec_recommendations` with `budget="budget"`, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list.
 
 ## Evaluate a list
 
-Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck`, `price_decklist`, `get_card`, `reference_deck`, `find_combos`, `reference_compare`, the goldfish skill, and the mana skill when one color's pips sit well above its sources. A new card uses `nero-hunt`. A new line uses `nero-lines`.
+Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck`, `price_decklist`, `get_card`, `reference_deck`, `find_combos`, `reference_compare`, the goldfish skill, and the mana skill when one color's pips sit well above its sources. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real.
 
 `get_card` before you name an add or a cut. `get_card_rulings` if the line depends on timing. `get_card_printings` before telling anyone which copy to buy.
 
@@ -33,6 +35,6 @@ Do not stop after the first tool that returns.
 - Text, price, legality, roles: `get_card`. Speed: `simulate_deck`. Tested lists and staples: `reference_deck`, `reference_cards`, `reference_compare`, `reference_card`.
 - Combos already in the list: `find_combos`. Combos to consider: `search_combos`.
 
-Hand back the block the skill asks for. A new list leads with the bend. An existing list leads with the one swap.
+Hand back the block the skill asks for. A new list leads with the bend, the turn, and the bar. An existing list leads with the one swap.
 
-Example: "Build a $100 Rowan" runs steps 1–8. A pasted list runs the evaluate pass. Neither stops after `get_card`.
+Example: "Build a $100 Rowan" runs steps 1–8. Her bar is none, so fuel is skipped and the turn check still runs. A pasted list runs the evaluate pass. Neither stops after `get_card`.
