@@ -1,7 +1,8 @@
 {
   "mcpServers": {
     "mtg-deckbuilder": {
-      "command": "/Users/harshal/MTG-Deck-Builder-MCP/.venv/bin/mtg-mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.swag31415.com/mcp"]
     }
   }
 }
