@@ -23,7 +23,7 @@ simulate_deck                same seed when comparing two lists
 
 1. `get_card` the commander if you do not already have the mana value. One sentence: the turn the deck wants the commander down.
 2. Win lines are the combos `find_combos` already found in the deck, or `notes.win_lines` from his deck. Pass them as `win_lines`: a list of card-name groups. `A | B` means either card fills that slot.
-3. `simulate_deck` on the main list, commander passed if the list does not mark it. Default `trials` is fine. Set `seed` when you compare a before and an after.
+3. `simulate_deck` on the main list, commander passed if the list does not mark it. Default `trials` is fine. Set `seed` when you compare a before and an after, or when comparing a **33-card core (`based-core` / `based-split` Pile A, 34 cards with commander)** against the **full 99-card deck (`based-scale`, 100 cards)**. Always include `// Commander` or pass `commanders=[...]` on a 33-card core so the commander is not parsed as main deck.
 4. Read the result, not a vibe:
    - `opening_hand.kept_seven` and `average_mulligans`
    - `commander.castable_by_turn` at the ideal turn, and `median_turn`

@@ -19,7 +19,7 @@ If `get_card` is not in this session, say so and stop.
 2. `get_skill("defcat-turn")` after `nero-hunt`. Rescore the keeps. A keep that is blank on the turn the deck acts is a cut.
 3. `get_skill("defcat-fuel")` only when the bar is real. Each fuel card still does a job from `nero-read` the turn you cast it.
 4. When the bar is real, the hand is interaction and the payoffs sit in the library under that bar. Bracket 2–3 keeps the top random. A higher bracket adds one dial and names it: untap on an opponent's turn, an extra trigger, or a tutor to the top. `get_card_rulings` before you claim the extra trigger works with "first spell each turn."
-5. Do not stop here. Finish `nero-build`: `get_skill("nero-mana")`, `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")`, `edhrec_recommendations`, `archidekt_popular_cards`. The goldfish calls `simulate_deck`. It does not see free casts. Run it anyway. When the bar is real, say the cast rate is the commander, not the free spells.
+5. Do not stop here. Finish `nero-build`: `get_skill("based-core")` (test the first 33 cards in `analyze_deck` and `nero-goldfish`), `get_skill("based-scale")` (triplicate `33 × 3 = 99`), `get_skill("nero-mana")`, `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")` on the full 99, `edhrec_recommendations`, `archidekt_popular_cards`. The goldfish calls `simulate_deck`. It does not see free casts. Run it anyway. When the bar is real, say the cast rate is the commander, not the free spells.
 
 ## Hand back
 

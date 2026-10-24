@@ -7,25 +7,26 @@ alwaysApply: true
 
 A new commander (no list yet) or a deck to evaluate (paste, file, Moxfield, Archidekt, MTGO) runs the whole pass. One lookup is not the pass. If a named tool is missing, say so and stop. Do not fill the gap from memory.
 
-Every build runs both schools on the same list. NeRo picks the bend, the win, and the cards that do a job the turn you cast them. Defcat then asks when in the turn that card wants to resolve, and whether casting it makes another card better. A card that fails either school is out.
+Every build runs all three schools on the same list. NeRo picks the bend, the win, and the cards that do a job the turn you cast them. Defcat then asks when in the turn that card wants to resolve, and whether casting it makes another card better. Based (Based Deck Department / Brother Frog) shrinks the deck to one 33-card average game (`based-core`), goldfishes that 33-card core at low variance first, and scales `33 × 3 = 99` with two functional twins per slot (`based-scale`) — or splits an existing 99 into three 33-card piles (`based-split`) to cut `1/0/0` orphans and slow value engines. A card that fails any school is out.
 
 ## New commander
 
 `get_skill` and follow it. Do not skip a skill because the commander looks obvious.
 
-1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order, including the Defcat steps.
+1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order, including the Defcat and Based 33-card steps.
 2. `reference_principles(source="nero")`, `get_card` the commander, `reference_deck`. A hit starts from his list and switches to the evaluate pass. Do not brew a second one.
 3. `get_skill("nero-read")`, then `get_skill("defcat-read")`. `get_card_rulings` when the ability uses X, "this turn", "each turn", or a timing word. `Bar: none` is a complete answer when the commander does not compare mana value.
 4. `get_skill("nero-lines")`. `search_combos` or `search_cards` as that skill says. A one-spell or edict-pile win does not get a combo package.
-5. `get_skill("nero-hunt")`, then `get_skill("defcat-turn")` on those keeps. `get_skill("defcat-fuel")` only when the bar is real. A fuel card still has to do a NeRo job the turn you cast it.
-6. `get_skill("nero-mana")` on the finished list.
-7. `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")`. Re-price before telling anyone to buy.
-8. After the list exists: `edhrec_recommendations` with `budget="budget"`, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list.
-9. `get_skill("moxfield-primer")`. Tagged decklist for Moxfield bulk paste plus markdown primer (plan, mulligan, lines, key cards). Skip only if the user said they do not want a primer or tags.
+5. `get_skill("based-core")`. Lock the 33-card 1-game slot budget, fill Pile A (33 cards) with `get_skill("nero-hunt")` and `get_skill("defcat-turn")` (`get_skill("defcat-fuel")` only when the bar is real), and run `analyze_deck` + `get_skill("nero-goldfish")` on that 34-card core (`commander + 33`) first.
+6. `get_skill("based-scale")`. Replicate Pile A two more times (`33 × 3 = 99`, Piles B and C) with functional twins — zero `1/0/0` orphans (`Archmage Emeritus` test) and no slow random value engines in specific slots (`Exalted Flamer of Tzeentch` test).
+7. `get_skill("nero-mana")` on the finished list.
+8. `analyze_deck`, `price_decklist`, `find_combos`, `get_skill("nero-goldfish")` on the full 100-card list (same `seed` as the 33-card core). Re-price before telling anyone to buy.
+9. After the list exists: `edhrec_recommendations` with `budget="budget"`, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list.
+10. `get_skill("moxfield-primer")`. Tagged decklist for Moxfield bulk paste plus markdown primer (plan, mulligan, lines, key cards). Skip only if the user said they do not want a primer or tags.
 
 ## Evaluate a list
 
-Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck`, `price_decklist`, `get_card`, `reference_deck`, `find_combos`, `reference_compare`, the goldfish skill, and the mana skill when one color's pips sit well above its sources. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real.
+Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck`, `price_decklist`, `get_card`, `reference_deck`, `get_skill("based-split")` (deal the 99 into `3 × 33` piles to expose uneven splits, `1/0/0` orphans, uncounted theme density, and fake job slots), `find_combos`, `reference_compare`, the goldfish skill (Pile A 33-card core vs. full 99, same `seed`), and the mana skill when one color's pips sit well above its sources. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real.
 
 `get_card` before you name an add or a cut. `get_card_rulings` if the line depends on timing. `get_card_printings` before telling anyone which copy to buy.
 

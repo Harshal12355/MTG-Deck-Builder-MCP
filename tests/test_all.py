@@ -489,7 +489,8 @@ class SkillTest(unittest.TestCase):
 
         loaded = load_skills()
         names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
-                 "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn", "moxfield-primer"}
+                 "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
+                 "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"}
         self.assertEqual(set(loaded), names)
         for skill in loaded.values():
             self.assertTrue(skill.description)
@@ -497,10 +498,22 @@ class SkillTest(unittest.TestCase):
         self.assertIn("reference_principles", loaded["nero-tune"].instructions)
         self.assertIn("nero-read", loaded["nero-build"].instructions)
         self.assertIn("defcat-read", loaded["nero-build"].instructions)
+        self.assertIn("based-core", loaded["nero-build"].instructions)
+        self.assertIn("based-scale", loaded["nero-build"].instructions)
         self.assertIn("nero-goldfish", loaded["nero-build"].instructions)
         self.assertIn("defcat-turn", loaded["nero-tune"].instructions)
+        self.assertIn("based-split", loaded["nero-tune"].instructions)
         self.assertIn("nero-goldfish", loaded["nero-tune"].instructions)
         self.assertIn("nero-goldfish", loaded["defcat-build"].instructions)
+        self.assertIn("based-core", loaded["based-build"].instructions)
+        self.assertIn("based-scale", loaded["based-build"].instructions)
+        self.assertIn("based-split", loaded["based-build"].instructions)
+        self.assertIn("Sauron, the Dark Lord", loaded["based-core"].instructions)
+        self.assertIn("simulate_deck", loaded["based-core"].instructions)
+        self.assertIn("Archmage Emeritus", loaded["based-scale"].instructions)
+        self.assertIn("Exalted Flamer of Tzeentch", loaded["based-scale"].instructions)
+        self.assertIn("Archmage Emeritus", loaded["based-split"].instructions)
+        self.assertIn("Exalted Flamer of Tzeentch", loaded["based-split"].instructions)
         self.assertIn("get_card_rulings", loaded["nero-read"].instructions)
         self.assertIn("search_combos", loaded["nero-lines"].instructions)
         self.assertIn("Lofty Denial", loaded["nero-hunt"].instructions)
@@ -556,7 +569,8 @@ class McpProtocolTest(unittest.TestCase):
         self.assertEqual(
             {p.name for p in prompts.prompts},
             {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
-             "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn", "moxfield-primer"},
+             "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
+             "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"},
         )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)

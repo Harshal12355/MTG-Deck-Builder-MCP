@@ -14,19 +14,20 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
                                                    ▼
                                ┌───────────────────────────────────────┐
                                │     mtg-deckbuilder MCP (23 Tools)    │
-                               │  + 12 Deckbuilding Skills & Prompts   │
+                               │  + 16 Deckbuilding Skills & Prompts   │
                                │  + Monte Carlo Goldfish Simulator     │
                                └───────────────────┬───────────────────┘
                                                    ▼
-             ┌─────────────────────────────────────┼─────────────────────────────────────┐
-             ▼                                     ▼                                     ▼
-┌─────────────────────────┐           ┌─────────────────────────┐           ┌─────────────────────────┐
-│    1. NeRo School       │           │    2. Defcat School     │           │  3. Moxfield Export     │
-│ • Commander's bend      │           │ • Turn window (1st/2nd  │           │ • Bulk-paste list with  │
-│ • Win line before cards │           │   main vs. their turn)  │           │   #tags on every card   │
-│ • Veggies + double-duty │           │ • MV bar & free-cast    │           │ • Copy-paste Markdown   │
-│ • Pips vs. land sources │           │   fuel (Delve/Pitch)    │           │   primer & mulligans    │
-└─────────────────────────┘           └─────────────────────────┘           └─────────────────────────┘
+       ┌─────────────────────────┬─────────────────┴───────┬─────────────────────────┐
+       ▼                         ▼                         ▼                         ▼
+┌──────────────┐          ┌──────────────┐          ┌──────────────┐          ┌──────────────┐
+│ 1. NeRo      │          │ 2. Defcat    │          │ 3. Based 33  │          │ 4. Moxfield  │
+│ • Commander  │          │ • Turn phase │          │ • 33-card    │          │ • Bulk-paste │
+│   bend & win │          │   (1st/2nd / │          │   1-game core│          │   #tags list │
+│ • Veggies +  │          │   their turn)│          │ • Sim 33 1st │          │ • Copy-paste │
+│   2-job cards│          │ • MV bar &   │          │ • Scale 3x33 │          │   Markdown   │
+│ • Pips/lands │          │   cheap fuel │          │ • Split 3x33 │          │   primer     │
+└──────────────┘          └──────────────┘          └──────────────┘          └──────────────┘
 ```
 
 ## Highlights
@@ -38,7 +39,7 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
 - **Commander Spellbook**: finds combos already in your deck, combos you are one card away from, and searches the full Spellbook database.
 - **EDHREC & Archidekt**: fetches high-synergy and top cards by theme or budget (filtering out cards already in your list), searches public Archidekt decks by commander/card/owner/bracket, pulls full categorized decklists, and tallies card inclusion % across top-viewed decks.
 - **Reference Library & Moxfield Importer**: ships with 28 tested ~$100 high-power Bracket 4 / budget cEDH decks from [NeRo (`@_NeRo`)](https://moxfield.com/users/_NeRo), complete with author role tags, capture-time prices, distilled principles, mulligan guides, and win lines. Import or refresh any Moxfield builder with `moxfield_import_user`.
-- **12 Built-in Deckbuilding Skills (`get_skill` & MCP Prompts)**: encodes a complete two-school deckbuilding pass (**NeRo / Budget Bros** + **Defcat**) plus automated **Moxfield `#tag` + Primer** generation.
+- **16 Built-in Deckbuilding Skills (`get_skill` & MCP Prompts)**: encodes a complete three-school deckbuilding pass (**NeRo / Budget Bros** + **Defcat** + **Based Deck Department 33-Card**) plus automated **Moxfield `#tag` + Primer** generation.
 
 ---
 
@@ -93,16 +94,17 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
 | `reference_deck` | Full reference deck entry by commander, name, or Moxfield ID: plan, ideal turn, mulligan guide, `win_lines` (ready for `simulate_deck`), key cards, stats, and full `decklist` |
 | `reference_compare` | Compare a decklist against the reference library to surface proven staples in its colour identity that it isn't running yet, grouped by role |
 | `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, card metadata, and raw Markdown primers) of a Moxfield user into the reference library |
-| `get_skill` | Load one of the 12 deckbuilding skills from `src/mtg_mcp/deck_skills/` (also exposed as MCP prompts via `prompts/list` and `prompts/get`) |
+| `get_skill` | Load one of the 16 deckbuilding skills from `src/mtg_mcp/deck_skills/` (also exposed as MCP prompts via `prompts/list` and `prompts/get`) |
 
 ---
 
-## Deckbuilding Skills & The Two-School Pass
+## Deckbuilding Skills & The Three-School Pass
 
-Every build or tune runs **two deckbuilding schools on the same list** via `get_skill` (or MCP prompts):
+Every build or tune runs **three deckbuilding schools on the same list** via `get_skill` (or MCP prompts):
 
 1. **NeRo / Budget Bros School**: finds the rule the commander bends past its surface EDHREC theme, locks the win condition first (one spell, an edict/effect pile, or overlapping 2–4 card combos where every piece works alone), fills draw/ramp/interaction ("veggies") at higher-than-usual counts, and demands that utility cards do two jobs the turn they are cast.
 2. **Defcat School**: evaluates *when* in the turn each card wants to resolve (first main, second main, or an opponent's turn), checks whether casting one card makes another card better, and—when the commander sets a mana-value bar (e.g. Rashmi, cascade, top-of-library)—pairs cheap alternate-cost high-MV fuel (delve, pitch, evoke, convoke, affinity) with 1–3 MV flash/ETB hits.
+3. **Based 33-Card School (Based Deck Department / Brother Frog)**: since an average Commander game sees ~1/3 of the deck (33 cards), builds and goldfishes a tight **33-card 1-game deck first** (`based-core` + `simulate_deck` at low variance), then replicates each slot two more times (`based-scale`, `33 × 3 = 99`) so the deck is a reliable "silly goose" instead of a once-a-year "pigeon"—or deals an existing 99 into three 33-card piles (`based-split`) to expose uneven role splits, `1/0/0` orphans (`Archmage Emeritus`), and slow random value engines (`Exalted Flamer of Tzeentch`).
 
 ```text
 New Commander ("Build a $100 Rowan")           Existing Decklist / Link ("Tune my Vren list")
@@ -112,32 +114,37 @@ New Commander ("Build a $100 Rowan")           Existing Decklist / Link ("Tune m
    2. nero-build + reference_deck check                   2. reference_principles(source="nero")
    3. nero-read  ──► Surface vs. Bend, Trap, Jobs         3. analyze_deck + price_decklist
    4. defcat-read ─► Turn window & MV Bar (or "none")     4. get_card(commander) + defcat-read
-   5. nero-lines ──► 1 spell / pile / overlapping combos  5. reference_deck + find_combos
-   6. nero-hunt  ──► Veggies first + double-duty cards    6. reference_compare(min_decks=3)
-   7. defcat-turn ─► Rescore keeps for turn timing        7. nero-hunt + defcat-turn (for new adds)
-   8. defcat-fuel ─► High-MV / low-pay fuel (if Bar)      8. nero-goldfish (before vs. after seed)
-   9. nero-mana  ──► Colour pips vs. land sources         9. nero-mana (if a colour is short)
-  10. analyze_deck + price_decklist + find_combos        10. moxfield-primer (on request)
-  11. nero-goldfish (simulate_deck)
-  12. edhrec_recommendations + archidekt_popular_cards
-  13. moxfield-primer (#tags + Markdown primer)
+   5. nero-lines ──► 1 spell / pile / overlapping combos  5. reference_deck + based-split (3 x 33)
+   6. based-core ──► Lock 33-card 1-game slot budget      6. find_combos + reference_compare
+   7. nero-hunt + defcat-turn (+ defcat-fuel if Bar)      7. nero-hunt + defcat-turn (for new adds)
+   8. nero-goldfish on 33-card core (test at low var)     8. nero-goldfish (33 Pile A + 99 before/after)
+   9. based-scale ─► Triplicate 33 x 3 = 99 (0 orphans)   9. nero-mana (if a colour is short)
+  10. nero-mana  ──► Colour pips vs. land sources        10. moxfield-primer (on request)
+  11. analyze_deck + price_decklist + find_combos
+  12. nero-goldfish on 99 (compare vs. 33-card seed)
+  13. edhrec_recommendations + archidekt_popular_cards
+  14. moxfield-primer (#tags + Markdown primer)
 ```
 
-### All 12 Skills (`src/mtg_mcp/deck_skills/`)
+### All 16 Skills (`src/mtg_mcp/deck_skills/`)
 
 | Skill | School | When to use |
 |---|---|---|
-| `nero-build` | NeRo + Defcat | Master build order for a new commander at ~$100 high-power Bracket 4 |
-| `nero-tune` | NeRo + Defcat | Evaluate and tune an existing decklist: one plan-fixing swap first, then at most four more tied to tool numbers |
+| `nero-build` | NeRo + Defcat + Based | Master build order for a new commander at ~$100 high-power Bracket 4 |
+| `nero-tune` | NeRo + Defcat + Based | Evaluate and tune an existing decklist: one plan-fixing swap first, then at most four more tied to tool numbers |
 | `nero-read` | NeRo | Read a commander past its EDHREC theme: what locks, what mana you still pay, the trap card, win shape, and 3–4 jobs |
 | `nero-lines` | NeRo | Pick the win: one finisher spell, a pile of the same effect, or overlapping 2–4 card combos with no dead pieces |
 | `nero-hunt` | NeRo | Find ~$100 Bracket 4 veggies and double-duty cards; cut 4-mana enablers that do nothing the turn they enter |
 | `nero-mana` | NeRo | Fix colour pips vs. land sources and cut taplands using land counts matched to commander MV and plan |
-| `nero-goldfish` | NeRo | Run `simulate_deck` to test 7-card keep rate, commander cast turn, and win-line assembly by turn |
+| `nero-goldfish` | NeRo | Run `simulate_deck` (on both the 33-card core and the full 99) to test 7-card keep rate, commander cast turn, and win-line assembly |
 | `defcat-build` | Defcat | Second-school pass inside `nero-build`: turn timing, mana-value bar check, and fuel/hit separation |
 | `defcat-read` | Defcat | Read commanders that compare mana value, reveal the top card, or trigger on the first spell each turn |
 | `defcat-turn` | Defcat | Rescore cards for the moment they resolve (1st main, 2nd main, or free on an opponent's turn) |
 | `defcat-fuel` | Defcat | Find high printed-MV spells that cost little mana to pay (delve, pitch, evoke, convoke, affinity) when a bar exists |
+| `based-build` | Based 33-Card | Third-school pass inside `nero-build` and `nero-tune`: 33-card 1-game core first, `33 × 3 = 99` scaling, and `3 × 33` split audits |
+| `based-core` | Based 33-Card | Draft and goldfish a 33-card 1-game Commander deck (`1/3` of 99) at low variance before choosing 66 more cards |
+| `based-scale` | Based 33-Card | Replicate a tested 33-card core two more times (`33 × 3 = 99`) with functional twins and zero `1/0/0` orphans |
+| `based-split` | Based 33-Card | Split an existing 99-card deck into three 33-card piles to expose uneven splits, `1/0/0` orphans (`Archmage Emeritus`), and fake job slots (`Exalted Flamer of Tzeentch`) |
 | `moxfield-primer` | Publishing | Tag every card in the final list (`#ramp`, `#draw`, `#combo`, `#land`...) for Moxfield bulk paste and generate a full Markdown primer |
 
 ---
@@ -351,7 +358,7 @@ src/mtg_mcp/
   archidekt.py        Archidekt client (deck search, full deck summary, popular cards across top decks)
   library.py          reference library loader, role normalizer, card/deck search, staple comparison
   moxfield.py         Moxfield user importer for reference library sources
-  deck_skills/        12 deckbuilding skills (nero-*, defcat-*, moxfield-primer)
+  deck_skills/        16 deckbuilding skills (nero-*, defcat-*, based-*, moxfield-primer)
   data/library/       bundled reference library data (nero/source.json, decks.json, cards.json)
 scripts/
   build_library_docs.py   regenerate docs/library/ Markdown files from src/mtg_mcp/data/library/
