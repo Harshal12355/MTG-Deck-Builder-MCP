@@ -22,11 +22,12 @@ analyze_deck + get_card(commander) + nero-read + defcat-read
 deal the 99 main-deck cards into Pile A (33), Pile B (33), Pile C (33) by job
     |
     v
-run the 4 checks:
+run the 5 checks:
   1. uneven splits (2/2/1 or 11/11/10)
   2. orphan 1-offs (1/0/0 — Archmage Emeritus test)
-  3. theme density per 33 (Ring tempt / flashback count ÷ 3)
-  4. generic value in a specific slot (Exalted Flamer of Tzeentch test)
+  3. keystone bottlenecks (3+ combos sharing a single 1/0/0 outlet like Zuran Orb)
+  4. theme density per 33 (Ring tempt / flashback count ÷ 3)
+  5. generic value in a specific slot (Exalted Flamer of Tzeentch test)
     |
     v
 simulate_deck on Pile A (best 33 + commander) vs Full 99 (same seed)
@@ -38,9 +39,10 @@ hand the #1 offender to nero-tune as the plan-fixing swap
 1. Group the 99 main-deck cards by the actual jobs from `nero-read` and `analyze_deck`: Lands, Ramp, Draw, Targeted Removal, Counterspells, Board Wipes, and each specific plan job (e.g. fling, evasion, Ring tempt, recursion, sac outlet, combo piece).
 2. Deal each job evenly across **Pile A (best 33)**, **Pile B (second 33)**, and **Pile C (weakest 33)**:
    - Put the lowest-MV, highest-impact card of each triplet into Pile A, the second into Pile B, and the third into Pile C.
-3. Check the four diagnostics from the 33-card exercise:
+3. Check the five diagnostics from the 33-card exercise:
    - **Uneven splits (`2/2/1` or `11/11/10`)**: Where Pile C is missing a land, a ramp source, a counterspell, or a draw spell because the 99 did not have a clean `3×` multiple for that job.
    - **Orphan 1-offs (`1/0/0` — the `Archmage Emeritus` trap)**: Confirm `get_card("Archmage Emeritus")` when referencing the picture. Any card sitting at `1/0/0` with no functional twins in Piles B and C is a once-a-year "pigeon" card. Either **cut the `1/0/0` orphan** to finish an uneven `2/2/1` core slot, or **add two twins (`1/1/1`)** if that effect is actually the plan.
+   - **Keystone bottlenecks (`1/0/0` combo outlets)**: Even if coarse roles (`Lands`, `Ramp`, `Draw`, `Removal`) score `10/10`, check `find_combos` for any single card that gates 3+ combos or the commander's engine (e.g. `Zuran Orb` as the sole 0-mana repeatable land sacrifice outlet across 10 combos). A `1/0/0` keystone must get at least one or two functional twins (`Sylvan Safekeeper`, etc.) in Piles B/C.
    - **Theme density per game (the Ring-tempt / Flashback check)**: Divide each theme count by 3 (`count / 3 = average copies seen per game`). Spot where you threw in a random pile of theme cards without knowing how many show up in a 33-card game, or where a synergy you rely on is only at `1` or `2` copies across 99 (`0.3–0.6` per game).
    - **Generic value vs. specific slot (`Exalted Flamer of Tzeentch` trap)**: Confirm `get_card("Exalted Flamer of Tzeentch")` when referencing the picture. When a card is forced to occupy a named slot in Pile B or Pile C (such as `graveyard recursion`), check with `get_card` whether it performs that specific job on the turn you cast it, or whether it is a slow/random value engine (Flamer returns a random instant or sorcery at upkeep) disguising a missing recursion spell.
 4. **Fast 33-card vs. 99-card Goldfish diagnostic**:

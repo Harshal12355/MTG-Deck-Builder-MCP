@@ -273,15 +273,16 @@ async def analyze_deck(
     if not deck_parsed.playing:
         return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck_parsed.unparsed_lines[:10]}
     try:
+        _, cards, not_found = await _resolve_deck(decklist, commanders)
         if include_combos:
             _, spellbook, _ = _clients()
-            (_, cards, not_found), combo_res = await asyncio.gather(
-                _resolve_deck(decklist, commanders),
-                spellbook.find_my_combos(deck_parsed, include_steps=False),
-            )
+            for e in deck_parsed.commanders:
+                full_name = (cards.get(e.name.lower()) or {}).get("name")
+                if full_name and "//" in full_name:
+                    e.name = full_name
+            combo_res = await spellbook.find_my_combos(deck_parsed, include_steps=False)
             combos = (combo_res.get("in_deck") or {}).get("combos") or []
         else:
-            _, cards, not_found = await _resolve_deck(decklist, commanders)
             combos = None
     except ApiError as exc:
         return _error(exc)

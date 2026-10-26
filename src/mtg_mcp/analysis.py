@@ -97,8 +97,8 @@ CURATED_TWO_CARD_COMBOS: tuple[tuple[str, str, bool], ...] = (
     ("Worldgorger Dragon", "Dance of the Dead", True),
     ("Curiosity", "Niv-Mizzet, the Firemind", False),
     ("Curiosity", "Niv-Mizzet, Parun", False),
-    ("Helm of the Host", "Godo, Bandit Warlord", True),
-    ("Heliod, Sun-Crowned", "Walking Ballista", True),
+    ("Helm of the Host", "Godo, Bandit Warlord", False),
+    ("Heliod, Sun-Crowned", "Walking Ballista", False),
     ("Heliod, Sun-Crowned", "Spike Feeder", True),
     ("Vito, Thorn of the Dusk Rose", "Exquisite Blood", False),
     ("Bloodthirsty Conqueror", "Sanguine Bond", False),
@@ -109,31 +109,22 @@ CURATED_TWO_CARD_COMBOS: tuple[tuple[str, str, bool], ...] = (
     ("Demonic Consultation", "Jace, Wielder of Mysteries", True),
     ("Tainted Pact", "Laboratory Maniac", True),
     ("Demonic Consultation", "Laboratory Maniac", True),
-    ("Dualcaster Mage", "Twinflame", True),
-    ("Dualcaster Mage", "Heat Shimmer", True),
-    ("Dualcaster Mage", "Molten Duplication", True),
+    ("Dualcaster Mage", "Twinflame", False),
+    ("Dualcaster Mage", "Heat Shimmer", False),
+    ("Dualcaster Mage", "Molten Duplication", False),
     ("Village Bell-Ringer", "Kiki-Jiki, Mirror Breaker", True),
     ("Restoration Angel", "Kiki-Jiki, Mirror Breaker", True),
-    ("Restoration Angel", "Felidar Guardian", False),
+    ("Felidar Guardian", "Kiki-Jiki, Mirror Breaker", True),
     ("Phyrexian Altar", "Gravecrawler", True),
     ("Time Sieve", "Thopter Assembly", False),
     ("Chatterfang, Squirrel General", "Pitiless Plunderer", True),
     ("Kinnan, Bonder Prodigy", "Basalt Monolith", True),
-    ("Luminous Broodmoth", "Carrion Feeder", True),
-    ("Luminous Broodmoth", "Viscera Seer", True),
-    ("Luminous Broodmoth", "Bartolomé del Presidio", True),
     ("Leonin Relic-Warder", "Animate Dead", True),
     ("Leonin Relic-Warder", "Dance of the Dead", True),
     ("Leonin Relic-Warder", "Necromancy", True),
-    ("Vizier of Remedies", "Carrion Feeder", True),
-    ("Vizier of Remedies", "Viscera Seer", True),
-    ("Vizier of Remedies", "Bartolomé del Presidio", True),
-    ("Metallic Mimic", "Carrion Feeder", True),
-    ("Metallic Mimic", "Viscera Seer", True),
-    ("Metallic Mimic", "Bartolomé del Presidio", True),
-    ("Thran Vigil", "Carrion Feeder", True),
-    ("Thran Vigil", "Viscera Seer", True),
-    ("Thran Vigil", "Bartolomé del Presidio", True),
+    ("Abdel Adrian, Gorion's Ward", "Animate Dead", True),
+    ("Abdel Adrian, Gorion's Ward", "Dance of the Dead", True),
+    ("Abdel Adrian, Gorion's Ward", "Necromancy", True),
 )
 
 # Community EDHREC salt scores for the most-flagged Commander staples (0-4 scale).
@@ -371,7 +362,7 @@ _ROLE_PATTERNS: dict[str, list[re.Pattern[str]]] = {
         re.compile(r"each player sacrifices (?:all|each)"),
     ],
     "tutor": [
-        re.compile(r"search your library for (?:a|an|up to \w+|two|three|four|any number of) (?!basic )(?![^.]*\bland\b)[^.]*cards?"),
+        re.compile(r"search your library for (?:a|an|up to \w+|two|three|four|any number of) (?!basic )(?![^.]*\b(?:land|plains|island|swamp|mountain|forest)\b)[^.]*cards?"),
         re.compile(r"\btransmute\b"),
     ],
     "protection": [
@@ -535,21 +526,29 @@ def _detect_combos_and_tiers(
 ) -> dict[str, Any]:
     two_card: list[dict[str, Any]] = []
     three_plus: list[dict[str, Any]] = []
+    template_combos: list[dict[str, Any]] = []
     seen_pairs: set[tuple[str, ...]] = set()
 
     for c in spellbook_combos or []:
         pieces = [p for p in (c.get("cards") or []) if p]
         if not pieces:
             continue
-        key = tuple(sorted(_front_lower(p) for p in pieces))
+        also_req = c.get("also_requires") or []
+        key = tuple(sorted(_front_lower(p) for p in pieces)) + tuple(also_req)
         if key in seen_pairs:
             continue
         seen_pairs.add(key)
         tag = str(c.get("bracket_tag") or "").upper()
-        # Commander Spellbook tags: 'E' (Explosive), 'O' (Optimized), 'R' (Ruthless) = early/Bracket 4+; 'S'/'P'/'C' = late/Bracket 3
-        is_early = tag in {"E", "O", "R", "4", "5", "EARLY", "RUTHLESS", "EXPLOSIVE", "OPTIMIZED"} or (not tag and len(pieces) == 2)
-        item = {"cards": pieces, "early": is_early, "produces": c.get("produces")}
-        if len(pieces) <= 2:
+        # Commander Spellbook BracketTagEnum: 'R' (Ruthless), 'P' (Powerful) = early/Bracket 4+;
+        # 'S' (Spicy) = late/Bracket 3; 'C' (Core), 'O' (Oddball), 'E' (Exhibition) = Bracket 1-2 (needs payoff).
+        is_early = tag in {"R", "P", "4", "5", "EARLY", "RUTHLESS", "POWERFUL"} or (not tag and len(pieces) == 2)
+        is_non_winning_two_card = len(pieces) <= 2 and tag in {"E", "O", "C", "1", "2"}
+        item = {"cards": pieces, "early": is_early, "produces": c.get("produces"), "also_requires": also_req or None}
+        # EDHcheck rule (05~mod.szojk4.js): `e.cards.length <= 2 && !e.requires?.length`
+        # Combos with template `also_requires` ("+ needs Creature with Persist or Undying") are 3-card / template loops, not 2-card combos.
+        if also_req:
+            template_combos.append(item)
+        elif len(pieces) <= 2 and not is_non_winning_two_card:
             two_card.append(item)
         else:
             three_plus.append(item)
@@ -565,9 +564,11 @@ def _detect_combos_and_tiers(
     return {
         "two_card_combos": two_card,
         "three_plus_combos": three_plus,
+        "template_combos": template_combos,
         "early_two_card": any(c["early"] for c in two_card),
         "late_two_card": any(not c["early"] for c in two_card),
         "total_combos": len(two_card) + len(three_plus),
+        "total_including_templates": len(two_card) + len(three_plus) + len(template_combos),
     }
 
 
@@ -612,7 +613,7 @@ def _score_and_bracket(
     salty_hits = [SALT_SCORES[_front_lower(c.get("name", e.name))] for e, c in resolved if _front_lower(c.get("name", e.name)) in SALT_SCORES]
     avg_salt = sum(salty_hits) / max(4, len(salty_hits)) if salty_hits else 0.15
 
-    # 8 EDHcheck 0-10 sub-scores
+    # 8 EDHcheck 0-10 sub-scores (exact EDHcheck weights and scalers)
     tutor_sub = min(10.0, tutors_count * 0.9)
     combo_sub = min(10.0, combo_info["total_combos"] * 3.2)
     gc_sub = min(10.0, len(game_changers) * 2.0)
@@ -620,26 +621,42 @@ def _score_and_bracket(
     draw_sub = min(10.0, draw_pct * 65.0)
     ramp_sub = min(10.0, ramp_pct * 70.0)
     salt_sub = min(10.0, avg_salt * 4.0)
-    removal_sub = min(10.0, removal_pct * 65.0)
+    removal_sub = min(10.0, removal_pct * 47.0)
 
     synergy = _synergy_profile(nonland_cards)
     interaction_score = round(min(10.0, removal_sub * (0.65 + 0.35 * instant_ratio)), 1)
     interaction_bonus = round(min(0.4, interaction_score * 0.04), 2)
 
-    # Allow clean synergy/combo density to stand in when a deck avoids high-salt stax or expensive Game Changers
-    effective_gc_sub = max(gc_sub, min(10.0, (combo_sub + tutor_sub) * 0.5))
-    effective_salt_sub = max(salt_sub, min(10.0, synergy["score"] * 0.9))
     weighted = (
         tutor_sub * 0.18
         + combo_sub * 0.15
+        + gc_sub * 0.15
+        + curve_sub * 0.12
+        + draw_sub * 0.12
+        + ramp_sub * 0.10
+        + salt_sub * 0.10
+        + removal_sub * 0.08
+    )
+    raw = weighted + synergy["bonus"] + interaction_bonus
+
+    # Allow clean synergy/combo density (including satisfied template combos) to stand in for budget adjusted score
+    full_combo_sub = min(10.0, combo_info["total_including_templates"] * 3.2)
+    effective_gc_sub = max(gc_sub, min(10.0, (full_combo_sub + tutor_sub) * 0.5))
+    effective_salt_sub = max(salt_sub, min(10.0, synergy["score"] * 0.9))
+    budget_raw = (
+        tutor_sub * 0.18
+        + full_combo_sub * 0.15
         + effective_gc_sub * 0.15
         + curve_sub * 0.12
         + draw_sub * 0.12
         + ramp_sub * 0.10
         + effective_salt_sub * 0.10
-        + removal_sub * 0.08
+        + min(10.0, removal_pct * 65.0) * 0.08
+        + synergy["bonus"]
+        + interaction_bonus
     )
-    raw = weighted + synergy["bonus"] + interaction_bonus
+    budget_stretched = 6.0 + (budget_raw - 6.0) * 1.3 if budget_raw > 6.0 else budget_raw
+    budget_power_total = round(min(10.0, max(0.0, budget_stretched)), 1)
 
     # Base Bracket 1..4 decision (EDHcheck decideBracket)
     b4_reasons: list[str] = []
@@ -753,9 +770,9 @@ def _score_and_bracket(
             bracket_path.append(f"Trim extra-turn spells ({', '.join(extra_turns)}) down to at most 1 for Bracket 2.")
 
     speed_score = round(min(10.0, curve_sub * 0.35 + ramp_sub * 0.25 + tutor_sub * 0.20 + combo_sub * 0.20), 1)
-    consistency_score = round(min(10.0, draw_sub * 0.45 + tutor_sub * 0.35 + ramp_sub * 0.20), 1)
+    consistency_score = round(min(10.0, (draw_sub * 0.45 + tutor_sub * 0.35 + ramp_sub * 0.20) * 0.83), 1)
     token_axis = (synergy["axes"].get("tokens") or {}).get("score", 0)
-    resilience_score = round(min(10.0, (protection_count + recursion_count) * 1.1 + token_axis * 0.4), 1)
+    resilience_score = round(min(10.0, (protection_count + recursion_count) * 0.35 + token_axis * 0.2), 1)
 
     tier = (
         "Bleeding Edge" if power_total >= 9.5 else
@@ -788,6 +805,7 @@ def _score_and_bracket(
 
     power_report = {
         "total": power_total,
+        "budget_adjusted_total": budget_power_total,
         "tier": tier,
         "raw_weighted": round(weighted, 2),
         "speed": speed_score,

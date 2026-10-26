@@ -26,7 +26,10 @@ BUCKETS = {
 def _summarize_variant(v: dict[str, Any], deck_names: set[str]) -> dict[str, Any]:
     cards = [u.get("card", {}).get("name") for u in v.get("uses", [])]
     templates = [r.get("template", {}).get("name") for r in v.get("requires", [])]
-    missing = [c for c in cards if c and c.lower() not in deck_names]
+    missing = [
+        c for c in cards
+        if c and c.lower() not in deck_names and c.split(" // ")[0].strip().lower() not in deck_names
+    ]
     out = {
         "id": v.get("id"),
         "cards": cards,
@@ -48,7 +51,7 @@ class Spellbook:
     def __init__(self, http: HttpClient):
         self.http = http
 
-    async def find_my_combos(self, deck: ParsedDeck, *, limit_per_bucket: int = 15, include_steps: bool = True) -> dict[str, Any]:
+    async def find_my_combos(self, deck: ParsedDeck, *, limit_per_bucket: int = 30, include_steps: bool = True) -> dict[str, Any]:
         body = {
             "commanders": [{"card": e.name, "quantity": e.quantity} for e in deck.commanders],
             "main": [{"card": e.name, "quantity": e.quantity} for e in deck.main],

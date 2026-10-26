@@ -44,8 +44,9 @@ nero-goldfish on 100 cards with the SAME seed as based-core (compare 33 vs 99)
    - **Same curve weight**: do not replace a 1–2 MV card in Pile A with a 4–5 MV twin in Pile C. That bloats the 99-card curve and breaks the 33-card goldfish benchmark.
    - **Specific job over generic value (`Exalted Flamer of Tzeentch` test)**: if the slot in Pile A is specific recursion, Pile B and Pile C must also be specific recursion — not a slow random value engine.
    - **No `1/0/0` orphans (`Archmage Emeritus` test)**: do not drop a random 1-of into Pile C because you ran out of ideas. Either the effect owns a `1/1/1` triplet across all three piles, or it is out.
-4. **Overlapping combos across `3 × 33`**:
+4. **Overlapping combos and keystone triplication across `3 × 33`**:
    - When `nero-lines` chose overlapping combos, spread interchangeable pieces (`A1 | A2 | A3` and `B1 | B2 | B3`, or the combo piece in Pile A plus 2 tutors/transmutes at the same MV in Piles B and C) so every 33-card slice can assemble the win.
+   - **Never leave a keystone outlet at `1/0/0`**: if 3+ lines depend on one specific sub-effect (e.g. a 0-mana land sacrifice outlet like `Zuran Orb`), give it functional twins in Piles B and C (`Sylvan Safekeeper`, etc.) or instant-speed tutors at the same MV.
 5. Combine `Commander + Pile A + Pile B + Pile C` (`100` cards total). Run `get_skill("nero-mana")`, `analyze_deck`, `price_decklist`, `find_combos`, and `get_skill("nero-goldfish")` with the **same `seed`** used in `based-core`.
 6. Compare the 99-card goldfish against the 33-card core benchmark:
    - `kept_seven` and `commander.castable_by_turn` at the ideal turn should stay within a few points of the 33-card run.

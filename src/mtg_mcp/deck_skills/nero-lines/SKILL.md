@@ -30,9 +30,13 @@ Use this when the win shape says overlapping combos.
 
 1. `search_combos`. Start with `card:"Commander Name"`. Then search the outlet without the commander, so you can see lines that work while the commander is removed. The tool's syntax also includes `cards=2`, `result:"win the game"`, and `id<=COLORS` (same form as the tool's own examples). A query that returns no combos loses one filter and runs again.
 2. Keep a line only when all of these are true:
+   - **Fits the target Bracket (default Bracket 4, or the user's Bracket 2 / 3 ceiling)**:
+     - **Bracket 2**: `0` Game Changers, `0` two-card combos (`S`, `R`, `P` out; only 3+ card loops or `E`/`C` non-winning engines).
+     - **Bracket 3 (the "9.0/10 in Bracket 3" rule)**: at most `3` Game Changers, `0` early two-card combos (`bracket_tag` `"R"` or `"P"` out). Use **3+ card overlapping engines**, **Exhibition (`"E"`) 2-card engines that need a 3rd payoff** (`Ashaya` + `Quirion Ranger` + landfall payoff), or **Late (`"S"` = Spicy) 2-card combos** (`The Gitrog Monster` + `Dakmor Salvage`).
+     - **Bracket 4**: any overlapping 2–4 card combos within budget.
    - 2 to 4 cards.
    - `get_card` on every piece. On an ordinary turn it does one job from `nero-read`. A piece that is dead alone is out.
-   - A second line shares a piece. For every A, two or three Bs.
+   - **Keystone triplication (no `1/0/0` bottleneck)**: a second line shares a piece ("for every A, two or three Bs"), AND any keystone outlet shared across 3+ combos (e.g. 0-mana land sacrifice like `Zuran Orb`) must have functional twins (`Sylvan Safekeeper`, etc.) so the deck does not fold when one card sits in the bottom 66.
    - Most lines still function if the commander is not on the battlefield.
    - Price from `get_card`. One piece over about $15 eats a ~$100 deck. Out, unless the user asked. Thassa's Oracle and Underworld Breach are out unless the user asked for that budget.
 3. Three or four lines. After a decklist exists, `find_combos` on it. Say what is already in the deck, then what is one card away. The missing card has to be good alone.

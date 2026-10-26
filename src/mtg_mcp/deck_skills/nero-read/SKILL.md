@@ -27,10 +27,11 @@ win shape                 one spell, a pile of the same effect, or overlapping c
 
 1. `get_card` the commander. Quote the ability that is not the creature type.
 2. `get_card_rulings` when the sequence matters. Rowan is this case. Skip the call only when the text has no timing, no X, and no "this turn".
-3. Answer four questions from the tool result:
+3. Answer five questions from the tool result:
    - Scope. The next spell, or every spell this turn? One trigger, or each end step?
    - Lock. When is the number fixed? Life you lose after that moment does not count.
    - Fuel. What has to happen before the lock? Name the amount, not "some life".
+   - Board gate. What permanent, power total, or fodder must already be on the battlefield before the commander's ability turns on (`Station 2+ / 8+`, `Saddle`, `Crew`, sacrifice a creature/land)? When a board gate exists, early ramp and draw slots must provide that body or permanent type (e.g. a 2-power ramp creature over `Farseek` so it both ramps and stations `Hearthhull` the turn it arrives).
    - Leftover cost. Generic mana only, or the colored pips too? Pips you still pay are part of the bend.
 4. Name the trap. It is the card the surface theme suggests that pays off on the wrong turn, or for 1 when the plan needs 3 or 4. `get_card` it before you call it a trap.
 5. Write the win shape in one sentence. Do not add cards in this skill.
