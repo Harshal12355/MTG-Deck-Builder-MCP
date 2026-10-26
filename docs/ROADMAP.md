@@ -191,6 +191,12 @@ compare_decks(+2 swaps) ──► 98 hits in cache, fetches only [2]  (1 tiny HT
 
 ---
 
+## Code structure (see `docs/architecture.md`)
+
+Modularization follows MCP reference-server patterns: thin `server.py` + `tools/*`, domain in `analysis/*`, shared `wiring.py`. Progress is tracked in the architecture doc migration checklist (golden tests gate each step).
+
+---
+
 ## Explicitly Out of Scope (Ponytail YAGNI)
 
 - **EDHcheck UI-only games & bots:** *Higher or Lower Price Game*, *MTG Oracle (20 Questions)*, *Pack Simulator (foil shimmer UI)*, and *Discord Bot* are web-entertainment / chat-platform wrappers, not deckbuilding MCP primitives.

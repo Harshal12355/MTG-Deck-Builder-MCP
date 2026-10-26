@@ -12,8 +12,8 @@ import re
 from collections import Counter, defaultdict
 from typing import Any
 
-from .decklist import ParsedDeck
-from .scryfall import front_type_line, oracle_text, price_usd
+from ..decklist import ParsedDeck
+from ..scryfall import front_type_line, oracle_text, price_usd
 
 COLORS = "WUBRG"
 

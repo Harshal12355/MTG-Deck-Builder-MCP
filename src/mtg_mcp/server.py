@@ -30,8 +30,10 @@ from .archidekt import Archidekt, parse_deck_id
 from .decklist import ParsedDeck, parse_decklist
 from .edhrec import Edhrec
 from .forge import fetch_forge_tags
-from .http import ApiError, HttpClient
+from .http import ApiError
 from .goldfish import simulate
+from .tools import register_tools
+from . import wiring
 from .library import ROLES, decklist_text, deck_label, get_library, library_dir, reload_library
 from .moxfield import import_user
 from .principles import principles as build_principles
@@ -106,38 +108,28 @@ def get_skill(name: str) -> dict[str, Any]:
 
 
 register_prompts(mcp)
-
-_http: HttpClient | None = None
+register_tools(mcp)
 
 
 def _clients() -> tuple[Scryfall, Spellbook, Edhrec]:
-    global _http
-    if _http is None:
-        _http = HttpClient()
-    return Scryfall(_http), Spellbook(_http), Edhrec(_http)
+    return wiring.clients()
 
 
 def _archidekt() -> Archidekt:
-    _clients()  # make sure the shared client exists
-    assert _http is not None
-    return Archidekt(_http)
+    return wiring.archidekt()
 
 
-def set_http_client(http: HttpClient) -> None:
+def set_http_client(http) -> None:
     """Swap the shared HTTP client (used by tests)."""
-    global _http
-    _http = http
+    wiring.set_http_client(http)
 
 
 def _error(exc: ApiError) -> dict[str, Any]:
-    return {"error": str(exc), "status": exc.status}
+    return wiring.api_error(exc)
 
 
 async def _resolve_deck(decklist: str, commanders: list[str] | None) -> tuple[ParsedDeck, dict[str, dict[str, Any]], list[str]]:
-    scryfall, _, _ = _clients()
-    deck = parse_decklist(decklist, commanders)
-    cards, not_found = await scryfall.collection(e.name for e in deck.commanders + deck.main + deck.sideboard)
-    return deck, cards, not_found
+    return await wiring.resolve_deck(decklist, commanders)
 
 
 # --------------------------------------------------------------------------- cards
@@ -185,7 +177,6 @@ async def get_card(
     `DeckHints`, and AST ability/trigger tags.
     """
     scryfall, _, _ = _clients()
-    assert _http is not None
     try:
         card = await scryfall.named(name, fuzzy=not exact, set_code=set_code)
     except ApiError as exc:
@@ -193,7 +184,7 @@ async def get_card(
     out = summarize_card(card)
     out["roles"] = card_roles(card) or None
     if include_forge_tags:
-        ftags = await fetch_forge_tags(_http, card.get("name", name))
+        ftags = await fetch_forge_tags(wiring.http_client(), card.get("name", name))
         card["forge_tags"] = ftags
         out["forge_tags"] = ftags
     return out
@@ -982,10 +973,8 @@ async def moxfield_import_user(username: str, source_key: str | None = None, inc
     <library>/<source_key>/. Existing hand-written notes for decks are kept. Moxfield has no official API,
     so this can break or be rate-limited (about 1 request per second, ~2 per deck).
     """
-    _clients()
-    assert _http is not None
     try:
-        result = await import_user(_http, username, library_dir(), source_key=source_key,
+        result = await import_user(wiring.http_client(), username, library_dir(), source_key=source_key,
                                    include_primers=include_primers, max_decks=max(1, min(max_decks, 200)))
     except ApiError as exc:
         return {**_error(exc), "hint": "Moxfield may be blocking automated requests from this network."}
