@@ -150,6 +150,16 @@ class AnalysisTests(unittest.TestCase):
         self.assertIn("nero", r["school_score"])
         self.assertIn("defcat", r["school_score"])
         self.assertIn("based_33", r["school_score"])
+        r_keystone = analyze(
+            d,
+            CARDS,
+            combos=[
+                {"cards": ["Zuran Orb", "A", "B"], "bracket_tag": "E"},
+                {"cards": ["Zuran Orb", "C", "D"], "bracket_tag": "E"},
+                {"cards": ["Zuran Orb", "E", "F"], "bracket_tag": "E"},
+            ],
+        )
+        self.assertEqual(r_keystone["school_score"]["keystone_combo_pieces"], ["Zuran Orb"])
         self.assertIn("synergy", r)
         self.assertEqual(r["roles"]["cards"]["draw_on_their_spell"], ["Rhystic Study"])
         self.assertEqual(r["price"]["most_expensive"][0], {"card": "Doubling Season", "usd": 45.0})

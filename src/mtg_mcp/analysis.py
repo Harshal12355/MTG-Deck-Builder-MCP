@@ -856,13 +856,20 @@ def _score_and_bracket(
         name for name, count in (("lands", lands), ("ramp", ramp_count), ("card_draw", draw_count), ("interaction", interaction_total))
         if count % 3 != 0
     ]
+    combo_piece_counts: Counter[str] = Counter()
+    for c in combo_info["two_card_combos"] + combo_info["three_plus_combos"] + combo_info["template_combos"]:
+        for piece in c.get("cards") or []:
+            combo_piece_counts[piece] += 1
+    keystone_cards = [card for card, cnt in combo_piece_counts.most_common() if cnt >= 3]
+
     based_hits = (
         (3.0 if 9.5 <= per_33["lands"] <= 13.5 else 1.0)
         + (2.5 if per_33["ramp"] >= 2.5 else per_33["ramp"])
         + (2.5 if per_33["card_draw"] >= 3.0 else per_33["card_draw"] * 0.8)
         + (2.0 if per_33["interaction"] >= 3.0 else per_33["interaction"] * 0.6)
+        - 0.3 * len(uneven_roles)
     )
-    based_score = round(min(10.0, based_hits), 1)
+    based_score = round(max(0.0, min(10.0, based_hits)), 1)
     school_notes: list[str] = []
     if avg_cmc > 2.5:
         school_notes.append(f"NeRo: average nonland MV is {avg_cmc} (target <= 2.2 for fast Bracket 4).")
@@ -872,6 +879,10 @@ def _score_and_bracket(
         school_notes.append(f"Defcat: only {int(instant_ratio * 100)}% of interaction is instant-speed; prefer Instant/Flash answers.")
     if uneven_roles:
         school_notes.append(f"Based 3x33: {', '.join(uneven_roles)} are not clean multiples of 3 across Piles A/B/C.")
+    if keystone_cards:
+        school_notes.append(
+            f"Based 3x33: keystone combo pieces in 3+ lines ({', '.join(keystone_cards[:3])}) need functional twins or tutors across Piles B/C."
+        )
 
     school_report = {
         "total": round((nero_score + defcat_score + based_score) / 3.0, 1),
@@ -880,6 +891,7 @@ def _score_and_bracket(
         "based_33": based_score,
         "per_33_game": per_33,
         "uneven_3x33_roles": uneven_roles,
+        "keystone_combo_pieces": keystone_cards,
         "notes": school_notes,
     }
 
