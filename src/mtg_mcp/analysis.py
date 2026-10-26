@@ -186,6 +186,10 @@ _SYNERGY_AXES: dict[str, tuple[re.Pattern[str], re.Pattern[str]]] = {
         re.compile(r"\bmill\b|\bdiscard\b|search your library for a card, put that card into your graveyard"),
         re.compile(r"return target creature card from (?:a|your) graveyard to the battlefield|put .*creature cards? from .*graveyard.* onto the battlefield"),
     ),
+    "upkeep": (
+        re.compile(r"additional upkeep|can't be blocked|\bhaste\b|\bdouble strike\b|you become the monarch|take the initiative"),
+        re.compile(r"at the beginning of (?:your|each|enchanted player's) (?:first )?upkeep|you become the monarch|take the initiative|\bsuspend\b|time counter"),
+    ),
 }
 
 LAND_CYCLES: list[dict[str, str]] = [
