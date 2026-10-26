@@ -39,9 +39,10 @@ def front_type_line(card: dict[str, Any]) -> str:
     return card.get("type_line", "")
 
 
-def price_usd(card: dict[str, Any]) -> float | None:
+def price_usd(card: dict[str, Any], currency: str = "usd") -> float | None:
     prices = card.get("prices") or {}
-    for key in ("usd", "usd_foil", "usd_etched"):
+    keys = ("eur", "eur_foil") if currency.lower() == "eur" else ("usd", "usd_foil", "usd_etched")
+    for key in keys:
         value = prices.get(key)
         if value:
             try:

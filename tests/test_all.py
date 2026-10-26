@@ -99,6 +99,29 @@ class RoleTests(unittest.TestCase):
         self.assertIn("ramp", self.roles("Cultivate"))
         self.assertNotIn("tutor", self.roles("Cultivate"))
         self.assertIn("card_draw", self.roles("Rhystic Study"))
+        self.assertIn("draw_on_their_spell", self.roles("Rhystic Study"))
+        self.assertNotIn("draw_on_cast", self.roles("Rhystic Study"))
+        self.assertNotIn("draw_on_hit", self.roles("Rhystic Study"))
+
+    def test_draw_gates(self):
+        def gates(text, type_line="Instant"):
+            return card_roles({"type_line": type_line, "oracle_text": text})
+
+        opt = gates("Scry 1.\nDraw a card.")
+        self.assertIn("card_draw", opt)
+        self.assertEqual([r for r in opt if r.startswith("draw_")], ["draw_on_cast"])
+        piracy = gates(
+            "Whenever a creature you control deals combat damage to an opponent, you may draw a card.",
+            "Enchantment",
+        )
+        self.assertIn("draw_on_hit", piracy)
+        self.assertNotIn("draw_on_their_spell", piracy)
+        self.assertNotIn("draw_on_cast", piracy)
+        enters = gates("When this creature enters, draw a card.", "Creature — Human")
+        self.assertIn("draw_on_cast", enters)
+        arena = gates("At the beginning of your upkeep, you draw a card and you lose 1 life.", "Enchantment")
+        self.assertIn("card_draw", arena)
+        self.assertFalse(any(r.startswith("draw_on_") for r in arena))
         self.assertIn("removal", self.roles("Swords to Plowshares"))
         self.assertIn("board_wipe", self.roles("Wrath of God"))
         self.assertNotIn("removal", self.roles("Wrath of God"))
@@ -117,6 +140,18 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["lands"], 91)
         self.assertEqual(r["land_color_sources"]["G"], 46)
         self.assertEqual(r["game_changers"], ["Demonic Tutor", "Rhystic Study"])
+        self.assertEqual(r["bracket"]["bracket"], 3)
+        self.assertEqual(r["bracket"]["label"], "Upgraded")
+        self.assertTrue(r["bracket"]["bracket_path"])
+        self.assertGreater(r["power_score"]["total"], 0)
+        self.assertIn("speed", r["power_score"])
+        self.assertIn("consistency", r["power_score"])
+        self.assertIn("school_score", r)
+        self.assertIn("nero", r["school_score"])
+        self.assertIn("defcat", r["school_score"])
+        self.assertIn("based_33", r["school_score"])
+        self.assertIn("synergy", r)
+        self.assertEqual(r["roles"]["cards"]["draw_on_their_spell"], ["Rhystic Study"])
         self.assertEqual(r["price"]["most_expensive"][0], {"card": "Doubling Season", "usd": 45.0})
         t = r["template"]
         self.assertEqual(t["categories"]["lands"], {"target": 38, "actual": 91, "status": "53 over"})
@@ -175,6 +210,37 @@ class ToolTests(unittest.TestCase):
         # 11 unique names in one /cards/collection batch
         posts = [c for c in self.fake.calls if c[0] == "POST"]
         self.assertEqual(len(posts), 1)
+        with_combos = run(server.analyze_deck(atraxa_list(), include_combos=True))
+        self.assertEqual(with_combos["bracket"]["bracket"], 4)  # Spellbook 'R' early 2-card combo elevates to B4
+
+    def test_edhcheck_suite_tools(self):
+        mana = run(server.analyze_mana_base(atraxa_list()))
+        self.assertIn("grade", mana)
+        self.assertIn("letter", mana["grade"])
+        self.assertGreaterEqual(mana["recommended_land_count"], 30)
+        self.assertTrue(mana["color_requirements"])
+
+        cycles = run(server.search_lands())
+        self.assertEqual(len(cycles["cycles"]), 24)
+        pains = run(server.search_lands(color_identity="wubg", cycle="pain", max_price=5.0))
+        self.assertEqual(pains["cycle"]["slug"], "pain")
+        self.assertIn("is:painland", pains["query"])
+
+        list_b = atraxa_list().replace("1 Rhystic Study", "1 Lightning Bolt").replace("1 Demonic Tutor", "1 Forest")
+        diff = run(server.compare_decks(atraxa_list(), list_b))
+        self.assertLess(diff["deltas"]["bracket"]["after"], diff["deltas"]["bracket"]["before"])
+        self.assertEqual(diff["game_changers_removed"], ["Demonic Tutor", "Rhystic Study"])
+
+        pod = run(server.check_pod([atraxa_list(), list_b], names=["Tuned Atraxa", "Core Atraxa"]))
+        self.assertIn(pod["verdict"], {"balanced", "slight", "uneven", "mismatched"})
+        self.assertEqual(len(pod["seats"]), 2)
+
+        tokens = run(server.find_tokens(atraxa_list()))
+        self.assertEqual(tokens["token_doublers_in_deck"], ["Doubling Season"])
+
+        priced = run(server.price_decklist(atraxa_list(), budget_target=50.0))
+        self.assertLessEqual(priced["total_after_cuts"], 50.0)
+        self.assertTrue(priced["suggested_cuts_to_hit_budget"])
 
     def test_deckbuilding_template_tool(self):
         r = run(server.deckbuilding_template())
@@ -234,6 +300,61 @@ class ToolTests(unittest.TestCase):
         either = alt["win_lines"][0]["assembled_by_turn"]["8"]
         one = run(server.simulate_deck(atraxa_list(), win_lines=[["Doubling Season"]], trials=200, seed=2))
         self.assertGreaterEqual(either, one["win_lines"][0]["assembled_by_turn"]["8"])
+        # 45 Forest, 45 Island, one Command Tower. Atraxa needs G, W, U, and B.
+        # Tower pays one of those colors, not all four.
+        self.assertEqual(r["commander"]["castable_by_turn"]["6"], 0.0)
+        self.assertGreater(r["commander"]["castable_ignoring_color_by_turn"]["6"], 0.5)
+        self.assertGreaterEqual(
+            r["win_lines"][0]["seen_by_turn"]["6"],
+            r["win_lines"][0]["assembled_by_turn"]["6"],
+        )
+        self.assertIn("1", r["development"]["median_hand_by_turn"])
+        mull = run(server.simulate_deck(
+            atraxa_list(),
+            turns=4,
+            trials=200,
+            seed=1,
+            mulligan_targets=[{"category": "land", "count": 3, "by_turn": 3}, {"category": "ramp", "count": 1, "by_turn": 2}],
+            track_card_impact=True,
+        ))
+        self.assertIn("mulligan_strategy", mull)
+        self.assertEqual(len(mull["mulligan_strategy"]["targets"]), 2)
+        self.assertIn("card_impact", mull)
+
+    def test_goldfish_color_hand_and_payable_line(self):
+        from mtg_mcp.goldfish import SimCard, _play_game, pay
+
+        class _KeepOrder:
+            def shuffle(self, seq):
+                pass
+
+        pips = [frozenset(c) for c in "GWUB"]
+        # Four mana, but the only source that can pay white or black is one land. It pays one pip.
+        self.assertIsNone(pay(0, [frozenset("WUBRG"), frozenset("G"), frozenset("U"), frozenset("G")], 0, pips))
+        self.assertIsNotNone(pay(0, [frozenset(c) for c in "GWUB"], 0, pips))
+
+        island = SimCard("Island", "land", sources=(frozenset({"U"}),))
+        forest = SimCard("Forest", "land", sources=(frozenset({"G"}),))
+        cost = (0, (frozenset({"U"}), frozenset({"U"})))
+        islands = _play_game([island] * 6 + [SimCard("Bear", "other", cmc=2)], _KeepOrder(), 2, 2, True, 0, [], cost)
+        self.assertEqual(islands["commander_turn"], 2)
+        forests = _play_game([forest] * 6 + [SimCard("Bear", "other", cmc=2)], _KeepOrder(), 2, 2, True, 0, [], cost)
+        self.assertIsNone(forests["commander_turn"])
+        self.assertEqual(forests["commander_turn_ignoring_color"], 2)
+
+        cantrip = SimCard("Opt", "other", cmc=1, generic=1, draws=1)
+        # 3 lands keeps the hand, so the only card lost is the cantrip, and the draw puts one back.
+        library = [island] * 3 + [cantrip] + [SimCard(f"F{i}", "other", cmc=3) for i in range(4)]
+        drawn = _play_game(library, _KeepOrder(), None, 1, True, 0, [])
+        self.assertEqual(drawn["hand_by_turn"], [6])
+        self.assertEqual(drawn["follow_up_turn"], 1)
+
+        season = SimCard("Season", "other", cmc=5, generic=5)
+        cultivate = SimCard("Cultivate", "other", cmc=3, generic=3)
+        line = [[(["Season"], False), (["Cultivate"], False)]]
+        early = _play_game([season, cultivate] + [forest] * 6, _KeepOrder(), None, 1, True, 0, line)
+        self.assertIsNone(early["line_turns"][0])
+        self.assertEqual(early["seen_turns"][0], 1)
 
     def test_unpaid_rituals_do_not_cast_the_commander(self):
         # The hand keeps (3 lands) but turn 1 plays one land. Two rituals cost 4,
@@ -560,7 +681,8 @@ class McpProtocolTest(unittest.TestCase):
         self.assertEqual(
             set(names),
             {"search_cards", "get_card", "get_card_rulings", "get_card_printings", "autocomplete_card_name",
-             "random_card", "analyze_deck", "find_combos", "search_combos", "edhrec_recommendations",
+             "random_card", "analyze_deck", "analyze_mana_base", "search_lands", "compare_decks", "check_pod",
+             "find_tokens", "find_combos", "search_combos", "edhrec_recommendations",
              "edhrec_card", "price_decklist", "deckbuilding_template", "deckbuilding_principles", "simulate_deck",
              "archidekt_search_decks", "archidekt_get_deck", "archidekt_popular_cards",
              "reference_library", "reference_principles", "reference_cards", "reference_card", "reference_deck",

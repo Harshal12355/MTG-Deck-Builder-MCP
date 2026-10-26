@@ -67,7 +67,7 @@ Master plan for `mtg-deckbuilder-mcp`:
 | **Game Changers List** | Partial (`game_changer` bool) | **Phase 6c:** Explain bracket impact in `analyze_deck`; queryable via `search_cards("is:gamechanger")` |
 | **Token Finder** | Missing | **Phase 10:** Add `find_tokens` using Scryfall `all_parts` (`component == "token"`) |
 | **Price Checker** | Have `price_decklist` (USD) | **Phase 6c:** Add `currency="eur"` (Cardmarket) + `cheaper_printings_over` budget swap finder |
-| **Deck Tester** | Have `simulate_deck` | **Phase 8:** Add color-aware mana checking so color-screwed hands don't count as castable |
+| **Deck Tester** | Have `simulate_deck` (colors, payable lines, hand size) | **Phase 8:** Mulligan targets still open |
 | **Mulligan Calculator** | Hardcoded keep rule | **Phase 8:** Add custom `mulligan_targets` (e.g. "2+ lands, 1+ ramp by T2") + exact hypergeometric math |
 | **Random Commander** | Have `random_card` | **Phase 10:** Add commander filter presets (color identity, max CMC, max USD) |
 | **Explore / Precons** | Have `archidekt_*` & `reference_*` | **Phase 2 & 10:** Add `moxfield_get_deck` + precon search filter (`is:precon` / Archidekt precon filter) |
@@ -168,10 +168,10 @@ compare_decks(+2 swaps) ──► 98 hits in cache, fetches only [2]  (1 tiny HT
 
 ### Phase 8 — Mulligan Calculator & Color-Aware Goldfish (`phase-8-mulligan-sim`)
 - **Estimate:** ~45 minutes
-- **Why:** `simulate_deck` currently ignores mana colors (`"Mana is counted by amount, not colour"`) and uses one hardcoded mulligan rule.
+- **Why:** The keep rule is still one hardcoded land count. Color, a payable win line, cards left in hand, and a non-ramp follow-up are already in `simulate_deck`.
 - **Scope (`src/mtg_mcp/goldfish.py`):**
-  1. Track produced colors on `SimCard` (`produced_mana` from Scryfall) and check color requirements when casting the commander.
-  2. Add `mulligan_targets: list[dict] | None = None` to `simulate_deck` (e.g. `[{"role": "land", "min": 2, "max": 4, "by_turn": 1}, {"role": "ramp", "min": 1, "by_turn": 2}]`) so it acts as EDHcheck's **Mulligan Strategy Calculator** across 10,000 trials.
+  1. Done: produced colors, commander pips, `assembled_by_turn` vs `seen_by_turn`, `development.median_hand_by_turn`, `development.follow_up_by_turn`.
+  2. Still open: `mulligan_targets: list[dict] | None = None` (e.g. `[{"role": "land", "min": 2, "max": 4, "by_turn": 1}, {"role": "ramp", "min": 1, "by_turn": 2}]`) so it acts as EDHcheck's **Mulligan Strategy Calculator** across 10,000 trials.
 
 ### Phase 9 — Deck Compare & Pod Checker (`phase-9-compare-and-pod`)
 - **Estimate:** ~45 minutes

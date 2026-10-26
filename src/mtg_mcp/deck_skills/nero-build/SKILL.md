@@ -52,8 +52,8 @@ reference_deck(commander)               his list, if he already built it
 6b. `get_skill("defcat-fuel")` only when the bar is real. A fuel card still does a NeRo job the turn you cast it. `Bar: none` means no fuel package.
 6c. Test **Pile A + commander (34 cards)** with `analyze_deck` and `get_skill("nero-goldfish")` (`simulate_deck`) before picking 66 more cards. Fix curve or ramp gaps in the 33-card core first, then run `get_skill("based-scale")` to replicate every slot two more times (`33 × 3 = 99`, Piles B and C) with functional twins — no `1/0/0` orphans (`Archmage Emeritus` test) and no slow random value engines in specific slots (`Exalted Flamer of Tzeentch` test).
 7. `get_card` (and `get_card_rulings` if the line depends on timing) before a card is in the list. `f:commander` and `id<=` the commander's colours on every `search_cards`.
-8. Lands last, then `get_skill("nero-mana")` on the finished list. Count follows the plan (dork turbo vs landfall), not 38.
-9. `analyze_deck`, `price_decklist`, `find_combos`, then `get_skill("nero-goldfish")` on the full 100-card list with the same `seed` as the 33-card core test. Copy its hand-back into Curve. Do not invent a percent. If `simulate_deck` is missing, write "not simulated".
+8. Lands last, then `get_skill("nero-mana")` (`analyze_mana_base` + `search_lands`) on the finished list. Count follows the plan and Karsten's regression (`recommended_land_count`), not a rigid 38.
+9. `analyze_deck(include_combos=True)`, `price_decklist`, `find_combos`, `find_tokens`, then `get_skill("nero-goldfish")` (`simulate_deck` with `track_card_impact=True`) on the full 100-card list with the same `seed` as the 33-card core test. Copy its hand-back into Curve, and report `bracket` (1–5), `power_score` (0–10), `school_score` (NeRo / Defcat / Based 3x33), and `synergy` (`Enabler × Payoff`). Do not invent a percent. If `simulate_deck` is missing, write "not simulated".
 10. `edhrec_recommendations` with `budget="budget"` and the decklist, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list. `get_card_printings` before naming a printing to buy. `price_decklist` again before telling anyone to buy. Default budget is about $100 for the deck.
 11. `get_skill("moxfield-primer")` unless the user said they do not want a primer or Moxfield tags. That skill owns the tagged list and the copy-paste primer.
 
@@ -69,11 +69,13 @@ Jobs:     1 …  2 …  3 …  4 …
 Fuel:     none | printed MV, mana you pay
 Core 33:  <slot budget in 33, scaled x3 to 99; 33-card vs 99-card sim>
 Started:  his <deck name>   |   new list
+Bracket:  B__ (<label>) · Power __/10 (<tier>) · School __/10 (NeRo __ / Defcat __ / Based __)
+Synergy:  __/10 (<signature Enabler x Payoff axes>)
 Price:    $__   (~$100)
 Avg MV:   __    (thumb from the tool)
-Lands:    __    (why this count)
+Lands:    __    (Mana Grade __, tipping point T__, why this count)
 Lines:    <2–4 overlapping lines; which pieces are dead alone>
-Curve:    nero-goldfish block (kept 7, cast by ideal turn, each line)
+Curve:    nero-goldfish block (kept 7, cast by ideal turn, each line, top card_impact accelerators)
 
 List:     plain `1 Card Name` lines, commander first
 Moxfield: moxfield-primer blocks (tagged list + markdown), when step 11 ran

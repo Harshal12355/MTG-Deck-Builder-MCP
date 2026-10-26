@@ -8,12 +8,24 @@ Run:
 from __future__ import annotations
 
 import argparse
+import asyncio
 from typing import Any, Literal
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
-from .analysis import TEMPLATE_CATEGORIES, analyze, card_roles, resolve_template, template_overlap
+from .analysis import (
+    LAND_CYCLES,
+    TEMPLATE_CATEGORIES,
+    analyze,
+    analyze_mana,
+    card_roles,
+    collect_deck_tokens,
+    compare_decks_analysis,
+    evaluate_pod,
+    resolve_template,
+    template_overlap,
+)
 from .archidekt import Archidekt, parse_deck_id
 from .decklist import ParsedDeck, parse_decklist
 from .edhrec import Edhrec
@@ -31,8 +43,12 @@ Tools for Magic: The Gathering questions and deckbuilding.
 
 - Card facts, rules text and prices: search_cards / get_card. Never answer card text from memory; look it up.
 - Rules questions about a card: get_card_rulings.
-- A pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain text): analyze_deck first,
-  then find_combos and edhrec_recommendations (pass the decklist so cards already in the deck are skipped).
+- A pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain text): analyze_deck first (reports WotC Bracket 1-5,
+  0-10 Power Score, 3-School Score, and 10-axis Enabler x Payoff synergy; pass include_combos=True to include
+  Commander Spellbook combos in one call), then find_combos, analyze_mana_base, and edhrec_recommendations.
+- Mana base, diffs, pod balance, and tokens: analyze_mana_base for Karsten 90% cast rates, tipping point, and 0-100 grade;
+  search_lands for 24 land cycles by speed and budget; compare_decks for before/after upgrade deltas;
+  check_pod for 2-4 deck Rule 0 table balance; find_tokens for token counts and doublers.
 - search_cards uses Scryfall syntax, e.g. `id<=bg t:creature o:"sacrifice" usd<3 f:commander`.
   For Commander, restrict to the commander's colours with `id<=<colors>` and `f:commander`.
 - Building or tuning a Commander deck: follow the deckbuilding template (call deckbuilding_template).
@@ -237,29 +253,42 @@ async def analyze_deck(
     commanders: list[str] | None = None,
     budget_per_card: float | None = None,
     template: dict[str, int] | None = None,
+    include_combos: bool = False,
 ) -> dict[str, Any]:
     """Analyse a pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain `1 Card Name` lines).
 
-    Reports legality for the format (size, copies, colour identity, bans), mana curve,
-    colour pips vs land sources, card roles (ramp, draw, removal, wipes, tutors...),
+    Reports legality for the format (size, copies, colour identity, bans), official WotC Bracket (1-5)
+    with `bracket_path` cuts, 0-10 Power Score (with Speed, Consistency, Saltiness, Interaction, Synergy,
+    Resilience), 3-School Scorecard (NeRo + Defcat + Based 3x33), 10-axis Enabler x Payoff synergy,
+    mana curve, colour pips vs land sources, card roles (ramp, draw, removal, wipes, tutors...),
     how the deck compares to the deckbuilding template, Game Changers, and total price.
-    Pass `commanders` if the list doesn't mark them. `budget_per_card` flags cards above that USD price.
-    `template` overrides template targets, e.g. {"lands": 36, "ramp": 12} (see deckbuilding_template).
+    Pass `include_combos=True` to concurrently query Commander Spellbook so early vs late 2-card combos
+    are factored into Bracket and Power Score in one call.
     """
     try:
         resolve_template(template)
     except ValueError as exc:
         return {"error": str(exc)}
+    deck_parsed = parse_decklist(decklist, commanders)
+    if not deck_parsed.playing:
+        return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck_parsed.unparsed_lines[:10]}
     try:
-        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+        if include_combos:
+            _, spellbook, _ = _clients()
+            (_, cards, not_found), combo_res = await asyncio.gather(
+                _resolve_deck(decklist, commanders),
+                spellbook.find_my_combos(deck_parsed, include_steps=False),
+            )
+            combos = (combo_res.get("in_deck") or {}).get("combos") or []
+        else:
+            _, cards, not_found = await _resolve_deck(decklist, commanders)
+            combos = None
     except ApiError as exc:
         return _error(exc)
-    if not deck.playing:
-        return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck.unparsed_lines[:10]}
-    result = analyze(deck, cards, fmt=format, budget_per_card=budget_per_card, template=template)
+    result = analyze(deck_parsed, cards, fmt=format, budget_per_card=budget_per_card, template=template, combos=combos)
     result["cards_not_found"] = sorted(set(result["cards_not_found"]) | set(not_found)) or None
-    if deck.unparsed_lines:
-        result["unparsed_lines"] = deck.unparsed_lines[:20]
+    if deck_parsed.unparsed_lines:
+        result["unparsed_lines"] = deck_parsed.unparsed_lines[:20]
     return result
 
 
@@ -324,15 +353,19 @@ async def simulate_deck(
     on_play: bool = True,
     extra_cards_per_turn: int = 0,
     seed: int | None = None,
+    mulligan_targets: list[dict[str, Any]] | None = None,
+    track_card_impact: bool = False,
 ) -> dict[str, Any]:
     """Goldfish a deck: shuffle and play it out thousands of times to see how fast it sets up.
 
-    Reports how often 7-card hands are kept, the chance the commander can be cast by each turn, and,
-    for each win line, the chance its cards have been seen by each turn (tutors stand in for missing pieces).
-    `win_lines` is a list of card-name groups, e.g. [["Pitiless Plunderer", "Gravecrawler", "Carrion Feeder"],
-    ["Kresh the Bloodbraided", "Jarad, Golgari Lich Lord"]]. `extra_cards_per_turn` approximates draw engines.
-    No opponents and mana is counted by amount, not colour, so use it to compare versions of a deck,
-    not as a win rate. `seed` makes results repeatable.
+    Reports how often 7-card hands are kept, the chance the commander can be cast by each turn
+    (colored pips included, plus the same chance if color is ignored), median cards left in hand,
+    the chance a non-ramp spell has been cast, and for each win line the chance it can be paid for
+    (`assembled_by_turn`) versus merely drawn (`seen_by_turn`). Tutors in hand stand in for a missing piece.
+    Pass `mulligan_targets` (e.g. `[{"category": "land", "count": 3, "by_turn": 3}, {"category": "ramp", "count": 1, "by_turn": 2}]`)
+    to run EDHcheck's Mulligan Strategy Calculator (`ceil(count/2)` opener rule + London mulligan).
+    Pass `track_card_impact=True` to run single-card knockout attribution (swaps each active card with a blank
+    using the same RNG seed to measure how much it accelerates the commander and win lines).
     """
     if not 1 <= turns <= 15:
         return {"error": "turns must be from 1 to 15."}
@@ -346,8 +379,11 @@ async def simulate_deck(
         return _error(exc)
     if not deck.playing:
         return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck.unparsed_lines[:10]}
-    result = simulate(deck, cards, win_lines=win_lines, turns=turns, trials=trials, on_play=on_play,
-                      extra_cards_per_turn=extra_cards_per_turn, seed=seed)
+    result = simulate(
+        deck, cards, win_lines=win_lines, turns=turns, trials=trials, on_play=on_play,
+        extra_cards_per_turn=extra_cards_per_turn, seed=seed,
+        mulligan_targets=mulligan_targets, track_card_impact=track_card_impact,
+    )
     if "error" not in result:
         result["cards_not_found"] = sorted(set(result.get("cards_not_found") or []) | set(not_found)) or None
     return result
@@ -437,11 +473,19 @@ async def edhrec_card(name: str) -> dict[str, Any]:
 
 
 @mcp.tool()
-async def price_decklist(decklist: str) -> dict[str, Any]:
-    """Quick price check of a decklist: per-card USD price and total, most expensive first."""
+async def price_decklist(
+    decklist: str,
+    currency: Literal["usd", "eur"] = "usd",
+    budget_target: float | None = None,
+) -> dict[str, Any]:
+    """Quick price check of a decklist: per-card USD (TCGplayer) or EUR (Cardmarket) price and total, most expensive first.
+
+    Pass `budget_target` to see which priciest non-commander cards would need to be cut to get under that target.
+    """
     scryfall, _, _ = _clients()
     deck = parse_decklist(decklist)
     entries = deck.playing + deck.sideboard
+    cmd_names = {e.name.lower() for e in deck.commanders}
     try:
         cards, not_found = await scryfall.collection(e.name for e in entries)
     except ApiError as exc:
@@ -451,15 +495,199 @@ async def price_decklist(decklist: str) -> dict[str, Any]:
         c = cards.get(e.name.lower())
         if c is None:
             continue
-        p = price_usd(c)
-        rows.append({"card": c.get("name"), "qty": e.quantity, "usd_each": p, "usd_total": round(p * e.quantity, 2) if p is not None else None})
+        p = price_usd(c, currency=currency)
+        if currency == "eur" and p is None:
+            p = price_usd(c, currency="usd")
+        total_p = round(p * e.quantity, 2) if p is not None else None
+        row: dict[str, Any] = {"card": c.get("name"), "qty": e.quantity, "usd_each": p, "usd_total": total_p}
+        if currency == "eur":
+            row["eur_each"] = p
+            row["eur_total"] = total_p
+        rows.append(row)
     rows.sort(key=lambda r: -(r["usd_total"] or 0))
-    return {
-        "total_usd": round(sum(r["usd_total"] or 0 for r in rows), 2),
+    total = round(sum(r["usd_total"] or 0 for r in rows), 2)
+    out: dict[str, Any] = {
+        "currency": currency,
+        "total_usd": total,
         "cards": rows,
         "no_price_listed": [r["card"] for r in rows if r["usd_each"] is None] or None,
         "cards_not_found": not_found or None,
     }
+    if currency == "eur":
+        out["total_eur"] = total
+    if budget_target is not None and total > budget_target:
+        running = total
+        cuts = []
+        for r in rows:
+            if running <= budget_target:
+                break
+            if (r["card"] or "").lower() in cmd_names or not r["usd_total"]:
+                continue
+            running = round(running - r["usd_total"], 2)
+            cuts.append({"card": r["card"], "saves": r["usd_total"]})
+        out["budget_target"] = budget_target
+        out["suggested_cuts_to_hit_budget"] = cuts
+        out["total_after_cuts"] = running
+    return out
+
+
+@mcp.tool()
+async def analyze_mana_base(
+    decklist: str,
+    commanders: list[str] | None = None,
+) -> dict[str, Any]:
+    """Analyse a Commander mana base the EDHcheck / Frank Karsten way.
+
+    Computes a 0-100 Mana Base Grade (S down to D-), Karsten's 99-card recommended land count
+    (`31.42 + 3.13 * avg_cmc - 0.75 * ramp * 0.28`), Tipping Point turn (80% and 90% on-curve mana),
+    exact hypergeometric per-color source requirements (`90%` cast probability with `+2` turn grace for Instants),
+    color deficits, turn 1-8 cast rates by color, and land cycle speed breakdown (untapped / conditional / tapped).
+    """
+    try:
+        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+    except ApiError as exc:
+        return _error(exc)
+    if not deck.playing:
+        return {"error": "Couldn't find any cards in that decklist."}
+    out = analyze_mana(deck, cards)
+    out["cards_not_found"] = not_found or None
+    return out
+
+
+@mcp.tool()
+async def search_lands(
+    color_identity: str | None = None,
+    cycle: str | None = None,
+    speed: Literal["untapped", "conditional", "tapped"] | None = None,
+    max_price: float | None = None,
+    limit: int = 25,
+) -> dict[str, Any]:
+    """Browse and search Commander land cycles (EDHcheck Land Database) via live Scryfall.
+
+    - cycle: e.g. `fetch`, `dual`, `shock`, `bond`, `pain`, `fast`, `slow`, `check`, `pathway`, `verge`,
+      `filter`, `canopy`, `battle`, `reveal`, `surveil`, `tri`, `bounce`, `scry`, `bike`, `mdfc`, `any-color`,
+      `panorama`, `gain`, `gate`. Omit `cycle` with no `color_identity` to list all 24 land cycles.
+    - speed: filter cycles to `untapped`, `conditional`, or `tapped`.
+    - color_identity: e.g. `"ubr"` restricts Scryfall results to lands legal in that commander identity (`id<=ubr`).
+    - max_price: maximum USD price per land (e.g. `5.0`).
+    """
+    cycles = [
+        c for c in LAND_CYCLES
+        if (cycle is None or c["slug"] == cycle.lower().strip())
+        and (speed is None or c["speed"] == speed)
+    ]
+    if not cycles:
+        return {"error": f"Unknown land cycle {cycle!r}.", "available_cycles": [c["slug"] for c in LAND_CYCLES]}
+    if cycle is None and color_identity is None and max_price is None:
+        return {"cycles": cycles}
+
+    scryfall, _, _ = _clients()
+    picked = cycles[0]
+    q_parts = [f"({picked['query']})", "f:commander"]
+    if color_identity:
+        q_parts.append(f"id<={color_identity.lower().strip()}")
+    if max_price is not None:
+        q_parts.append(f"usd<={max_price}")
+    query = " ".join(q_parts)
+    try:
+        res = await scryfall.search(query, order="edhrec", limit=max(1, min(limit, 60)))
+    except ApiError as exc:
+        return _error(exc)
+    return {
+        "cycle": picked,
+        "query": query,
+        "total_matches": res["total_cards"],
+        "lands": [summarize_card(c, "brief") for c in res["cards"]],
+    }
+
+
+@mcp.tool()
+async def compare_decks(
+    decklist_a: str,
+    decklist_b: str,
+    commanders_a: list[str] | None = None,
+    commanders_b: list[str] | None = None,
+) -> dict[str, Any]:
+    """Compare two decklists side by side (EDHcheck Deck Compare).
+
+    Resolves the union of both lists in a single Scryfall collection pass and reports `cards_added`,
+    `cards_removed`, `similarity_pct`, and exact before/after deltas for WotC Bracket, 0-10 Power Score,
+    Speed, Consistency, 3-School Score, average mana value, lands, ramp, card draw, interaction, tutors,
+    Game Changers, and USD price.
+    """
+    scryfall, _, _ = _clients()
+    deck_a = parse_decklist(decklist_a, commanders_a)
+    deck_b = parse_decklist(decklist_b, commanders_b)
+    if not deck_a.playing or not deck_b.playing:
+        return {"error": "Both decklist_a and decklist_b must contain cards."}
+    names = [e.name for e in deck_a.playing + deck_b.playing]
+    try:
+        cards, not_found = await scryfall.collection(names)
+    except ApiError as exc:
+        return _error(exc)
+    out = compare_decks_analysis(deck_a, deck_b, cards)
+    out["cards_not_found"] = not_found or None
+    return out
+
+
+@mcp.tool()
+async def check_pod(
+    decks: list[str],
+    names: list[str] | None = None,
+) -> dict[str, Any]:
+    """Compare 2 to 4 Commander decks for table balance before turn one (EDHcheck Pod Checker).
+
+    Resolves all decks in one shared Scryfall lookup, scores each deck's WotC Bracket, 0-10 Power Score,
+    Speed, Consistency, and median goldfish commander turn, and returns a Pod Verdict
+    (`balanced`, `slight`, `uneven`, or `mismatched`), outlier warnings, and per-seat Rule 0 disclosures.
+    """
+    if not 2 <= len(decks) <= 4:
+        return {"error": "check_pod requires between 2 and 4 decklists."}
+    scryfall, _, _ = _clients()
+    parsed = [parse_decklist(d) for d in decks]
+    if any(not p.playing for p in parsed):
+        return {"error": "Every deck in `decks` must contain cards."}
+    all_names = [e.name for p in parsed for e in p.playing]
+    try:
+        cards, not_found = await scryfall.collection(all_names)
+    except ApiError as exc:
+        return _error(exc)
+
+    seats = []
+    for idx, p in enumerate(parsed):
+        rep = analyze(p, cards)
+        sim = simulate(p, cards, turns=8, trials=400, seed=1)
+        cmd_label = " + ".join(rep["commanders"]) if rep["commanders"] else f"Seat {idx + 1}"
+        seat_name = names[idx] if names and idx < len(names) and names[idx] else cmd_label
+        seats.append({
+            "name": seat_name,
+            "analysis": rep,
+            "median_commander_turn": (sim.get("commander") or {}).get("median_turn"),
+        })
+    out = evaluate_pod(seats)
+    out["cards_not_found"] = not_found or None
+    return out
+
+
+@mcp.tool()
+async def find_tokens(
+    decklist: str,
+    commanders: list[str] | None = None,
+) -> dict[str, Any]:
+    """List every token a deck can create and suggest how many of each to bring (EDHcheck Token Finder).
+
+    Accounts for batch token creation, repeatable triggers, board-scaling effects, and token doublers
+    in the deck (e.g. Doubling Season, Parallel Lives, Mondrak).
+    """
+    try:
+        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+    except ApiError as exc:
+        return _error(exc)
+    if not deck.playing:
+        return {"error": "Couldn't find any cards in that decklist."}
+    out = collect_deck_tokens(deck, cards)
+    out["cards_not_found"] = not_found or None
+    return out
 
 
 # --------------------------------------------------------------------------- archidekt
