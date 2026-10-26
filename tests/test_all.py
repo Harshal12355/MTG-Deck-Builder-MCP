@@ -424,6 +424,10 @@ class ToolTests(unittest.TestCase):
         r_forge = run(server.get_card("atraxa", include_forge_tags=True))
         self.assertEqual(r_forge["forge_tags"]["deck_needs"], ["Ability$Counters"])
         self.assertIn("counters", r_forge["forge_tags"]["synergy_enables"])
+        from mtg_mcp.forge import parse_forge_script
+        upkeep_tags = parse_forge_script("T:Mode$ Phase | Phase$ Upkeep\nSVar:Trig:DB$ BecomeMonarch")
+        self.assertIn("upkeep", upkeep_tags["synergy_enables"])
+        self.assertIn("upkeep", upkeep_tags["synergy_needs"])
         err = run(server.get_card("zzzz"))
         self.assertEqual(err["status"], 404)
         self.assertIn("No cards found", err["error"])

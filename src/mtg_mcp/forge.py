@@ -96,6 +96,10 @@ def parse_forge_script(script: str) -> dict[str, Any]:
         enables.add("lifegain")
     if "LifeGain" in all_needs:
         needs_payoff.add("lifegain")
+    if any(a in abilities for a in ("AddPhase", "BecomeMonarch", "TakeInitiative")) or "ExtraPhase$ Upkeep" in script:
+        enables.add("upkeep")
+    if "Phase$ Upkeep" in script or any(a in abilities for a in ("BecomeMonarch", "TakeInitiative")):
+        needs_payoff.add("upkeep")
 
     return {
         "deck_has": deck_has or None,
