@@ -38,7 +38,7 @@ Master plan for `mtg-deckbuilder-mcp`:
 - [ ] **Phase 2 (~35 min):** One-call Moxfield deck fetch (`moxfield_get_deck`)
 - [ ] **Phase 3 (~40 min):** Deterministic Moxfield tagger (`tag_decklist`)
 - [ ] **Phase 4 (~30 min):** Persistent SQLite HTTP cache across MCP restarts
-- [ ] **Phase 5 (~30 min):** Golden-deck & skill-chain regression evals in CI
+- [x] **Phase 5 (~30 min):** Golden-deck & skill-chain regression evals in CI (`tests/test_regression.py`, `tests/fixtures/golden_atraxa_pipeline.json`)
 
 ### Part 2: Making Current Tools Faster (~1.5 hours total)
 - [ ] **Phase 6a (~30 min):** Per-card cache in `Scryfall.collection()` (stop re-fetching 75-card batches when 1 card changes)

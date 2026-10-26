@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "decklist_id": "atraxa_fake_v1",
+  "parse": {
+    "commanders": ["Atraxa, Praetors' Voice"],
+    "card_count": 100
+  },
+  "analyze_direct": {
+    "legal": true,
+    "color_identity": "WUBG",
+    "lands": 91,
+    "bracket": 3,
+    "bracket_label": "Upgraded",
+    "power_score_total": 4.9,
+    "game_changers": ["Demonic Tutor", "Rhystic Study"],
+    "school_nero": 2.7,
+    "school_defcat": 6.7,
+    "school_based_33": 1.6,
+    "template_double_duty": 9,
+    "price_total_usd": 131.25
+  },
+  "analyze_tool_with_combos": {
+    "bracket": 4,
+    "bracket_label": "Optimized",
+    "power_score_total": 7.0,
+    "power_speed": 5.2,
+    "power_consistency": 4.6
+  },
+  "combos": {
+    "in_deck": 0,
+    "one_card_away": 0
+  },
+  "simulate_seed_1": {
+    "trials": 500,
+    "kept_seven": 0.098,
+    "cast_t6": 0.0,
+    "cast_ignore_t6": 1.0,
+    "win_line_assembled_t6": 0.004
+  },
+  "mana": {
+    "recommended_land_count": 39,
+    "grade_letter": "B",
+    "grade_score": 70
+  },
+  "tokens": {
+    "token_doublers_in_deck": ["Doubling Season"]
+  },
+  "compare_decks": {
+    "bracket_before": 3,
+    "bracket_after": 2,
+    "bracket_delta": -1,
+    "game_changers_removed": ["Demonic Tutor", "Rhystic Study"]
+  }
+}
