@@ -234,7 +234,8 @@ def _synergy_profile(nonland_cards: list[dict[str, Any]]) -> dict[str, Any]:
         enablers = 0
         payoffs = 0
         for c in nonland_cards:
-            text = f"{front_type_line(c)} {re.sub(r'\\([^)]*\\)', '', oracle_text(c))}".lower()
+            oracle = re.sub(r"\([^)]*\)", "", oracle_text(c))
+            text = f"{front_type_line(c)} {oracle}".lower()
             ftags = c.get("forge_tags") or {}
             f_enables = set(ftags.get("synergy_enables") or ())
             f_needs = set(ftags.get("synergy_needs") or ())
