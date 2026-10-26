@@ -11,7 +11,7 @@ The server is `mtg-deckbuilder` (this repo: `mtg-mcp`). If its tools are not in 
 
 ## When a deck shows up
 
-A new commander, or a paste, file, or Moxfield / Archidekt / MTGO link, runs the full deck pass. Get the list as text first (Moxfield has no public API; curl often gets blocked). Do not name a card until `get_card` confirms the oracle text, colour identity, and Commander legality. `get_card_rulings` if the line depends on timing. The pass runs NeRo, Defcat, and the Based 33-card school on the same list.
+A new commander, or a paste, file, or Moxfield / Archidekt / MTGO link, runs the full deck pass. Get the list as text first (Moxfield has no public API; curl often gets blocked). Do not name a card until `get_card` confirms the oracle text, colour identity, and Commander legality (pass `include_forge_tags=True` on the commander or key synergy pieces to inspect Card-Forge's `DeckHas`, `DeckNeeds`, and AST tags). `get_card_rulings` if the line depends on timing. The pass runs NeRo, Defcat, and the Based 33-card school on the same list, and uses `analyze_deck(include_combos=True)`, `analyze_mana_base`, `search_lands`, `simulate_deck(track_card_impact=True)`, `compare_decks`, `check_pod`, `find_tokens`, and `price_decklist(budget_target=...)`.
 
 ## How to search
 

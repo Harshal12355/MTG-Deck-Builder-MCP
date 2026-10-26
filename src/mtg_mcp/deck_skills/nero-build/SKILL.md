@@ -21,7 +21,7 @@ commander
     |
     v
 reference_principles(source="nero")     the test
-get_card(commander)                     the bend, in one sentence
+get_card(commander, include_forge_tags=True)  the bend + Forge DeckHas/DeckNeeds
 reference_deck(commander)               his list, if he already built it
     |
     +-- yes --> start from that decklist. Do not rebuild it.
@@ -34,17 +34,17 @@ reference_deck(commander)               his list, if he already built it
          get_skill nero-hunt             veggies first, then double-duty cards
          get_skill defcat-turn           rescore those keeps
          get_skill defcat-fuel           only when the bar is real
-         analyze_deck + nero-goldfish    test the 33-card core (34 cards) first
+         analyze_deck(include_combos=True) + nero-goldfish  test the 33-card core (34 cards) first
          get_skill based-scale           triplicate Pile A x3 -> 99 (zero 1/0/0 orphans)
-         get_skill nero-mana
-         analyze_deck + price_decklist + find_combos
-         get_skill nero-goldfish        calls simulate_deck on 99 (same seed as 33)
+         get_skill nero-mana             analyze_mana_base + search_lands
+         analyze_deck(include_combos=True) + price_decklist(budget_target=100) + find_combos + find_tokens
+         get_skill nero-goldfish        calls simulate_deck(track_card_impact=True) on 99 (same seed as 33)
          edhrec_recommendations + archidekt_popular_cards
          get_skill moxfield-primer          tagged list + markdown primer
 ```
 
 1. `reference_principles(source="nero")`. Grade the list against what the tool returns. Do not recite principles from memory.
-2. `get_card` on the commander. Write the rule it breaks in one sentence. Vren is a removal deck that makes Rats. If you cannot name the bend, stop and say so.
+2. `get_card(commander, include_forge_tags=True)` on the commander. Write the rule it breaks in one sentence (and note any `forge_tags` `deck_needs` / `deck_has`). Vren is a removal deck that makes Rats. If you cannot name the bend, stop and say so.
 3. `reference_deck` with the commander name. A hit means start from his `decklist` and his `notes.win_lines`. Say which deck. Then switch to the tune skill's scorecard on that list.
 4. No hit: `get_skill("nero-read")`, then `get_skill("defcat-read")`. NeRo jobs and the win shape are the test for every later card. Defcat adds the turn that card wants, and a mana-value bar when the commander compares one. `Bar: none` is a complete answer. If you cannot name the bend, stop.
 5. `get_skill("nero-lines")` before any synergy card. A one-spell or edict-pile win does not get a combo package. Lock the target Bracket here (default Bracket 4, or Bracket 2 / 3 when requested: `<= 3` Game Changers and `0` early `"R"`/`"P"` 2-card combos gives a 8.5–9.0/10 engine inside Bracket 3).

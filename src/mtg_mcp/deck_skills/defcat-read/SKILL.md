@@ -17,7 +17,7 @@ If `get_card` is not in this session, say so and stop. Do not recite oracle text
 ## Order
 
 ```
-get_card(commander)
+get_card(commander, include_forge_tags=True)
     |
     v
 get_card_rulings     X, "each turn", "without paying", "rather than pay"
@@ -26,7 +26,7 @@ one shell            a sentence, not a card
 3 jobs
 ```
 
-1. `get_card` the commander. Quote the ability that looks at a mana value, a top card, or the first spell of a turn.
+1. `get_card(commander, include_forge_tags=True)` the commander. Quote the ability that looks at a mana value, a top card, or the first spell of a turn, and check `forge_tags` (`triggers`, `abilities`, `deck_needs`) if present.
 2. `get_card_rulings` when that ability uses X, "each turn", "without paying", or an alternate cost. Skip only when the text has none of those.
 3. Answer from the tool result:
    - Window. Your turn only, or the first spell of every turn? Opponents' turns are extra casts.

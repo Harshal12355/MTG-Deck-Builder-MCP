@@ -42,11 +42,13 @@ from .spellbook import Spellbook
 INSTRUCTIONS = """\
 Tools for Magic: The Gathering questions and deckbuilding.
 
-- Card facts, rules text and prices: search_cards / get_card. Never answer card text from memory; look it up.
-- Rules questions about a card: get_card_rulings.
-- A pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain text): analyze_deck first (reports WotC Bracket 1-5,
-  0-10 Power Score, 3-School Score, and 10-axis Enabler x Payoff synergy; pass include_combos=True to include
-  Commander Spellbook combos in one call), then find_combos, analyze_mana_base, and edhrec_recommendations.
+- Card facts, rules text, prices, and Card-Forge AI synergy tags: search_cards / get_card. Never answer card text from memory; look it up.
+  Pass `include_forge_tags=True` to `get_card` on the commander or key synergy pieces to inspect Card-Forge's human-written
+  `DeckHas`, `DeckNeeds`, `DeckHints`, `abilities`, `triggers`, and `sacrifice_costs`.
+- Rules questions about a card: get_card_rulings. Cheapest printings: get_card_printings.
+- A pasted decklist (Moxfield, Arena, Archidekt, MTGO or plain text): analyze_deck(include_combos=True) first (reports WotC Bracket 1-5,
+  0-10 Power Score, 3-School Score, and 10-axis Enabler x Payoff synergy; include_combos=True concurrently queries
+  Commander Spellbook in one call), then price_decklist(budget_target=100), find_combos, analyze_mana_base, find_tokens, and edhrec_recommendations.
 - Mana base, diffs, pod balance, and tokens: analyze_mana_base for Karsten 90% cast rates, tipping point, and 0-100 grade;
   search_lands for 24 land cycles by speed and budget; compare_decks for before/after upgrade deltas;
   check_pod for 2-4 deck Rule 0 table balance; find_tokens for token counts and doublers.
@@ -64,21 +66,24 @@ Tools for Magic: The Gathering questions and deckbuilding.
   commander really enables, choose the win condition, fill ramp/draw/interaction at higher-than-usual
   counts, then pick synergistic cards for every slot. Cut the enabler that does nothing the turn you cast it.
   Don't copy EDHREC lists wholesale.
-- To test how a deck plays, call simulate_deck with its win lines (groups of card names). Compare runs
-  before and after changes rather than reading the numbers as win rates.
+- To test how a deck plays, call simulate_deck with its win lines (groups of card names), `track_card_impact=True`
+  (single-card knockout attribution), and optional `mulligan_targets`. Compare runs before and after changes
+  with the same `seed` rather than reading the numbers as win rates.
 - Real decks people have built: archidekt_search_decks (by commander, card, name, owner, colours, bracket),
   archidekt_get_deck for one deck's full list (its `decklist` field can go straight into analyze_deck / find_combos),
   and archidekt_popular_cards to see what the most-viewed Archidekt decks for a commander actually run.
-- Reference library (reference_* tools): real, tested budget high-power decks from builders we learn from
+- Reference library (reference_library and reference_* tools): real, tested budget high-power decks from builders we learn from
   (first source: NeRo, ~$100 Bracket 4 / budget cEDH lists with primers). Use it when building or tuning:
-  reference_principles for the builder's principles, reference_cards for proven card choices by role / colour
+  reference_library for an overview of builders and decks, reference_principles for the builder's principles, reference_cards for proven card choices by role / colour
   identity / price, reference_deck for a full list with its win lines (pass them to simulate_deck),
   reference_card to see how a card was used, and reference_compare to find proven staples a deck is missing.
   Library prices are capture-time snapshots; re-check with price_decklist. moxfield_import_user adds or refreshes a builder.
+- Utility lookups: autocomplete_card_name for partial/misspelled names; random_card for random commander or card ideas;
+  edhrec_card for top commanders and high-synergy pairings for a single card.
 - Deckbuilding skills: call get_skill and follow what it returns.
   nero-build when there is a commander and no list. nero-tune when a decklist or a link is already here.
   All three schools run on the same list (NeRo + Defcat + Based 33-card). nero-read, then defcat-read, before naming cards.
-  nero-lines for the win (one spell, a pile, or overlapping combos).
+  nero-lines for the win (one spell, a pile, or overlapping combos via search_combos).
   based-core locks the 33-card 1-game blueprint (1/3 of 99) and goldfishes that 33-card core first at low variance.
   nero-hunt for draw, ramp, interaction, then cards that also do the plan.
   defcat-turn rescores those cards for when in the turn they want to resolve.
@@ -88,7 +93,7 @@ Tools for Magic: The Gathering questions and deckbuilding.
   nero-mana for a mana-base pass. nero-goldfish calls simulate_deck (on the 33-card core and the full 99). Do not stop a build or a tune before it, or before analyze_deck, price_decklist, and find_combos.
   moxfield-primer after the list is final: Moxfield `#tags` on every card plus a markdown primer to paste.
   The same text is available as MCP prompts under those names.
-Prices are Scryfall's daily USD market prices. EDHREC and Archidekt data are best-effort.
+Prices are Scryfall's daily USD/EUR market prices. EDHREC and Archidekt data are best-effort.
 """
 
 mcp = FastMCP("mtg-deckbuilder", instructions=INSTRUCTIONS)
@@ -188,7 +193,9 @@ async def get_card(
     out = summarize_card(card)
     out["roles"] = card_roles(card) or None
     if include_forge_tags:
-        out["forge_tags"] = await fetch_forge_tags(_http, card.get("name", name))
+        ftags = await fetch_forge_tags(_http, card.get("name", name))
+        card["forge_tags"] = ftags
+        out["forge_tags"] = ftags
     return out
 
 

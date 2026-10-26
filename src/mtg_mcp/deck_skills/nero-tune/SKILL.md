@@ -23,23 +23,24 @@ list as text
     |
     v
 reference_principles(source="nero")     the test
-analyze_deck + price_decklist           the picture
-get_card(commander)                     the bend, in one sentence
+analyze_deck(include_combos=True) + price_decklist(budget_target=100)  the picture
+get_card(commander, include_forge_tags=True)  the bend + Forge DeckHas/DeckNeeds
 reference_deck(commander)               his plan, if he built this commander
 get_skill based-split                   deal 99 into 3 x 33; spot orphans & uneven slots
-find_combos                             in the deck, then one card away
+find_combos + find_tokens               in the deck, one card away, and token kit
 reference_compare(min_decks=3)          his staples this list skips
-get_skill nero-goldfish                 calls simulate_deck (Pile A 33 + full 99)
-get_skill nero-mana                     only if a color is short
+get_skill nero-goldfish                 calls simulate_deck (Pile A 33 + full 99, track_card_impact=True)
+analyze_mana_base + get_skill nero-mana Karsten 90% sources + search_lands if a color is short
+compare_decks(before, after)            prove the upgrade delta (+ check_pod for 2-4 decks)
 get_card + get_card_printings           before a buy
 ```
 
 1. `reference_principles(source="nero")`. Grade against the tool result. Do not recite principles from memory.
-2. `analyze_deck(include_combos=True)` on the full list. Pass `commanders` if the list does not mark them. Read `bracket` (1–5 + `bracket_path` + `bracket_up_warning`), `power_score` (`0–10` + Speed, Consistency, Saltiness, Interaction, Synergy, Resilience), `school_score` (`NeRo` / `Defcat` / `Based 3x33` + `notes`), and `synergy` (`Enabler × Payoff` axes). `price_decklist` for the real total. The ~$100 cap is the deck, not a per-card cap.
-3. `get_card` on the commander. One sentence: the rule it breaks. If the list is built around the surface theme (Rat tribal for Vren, landfall tokens for Tannuk), that is the first cut.
+2. `analyze_deck(include_combos=True)` on the full list. Pass `commanders` if the list does not mark them. Read `bracket` (1–5 + `bracket_path` + `bracket_up_warning`), `power_score` (`0–10` + Speed, Consistency, Saltiness, Interaction, Synergy, Resilience), `school_score` (`NeRo` / `Defcat` / `Based 3x33` + `notes`), and `synergy` (`Enabler × Payoff` axes). `price_decklist(budget_target=100)` (or the user's cap) for the real total and `suggested_cuts_to_hit_budget`. The ~$100 cap is the deck, not a per-card cap. When evaluating 2–4 decks for a table, also run `check_pod`.
+3. `get_card(commander, include_forge_tags=True)` on the commander. One sentence: the rule it breaks (plus `forge_tags` `deck_has` / `deck_needs`). If the list is built around the surface theme (Rat tribal for Vren, landfall tokens for Tannuk), that is the first cut.
 4. `reference_deck` for this commander. Use his plan, mulligan, and `notes.win_lines` as the comparison, not as cards to copy blindly.
 4b. `get_skill("based-split")`. Deal the 99 main-deck cards into three 33-card piles (`Pile A / Pile B / Pile C`) by job. Flag uneven `2/2/1` or `11/11/10` splits, `1/0/0` orphan one-offs (`Archmage Emeritus` test), uncounted theme density (`count / 3` per game), and slow random value engines occupying a specific job slot (`Exalted Flamer of Tzeentch` test).
-5. `find_combos`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone. A new card uses `get_skill("nero-hunt")`, then `get_skill("defcat-turn")`. A new line uses `get_skill("nero-lines")`. An enabler that does nothing the turn it enters is a cut, even when EDHREC likes it.
+5. `find_combos` and `find_tokens`. Say what is already in the deck, then what is one card away. Prefer the one-card-away line whose new piece is good alone. A new card uses `get_skill("nero-hunt")`, then `get_skill("defcat-turn")`. A new line uses `get_skill("nero-lines")`. An enabler that does nothing the turn it enters is a cut, even when EDHREC likes it.
 5b. `get_skill("defcat-read")` on the commander. `Bar: none` means the swap only has to name its turn: first main, second main, or an opponent's turn. A real bar means `get_skill("defcat-fuel")` before a high mana value add, and that add still does a job the turn you cast it.
 6. `reference_compare` with the decklist, `min_decks=3`. Raise `min_decks` for only his real staples. Set `max_price` when the user names a budget. Check each candidate against the deck's jobs.
 7. `get_skill("nero-goldfish")`. That skill calls `simulate_deck` (on Pile A's 33-card core + commander and on the full 100-card deck with the same `seed`, plus `track_card_impact=True` to see which cards actually accelerate the commander and win lines). If `simulate_deck` is missing, write "not simulated". Do not invent a percent. **Mandatory after-swap proof**: after picking the swaps, run `compare_decks(before, after)` and rerun `simulate_deck` on the updated 100-card list with the **exact same `seed`**, reporting the before → after delta (`Cast by T_ __% → __%`, color gap, and combo count) while verifying the list stayed inside the user's target Bracket.

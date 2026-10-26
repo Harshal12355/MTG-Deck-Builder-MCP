@@ -52,7 +52,7 @@ analyze_deck + simulate_deck on Commander + Pile A (34 cards)
      1 Card 1
      ... (33 cards)
      ```
-   - Run `analyze_deck` on the 34-card list. Ignore the `must be exactly 100 cards` legality line; check `average_cmc_nonland`, `lands`, `color_pips`, `land_color_sources`, and `roles`.
+   - Run `analyze_deck(include_combos=True)` on the 34-card list. Ignore the `must be exactly 100 cards` legality line; check `average_cmc_nonland`, `lands`, `color_pips`, `land_color_sources`, `roles`, and `synergy`.
    - Run `get_skill("nero-goldfish")` (`simulate_deck` with a fixed `seed`, e.g. `seed=33`, and Pile A's `win_lines`). Because the library is only 33 cards, variance is tiny: `opening_hand.kept_seven`, `commander.castable_by_turn` at the ideal turn, and `win_lines` assembly immediately expose a bloated curve or missing ramp.
 5. If Pile A misses the commander's ideal turn or stalls, fix the 33-card slot budget and re-sim with the same `seed` now. Do not scale a broken 33-card deck to 99.
 

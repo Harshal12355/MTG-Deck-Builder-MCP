@@ -13,7 +13,7 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
           └─────────────────────┴──────────────────┼───────────────┴─────────────────┘
                                                    ▼
                                ┌───────────────────────────────────────┐
-                               │     mtg-deckbuilder MCP (23 Tools)    │
+                               │     mtg-deckbuilder MCP (28 Tools)    │
                                │  + 16 Deckbuilding Skills & Prompts   │
                                │  + Monte Carlo Goldfish Simulator     │
                                └───────────────────┬───────────────────┘
@@ -43,28 +43,33 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
 
 ---
 
-## MCP Tools (23 Tools)
+## MCP Tools (28 Tools)
 
-### Cards & Scryfall
+### Cards, Scryfall & Card-Forge
 
 | Tool | What it does |
 |---|---|
 | `search_cards` | Scryfall search (`query`, `order`, `direction`, `limit`, `detail`), e.g. `id<=bg o:"sacrifice" t:creature usd<3 f:commander` |
-| `get_card` | One card by (fuzzy or exact) name and optional `set_code`, with oracle text, legalities, USD price, and heuristic deck roles |
+| `get_card` | One card by (fuzzy or exact) name and optional `set_code`, with oracle text, legalities, USD price, heuristic deck roles, and optional `include_forge_tags=True` (`DeckHas`, `DeckNeeds`, `DeckHints`, AST `abilities`/`triggers`/`sacrifice_costs` from Card-Forge) |
 | `get_card_rulings` | Official Gatherer/Scryfall rulings for a card, plus oracle text for context |
 | `get_card_printings` | All printings of a card sorted cheapest USD first, with set code, collector number, and foil prices |
 | `autocomplete_card_name` | Up to 20 real card name suggestions for a partial or misspelled name |
 | `random_card` | Random card, optionally restricted by a Scryfall query (e.g. `is:commander id:ur`) |
 
-### Deck Analysis, Pricing, Principles & Goldfish Simulation
+### Deck Analysis, Mana Base, Diffs, Pod Balance & Goldfish Simulation
 
 | Tool | What it does |
 |---|---|
-| `analyze_deck` | Full deck report: format legality, mana curve, average nonland MV, colour pips vs. land sources, heuristic roles, template comparison, Game Changers, and USD price |
-| `price_decklist` | Quick price check of a decklist: per-card and total USD price sorted most expensive first, plus unpriced cards |
+| `analyze_deck` | Full deck report: format legality, WotC Bracket (1–5) + `bracket_path`, 0–10 Power Score, 3-School Score (NeRo / Defcat / Based 3x33), 10-axis `Enabler × Payoff` synergy, mana curve, pips vs. sources, roles, template comparison, Game Changers, and USD price (`include_combos=True` includes Spellbook combos in one call) |
+| `analyze_mana_base` | Karsten 99-card recommended land count, 0–100 Mana Base Grade (`S` to `D-`), tipping point turn, exact hypergeometric 90% per-color source requirements, deficits, turn 1–8 cast rates, and land cycle speed breakdown |
+| `search_lands` | Browse 24 Commander land cycles (`fetch`, `shock`, `bond`, `pain`, `pathway`, `verge`, `surveil`...) filtered by `color_identity`, `speed` (`untapped`/`conditional`/`tapped`), and `max_price` |
+| `compare_decks` | Side-by-side comparison of two decklists in one Scryfall batch: `cards_added`, `cards_removed`, `similarity_pct`, and exact before/after deltas for Bracket, Power Score, Speed, Consistency, 3-School Score, MV, roles, and price |
+| `check_pod` | Rule 0 table balance check across 2–4 Commander decks: Pod Verdict (`balanced`, `slight`, `uneven`, `mismatched`), bracket/power/speed spread, outlier warnings, and per-seat disclosures |
+| `find_tokens` | Every token a deck creates and suggested copy counts, accounting for batch creation, repeatable triggers, board scaling, and token doublers |
+| `price_decklist` | Quick price check of a decklist in `usd` (TCGplayer) or `eur` (Cardmarket), plus optional `budget_target` cut suggestions |
 | `deckbuilding_template` | The Command Zone's Commander template (38 lands, 10 ramp, 12 card advantage, 12 targeted disruption, 6 mass disruption, 30 plan), custom overrides, overlap calculation, and colour-scoped Scryfall queries |
 | `deckbuilding_principles` | Budget Pub Stomper & Budget Bros MTG principles for ~$100 high-power Bracket 4 builds: engine commander, win line first, build backwards from ideal turn, average MV ~2.0, 29–34 lands, veggies before theme, and cutting blank-this-turn enablers |
-| `simulate_deck` | Goldfish a deck 100–50,000 times (`turns`, `trials`, `on_play`, `extra_cards_per_turn`, `seed`): reports 7-card keep rate, commander cast rate by turn, and assembly rate by turn for each win line (`[["Card A", "Card B | Card C"]]`) |
+| `simulate_deck` | Goldfish a deck 100–50,000 times (`turns`, `trials`, `on_play`, `extra_cards_per_turn`, `seed`, `mulligan_targets`, `track_card_impact`): reports 7-card keep rate, commander cast rate by turn, assembly rate for each win line, mulligan strategy calculator, and single-card knockout attribution |
 
 ### Combos (Commander Spellbook)
 
@@ -345,9 +350,10 @@ See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the upcoming 10-phase plan:
 ```text
 src/mtg_mcp/
   __init__.py         package version
-  server.py           FastMCP server, 23 MCP tools, CLI entry point (--http / stdio)
+  server.py           FastMCP server, 28 MCP tools, CLI entry point (--http / stdio)
   http.py             per-host rate-limited, retrying async HTTP client + in-memory TTLCache
   scryfall.py         Scryfall API client (search, named, collection batches, rulings, printings)
+  forge.py            Card-Forge rules script & AI synergy tag parser (DeckHas, DeckNeeds, AST nodes)
   decklist.py         multi-format decklist parser (Moxfield, Arena, Archidekt, MTGO, plain text)
   analysis.py         legality, mana curve, pips vs. sources, role heuristics, template report
   goldfish.py         Monte Carlo goldfish simulator (mulligans, mana sources, rituals, tutors, win lines)

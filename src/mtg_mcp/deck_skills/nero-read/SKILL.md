@@ -16,7 +16,7 @@ If `get_card` is not in this session, say so and stop. Do not recite oracle text
 ## Order
 
 ```
-get_card(commander)
+get_card(commander, include_forge_tags=True)
     |
     v
 get_card_rulings          if the ability uses X, "this turn", or a timing word
@@ -25,7 +25,7 @@ win shape                 one spell, a pile of the same effect, or overlapping c
 3-4 jobs                  a later card that does none of them is out
 ```
 
-1. `get_card` the commander. Quote the ability that is not the creature type.
+1. `get_card(commander, include_forge_tags=True)` on the commander. Quote the ability that is not the creature type, and inspect `forge_tags` (`deck_has`, `deck_needs`, `abilities`, `triggers`, `sacrifice_costs`) for explicit synergy hooks.
 2. `get_card_rulings` when the sequence matters. Rowan is this case. Skip the call only when the text has no timing, no X, and no "this turn".
 3. Answer five questions from the tool result:
    - Scope. The next spell, or every spell this turn? One trigger, or each end step?

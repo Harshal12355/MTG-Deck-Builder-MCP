@@ -655,6 +655,12 @@ class SkillTest(unittest.TestCase):
         self.assertIn("Bracket 3", loaded["nero-lines"].instructions)
         self.assertIn("10% Color-Screw", loaded["nero-goldfish"].instructions)
         self.assertIn("compare_decks(before, after)", loaded["nero-tune"].instructions)
+        self.assertIn("include_forge_tags=True", loaded["nero-read"].instructions)
+        self.assertIn("include_forge_tags=True", loaded["defcat-read"].instructions)
+        self.assertIn("include_forge_tags=True", loaded["nero-hunt"].instructions)
+        self.assertIn("find_tokens", loaded["nero-build"].instructions)
+        self.assertIn("find_tokens", loaded["nero-tune"].instructions)
+        self.assertIn("find_tokens", loaded["moxfield-primer"].instructions)
         self.assertIn("Lofty Denial", loaded["nero-hunt"].instructions)
         self.assertIn("lesser mana value", loaded["defcat-read"].instructions)
         self.assertIn("Treasure Cruise", loaded["defcat-fuel"].instructions)
@@ -714,6 +720,8 @@ class McpProtocolTest(unittest.TestCase):
         )
         text = tune.messages[0].content.text
         self.assertIn("reference_principles", text)
+        for tool_name in names:
+            self.assertIn(tool_name, init.instructions, f"Tool {tool_name!r} missing from server.INSTRUCTIONS")
 
 
 class HttpHostAllowlistTest(unittest.TestCase):

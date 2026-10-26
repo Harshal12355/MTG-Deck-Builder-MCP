@@ -30,7 +30,7 @@ Replace COLOR and WORD.
 
 ## Cut test
 
-`get_card` before a card is a candidate. `get_card_rulings` if the line depends on a trigger happening twice.
+`get_card` before a card is a candidate (pass `include_forge_tags=True` on key synergy candidates to verify `deck_has`, `deck_needs`, and `sacrifice_costs` AST nodes). `get_card_rulings` if the line depends on a trigger happening twice.
 
 - Blank the turn it enters, and you need a lap around the table to use it: out. Mondrak, Glory Dominus is the picture. `{2}{W}{W}`, and tokens you create later are doubled. The turn you cast it, nothing happens. EDHREC puts it in token decks. Out even when the price on `get_card` fits the budget.
 - Theme only: wait. It is not a veggie.

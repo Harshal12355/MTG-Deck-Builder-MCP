@@ -24,15 +24,16 @@ From earlier skills, keep these in the reply (do not re-derive from memory):
 ## Order
 
 ```
-analyze_deck(decklist)          roles + categories for tags
-find_combos(decklist)             which cards are combo pieces
-reference_deck(commander)       his primer shape, if it exists
-tag every line                    see rules below
-write primer markdown             sections below
+analyze_deck(decklist, include_combos=True)   roles + categories + bracket + synergy for tags
+find_combos(decklist)                         which cards are combo pieces
+find_tokens(decklist)                         token checklist + doublers for primer stats
+reference_deck(commander)                     his primer shape, if it exists
+tag every line                                see rules below
+write primer markdown                         sections below
 ```
 
-1. `analyze_deck` on the final list. Use `roles.cards` and `categories` only as a **first pass**; fix obvious misses (a known `#combo` piece tagged only `#synergy`).
-2. `find_combos` on the same list. Any card that appears in an **in_deck** line gets `#combo` unless it already carries a clearer plan tag (`#wincon`).
+1. `analyze_deck(decklist, include_combos=True)` on the final list. Use `roles.cards` and `categories` only as a **first pass**; fix obvious misses (a known `#combo` piece tagged only `#synergy`).
+2. `find_combos` and `find_tokens` on the same list. Any card that appears in an **in_deck** line gets `#combo` unless it already carries a clearer plan tag (`#wincon`). Include the token counts from `find_tokens` in **Stats**.
 3. `reference_deck` when NeRo built this commander. Mirror his primer **sections**, not his card choices. Do not copy his paragraphs.
 
 ## Tag rules (Moxfield paste)
