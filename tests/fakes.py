@@ -296,6 +296,20 @@ class FakeApis:
                 deck = ARCHIDEKT_DECKS.get(int(m[2]))
                 return httpx.Response(200, json=deck) if deck else httpx.Response(404, json={"detail": "Not found."})
 
+        if host == "raw.githubusercontent.com":
+            if path.endswith("/a/atraxa_praetors_voice.txt"):
+                return httpx.Response(
+                    200,
+                    text=(
+                        "Name:Atraxa, Praetors' Voice\n"
+                        "T:Mode$ Phase | Phase$ End of Turn | Execute$ TrigProliferate\n"
+                        "SVar:TrigProliferate:DB$ Proliferate\n"
+                        "DeckHas:Ability$Proliferate & Ability$Counters\n"
+                        "DeckNeeds:Ability$Counters\n"
+                    ),
+                )
+            return httpx.Response(404, text="not found")
+
         return httpx.Response(404, json={"details": f"unmocked {request.method} {url}"})
 
     def client(self) -> HttpClient:

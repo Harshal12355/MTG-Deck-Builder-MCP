@@ -26,6 +26,7 @@ HOST_INTERVALS = {
     "backend.commanderspellbook.com": 0.25,
     "archidekt.com": 1.0,
     "api2.moxfield.com": 1.0,
+    "raw.githubusercontent.com": 0.05,
 }
 
 
@@ -151,6 +152,23 @@ class HttpClient:
 
     async def post(self, url: str, json_body: Any, **kw: Any) -> Any:
         return await self.request_json("POST", url, json_body=json_body, **kw)
+
+    async def get_text(self, url: str, *, ttl: float = 0, allow_404: bool = False) -> str | None:
+        key = f"text:{url}" if ttl > 0 else None
+        if key and (cached := self.cache.get(key)) is not None:
+            return cached
+        await self._throttle(url)
+        try:
+            resp = await self._client.get(url)
+        except httpx.HTTPError as exc:
+            raise ApiError(f"Network error calling {urlparse(url).netloc}: {exc}") from exc
+        if resp.status_code == 404 and allow_404:
+            return None
+        if resp.status_code >= 400:
+            raise ApiError(f"{urlparse(url).netloc} returned HTTP {resp.status_code}", status=resp.status_code)
+        if key:
+            self.cache.set(key, resp.text, ttl)
+        return resp.text
 
     async def aclose(self) -> None:
         await self._client.aclose()

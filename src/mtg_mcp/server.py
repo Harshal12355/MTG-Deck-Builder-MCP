@@ -29,6 +29,7 @@ from .analysis import (
 from .archidekt import Archidekt, parse_deck_id
 from .decklist import ParsedDeck, parse_decklist
 from .edhrec import Edhrec
+from .forge import fetch_forge_tags
 from .http import ApiError, HttpClient
 from .goldfish import simulate
 from .library import ROLES, decklist_text, deck_label, get_library, library_dir, reload_library
@@ -166,18 +167,28 @@ async def search_cards(
 
 
 @mcp.tool()
-async def get_card(name: str, set_code: str | None = None, exact: bool = False) -> dict[str, Any]:
+async def get_card(
+    name: str,
+    set_code: str | None = None,
+    exact: bool = False,
+    include_forge_tags: bool = False,
+) -> dict[str, Any]:
     """Look up one card by name (fuzzy by default, so misspellings and partial names work).
 
     Returns oracle text, types, colours, legalities, price and the card's heuristic deck roles.
+    Pass `include_forge_tags=True` to also fetch Card-Forge's human-written `DeckHas`, `DeckNeeds`,
+    `DeckHints`, and AST ability/trigger tags.
     """
     scryfall, _, _ = _clients()
+    assert _http is not None
     try:
         card = await scryfall.named(name, fuzzy=not exact, set_code=set_code)
     except ApiError as exc:
         return _error(exc)
     out = summarize_card(card)
     out["roles"] = card_roles(card) or None
+    if include_forge_tags:
+        out["forge_tags"] = await fetch_forge_tags(_http, card.get("name", name))
     return out
 
 
