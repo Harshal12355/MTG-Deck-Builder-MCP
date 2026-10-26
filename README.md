@@ -347,15 +347,19 @@ See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the upcoming 10-phase plan:
 
 ## Repository Layout
 
+See **[`docs/architecture.md`](docs/architecture.md)** for layers, dependency rules, and the modularization checklist.
+
 ```text
 src/mtg_mcp/
   __init__.py         package version
   server.py           FastMCP server, 28 MCP tools, CLI entry point (--http / stdio)
+  wiring.py           shared HTTP clients and deck resolution for tools
+  tools/              MCP tool registration (split in progress; see architecture.md)
+  analysis/           deck analysis package (core.py today; roles/mana/bracket split planned)
   http.py             per-host rate-limited, retrying async HTTP client + in-memory TTLCache
   scryfall.py         Scryfall API client (search, named, collection batches, rulings, printings)
   forge.py            Card-Forge rules script & AI synergy tag parser (DeckHas, DeckNeeds, AST nodes)
   decklist.py         multi-format decklist parser (Moxfield, Arena, Archidekt, MTGO, plain text)
-  analysis.py         legality, mana curve, pips vs. sources, role heuristics, template report
   goldfish.py         Monte Carlo goldfish simulator (mulligans, mana sources, rituals, tutors, win lines)
   principles.py       Budget Pub Stomper & Budget Bros MTG ~$100 Bracket 4 deckbuilding principles
   skills.py           SKILL.md frontmatter parser, get_skill loader, and MCP prompt registration

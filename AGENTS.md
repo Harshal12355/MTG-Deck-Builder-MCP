@@ -1,26 +1,36 @@
 # Agent guide — mtg-deckbuilder-mcp
 
-## Layout
+Read **`docs/architecture.md`** for layers, module map, migration checklist, and how to add tools.
 
-- **Domain logic:** `src/mtg_mcp/analysis.py`, `goldfish.py`, `decklist.py`, clients (`scryfall.py`, …)
-- **MCP surface:** `src/mtg_mcp/server.py` — thin tools; no new business logic here
-- **Deckbuilding SOPs:** `src/mtg_mcp/deck_skills/` (canonical). `.cursor/skills/<name>/` must stay identical
-- **Tests:** `tests/` — offline fakes only (`tests/fakes.py`)
+## Layout (short)
+
+| Layer | Location |
+|-------|----------|
+| MCP transport | `server.py`, `tools/` (split in progress) |
+| HTTP + deck resolve | `wiring.py` |
+| Deck math | `analysis/` (`core.py` today → split into roles, mana, bracket, …) |
+| Simulation | `goldfish.py` |
+| Parse | `decklist.py` |
+| Upstream APIs | `scryfall.py`, `spellbook.py`, `edhrec.py`, `archidekt.py`, `moxfield.py`, `http.py` |
+| Reference data | `library.py`, `data/library/` |
+| Agent SOPs | `deck_skills/` only — mirror to `.cursor/skills/` |
+
+**Import rule:** domain code never imports `server` or MCP. Tools call domain; domain uses card dicts + `ParsedDeck`.
 
 ## Test-driven refactors
 
-1. Run the full suite before changing structure:
-   ```bash
-   python3 -m unittest discover -s tests -v
-   ```
-2. **Golden pipeline** (`tests/test_regression.py` + `tests/fixtures/golden_atraxa_pipeline.json`) locks parse → analyze → combos → simulate (`seed=1`) → mana → tokens → compare on the fake Atraxa deck. If a refactor changes numbers, fix the bug or **intentionally** update the fixture in the same PR with a short note in the commit message.
-3. **Skill chain** tests scan `get_skill("…")` references in deck skills, `.cursor/skills`, and `.cursor/rules` and fail on typos or drift between packaged vs Cursor skill copies.
-4. Prefer adding a focused assertion to an existing test class over a one-off script. Split modules under `src/mtg_mcp/` only when golden + `test_all.py` stay green.
+```bash
+python3 -m unittest discover -s tests -v
+```
 
-## What not to use
+- **Golden pipeline:** `tests/test_regression.py` + `tests/fixtures/golden_atraxa_pipeline.json`
+- **Skill chain:** `get_skill("…")` references + packaged vs Cursor `SKILL.md` parity
+- One structural change per PR; tests green before merge. Update golden JSON only when behavior intentionally changes.
 
-- `ai-instructions/` is leftover from another project (Django/shipping). Ignore it for MTG MCP work.
+## Skills
+
+Edit `src/mtg_mcp/deck_skills/<name>/SKILL.md`, then copy to `.cursor/skills/<name>/SKILL.md`.
 
 ## CI
 
-GitHub Actions runs `python -m unittest discover -s tests` on Python 3.10 and 3.12 after `pip install -e .`.
+GitHub Actions: Python 3.10 and 3.12, `pip install -e .`, full `tests/` suite.
