@@ -1,21 +1,12 @@
-"""Deck analysis: legality, roles, bracket, mana base, compare, pod, tokens.
+"""Deck analysis: legality, roles, bracket, mana base, compare, pod, tokens."""
 
-Implementation is split across submodules over time; import from ``mtg_mcp.analysis``
-(not from ``analysis.core``) so callers stay stable.
-"""
-
-from .core import (
-    LAND_CYCLES,
-    TEMPLATE_CATEGORIES,
-    analyze,
-    analyze_mana,
-    card_roles,
-    collect_deck_tokens,
-    compare_decks_analysis,
-    evaluate_pod,
-    resolve_template,
-    template_overlap,
-)
+from .analyze import analyze
+from .compare import compare_decks_analysis
+from .mana import LAND_CYCLES, analyze_mana
+from .pod import evaluate_pod
+from .roles import card_roles
+from .template import TEMPLATE_CATEGORIES, resolve_template, template_overlap
+from .tokens import collect_deck_tokens
 
 __all__ = [
     "LAND_CYCLES",

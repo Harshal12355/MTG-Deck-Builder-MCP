@@ -98,27 +98,27 @@ Status key: `[x]` done, `[ ]` planned.
 
 ### Foundation
 
-- [x] Golden pipeline + skill-chain regression tests
+- [x] Golden pipeline + skill-chain regression tests (`tests/test_regression.py`)
 - [x] `AGENTS.md` + this document
 - [x] Remove stray `ai-instructions/` (non-MTG content)
 - [x] `wiring.py` — shared HTTP and deck resolution out of `server.py`
-- [x] `analysis/` package (starts as `core.py`; split modules below)
+- [x] `analysis/` package (`analysis/core.py` + stable `analysis/__init__.py` re-exports)
+- [x] `tools/__init__.py` scaffold + `register_tools(mcp)` hook on server startup
 
 ### analysis/ split (one PR per step, tests green)
 
-- [ ] `_card_utils.py` + `roles.py` (extract from `core.py`)
-- [ ] `mana.py` (`LAND_CYCLES`, `analyze_mana`, `classify_land`)
-- [ ] `template.py`
-- [ ] `legality.py`
-- [ ] `bracket.py` (sets, `_score_and_bracket`, synergy)
-- [ ] `compare.py`, `pod.py`, `tokens.py`
-- [ ] Slim `core.py` → rename to `analyze.py` orchestrator only
+- [x] `_card_utils.py` + `roles.py`
+- [x] `mana.py` (`LAND_CYCLES`, `analyze_mana`, `classify_land`)
+- [x] `template.py`
+- [x] `legality.py`
+- [x] `bracket.py` (sets, `_score_and_bracket`, synergy)
+- [x] `compare.py`, `pod.py`, `tokens.py`
+- [x] `analyze.py` orchestrator (removed monolithic `core.py`)
 
-### tools/ split (after analysis step 1)
+### tools/ split
 
-- [ ] `tools/cards.py` + `register_tools(mcp)`
-- [ ] `tools/deck.py`, `combos.py`, …
-- [ ] `server.py` under ~250 lines (instance + `main()` + short instructions)
+- [x] `tools/cards.py`, `deck.py`, `combos.py`, `edhrec_tools.py`, `archidekt_tools.py`, `reference.py`, `skills_tool.py`
+- [x] `register_tools(mcp)` + `server.py` ~130 lines (re-exports tools for tests)
 
 ### Optional later
 
