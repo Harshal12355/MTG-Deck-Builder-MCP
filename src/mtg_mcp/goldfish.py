@@ -322,7 +322,7 @@ def _bundle_cost(line: list[tuple[list[str], bool]], hand: list[SimCard],
         return None
     if len(missing) > len(regular) + len(critters):
         return None
-    for is_creature in missing:
+    for is_creature in sorted(missing):
         if not is_creature or not critters or (regular and regular[0].cmc <= critters[0].cmc):
             tutor = regular.pop(0)
         else:
@@ -353,8 +353,8 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
         if c.kind in tutors:
             tutors[c.kind] += 1
 
-    pool_c = pending_c = 0
-    pool_s: list[frozenset[str]] = []
+    perm_c = pending_c = 0
+    perm_s: list[frozenset[str]] = []
     pending_s: list[frozenset[str]] = []
     commander_turn = ignore_turn = follow_up = None
     color_cost = commander_cost if commander_cost is not None else (
@@ -381,8 +381,8 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
         draws = (0 if (on_play and turn == 1 and not draw_first) else 1) + (extra if turn >= 2 else 0)
         for _ in range(draws):
             draw_one()
-        pool_c += pending_c
-        pool_s += pending_s
+        perm_c += pending_c
+        perm_s += pending_s
         pending_c, pending_s = 0, []
         land = next((c for c in hand if c.kind == "land"), None) or next(
             (c for c in hand if c.kind == "tapped_land"), None)
@@ -390,11 +390,12 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
             hand.remove(land)
             add_c, add_s = _mana_of(land)
             if land.kind == "land":
-                pool_c += add_c
-                pool_s += add_s
+                perm_c += add_c
+                perm_s += add_s
             else:
                 pending_c += add_c
                 pending_s += add_s
+        pool_c, pool_s = perm_c, list(perm_s)
         rituals = [c for c in hand if c.kind == "ritual"]
         if commander_cmc is not None and ignore_turn is None:
             if _cast_with_rituals(pool_c, pool_s, commander_cmc, (), rituals) is not None:
@@ -419,9 +420,11 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
                 pending_c += add_c
                 pending_s += add_s
             else:
+                perm_c += add_c
+                perm_s += add_s
                 pool_c += add_c
                 pool_s += add_s
-        snap_c, snap_s = pool_c, list(pool_s)
+        snap_c, snap_s = perm_c, list(perm_s)
         seen_set = set(seen)
         for i, line in enumerate(lines):
             if seen_turn[i] is None and _line_ready(line, seen_set, tutors):
@@ -448,6 +451,8 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
                     pending_c += add_c
                     pending_s += add_s
                 elif c.kind == "source":
+                    perm_c += add_c
+                    perm_s += add_s
                     pool_c += add_c
                     pool_s += add_s
                 else:

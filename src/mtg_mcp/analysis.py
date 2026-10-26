@@ -119,6 +119,21 @@ CURATED_TWO_CARD_COMBOS: tuple[tuple[str, str, bool], ...] = (
     ("Time Sieve", "Thopter Assembly", False),
     ("Chatterfang, Squirrel General", "Pitiless Plunderer", True),
     ("Kinnan, Bonder Prodigy", "Basalt Monolith", True),
+    ("Luminous Broodmoth", "Carrion Feeder", True),
+    ("Luminous Broodmoth", "Viscera Seer", True),
+    ("Luminous Broodmoth", "Bartolomé del Presidio", True),
+    ("Leonin Relic-Warder", "Animate Dead", True),
+    ("Leonin Relic-Warder", "Dance of the Dead", True),
+    ("Leonin Relic-Warder", "Necromancy", True),
+    ("Vizier of Remedies", "Carrion Feeder", True),
+    ("Vizier of Remedies", "Viscera Seer", True),
+    ("Vizier of Remedies", "Bartolomé del Presidio", True),
+    ("Metallic Mimic", "Carrion Feeder", True),
+    ("Metallic Mimic", "Viscera Seer", True),
+    ("Metallic Mimic", "Bartolomé del Presidio", True),
+    ("Thran Vigil", "Carrion Feeder", True),
+    ("Thran Vigil", "Viscera Seer", True),
+    ("Thran Vigil", "Bartolomé del Presidio", True),
 )
 
 # Community EDHREC salt scores for the most-flagged Commander staples (0-4 scale).
@@ -149,16 +164,16 @@ _SYNERGY_AXES: dict[str, tuple[re.Pattern[str], re.Pattern[str]]] = {
         re.compile(r"from your graveyard|\bflashback\b|\bescape\b|\bdelve\b|\bthreshold\b|\bdelirium\b|\bretrace\b|\bunearthed?\b"),
     ),
     "sacrifice": (
-        re.compile(r"\bsacrifice (?:a|an|another) (?:creature|artifact|permanent|token)"),
-        re.compile(r"whenever (?:a|another|one or more) [^.]*(?:dies|you sacrifice)"),
+        re.compile(r"\bsacrifice (?:a|an|another|one or more) (?:creature|artifact|permanent|token)"),
+        re.compile(r"whenever (?:this creature or )?(?:a|another|one or more) [^.]*(?:dies|you sacrifice|leaves? your graveyard)|\bwhen this creature dies\b"),
     ),
     "tokens": (
-        re.compile(r"\bcreates? (?:a|an|one|two|three|four|x|\d+|that many) [^.]*tokens?\b|\bamass\b"),
+        re.compile(r"\bcreates? (?:a|an|one|two|three|four|x|\d+|that many) [^.]*tokens?\b|\bamass\b|\bfabricate\b"),
         re.compile(r"\btokens? you control\b|for each (?:creature|token) you control|\bpopulate\b|twice that many of those tokens|convoke"),
     ),
     "counters": (
-        re.compile(r"put (?:a|an|one|two|x|\d+|that many) \+1/\+1 counters?|\bproliferate\b"),
-        re.compile(r"with a \+1/\+1 counter|for each \+1/\+1 counter|if it has a \+1/\+1 counter|remove a \+1/\+1 counter|twice that many .*counters"),
+        re.compile(r"put (?:a|an|one|two|x|\d+|that many) (?:\+1/\+1|-1/-1) counters?|\bproliferate\b|\bundying\b|\bpersist\b|\bfabricate\b|additional \+1/\+1 counter"),
+        re.compile(r"(?:\+1/\+1|-1/-1) counters?|remove (?:a|all|any number of) counters?|\bundying\b|\bpersist\b"),
     ),
     "spellslinger": (
         re.compile(r"\binstant\b|\bsorcery\b"),
@@ -335,6 +350,7 @@ _ROLE_PATTERNS: dict[str, list[re.Pattern[str]]] = {
         re.compile(r"\bdraws? (?:a|an|one|two|three|four|five|x|that many|cards equal|\d+) (?:additional )?cards?"),
         re.compile(r"\bdraw cards equal"),
         re.compile(r"exile the top [^.]* cards? of your library[^.]*\. (?:until [^.]*, )?you may (?:play|cast)"),
+        re.compile(r"reveal the top [^.]* of your library[^.]*put (?:that card|it|one of them) into your hand"),
     ],
     "removal": [
         re.compile(r"\b(?:destroy|exile) (?:target|up to (?:one|two|three|x) target|another target)"),
@@ -354,7 +370,10 @@ _ROLE_PATTERNS: dict[str, list[re.Pattern[str]]] = {
         re.compile(r"return all (?:other )?(?:creatures|nonland permanents|permanents)[^.]* to their owners' hands"),
         re.compile(r"each player sacrifices (?:all|each)"),
     ],
-    "tutor": [re.compile(r"search your library for (?:a|an|up to \w+) (?!basic )(?![^.]*\bland\b)[^.]*card")],
+    "tutor": [
+        re.compile(r"search your library for (?:a|an|up to \w+|two|three|four|any number of) (?!basic )(?![^.]*\bland\b)[^.]*cards?"),
+        re.compile(r"\btransmute\b"),
+    ],
     "protection": [
         re.compile(r"(?:gains?|have|has) (?:[a-z ,]*)?(?:hexproof|indestructible|shroud|protection from)"),
         re.compile(r"phase out"),
@@ -421,6 +440,8 @@ def card_roles(card: dict[str, Any]) -> list[str]:
 def _pips(cost: str) -> Counter[str]:
     pips: Counter[str] = Counter()
     for sym in _PIP.findall(cost or ""):
+        if "/" in sym and any(ch.isdigit() for ch in sym):
+            continue
         for c in COLORS:
             if c in sym.upper():
                 pips[c] += 1
@@ -449,7 +470,7 @@ def _is_fast_mana(card: dict[str, Any]) -> bool:
     if cmc > 1:
         return False
     text = re.sub(r"\([^)]*\)", "", oracle_text(card).lower())
-    return len(re.findall(r"\{[wubrgc]\}", text)) >= 2
+    return bool(re.search(r"add \{[wubrgc]\}\{[wubrgc]\}|add (?:two|three|four|five) mana", text))
 
 
 def _is_extra_turn(card: dict[str, Any]) -> bool:
@@ -525,8 +546,8 @@ def _detect_combos_and_tiers(
             continue
         seen_pairs.add(key)
         tag = str(c.get("bracket_tag") or "").upper()
-        # Commander Spellbook tags: 'R' / 'S' / '4' / 'C' / 'early' = early/Ruthless; 'P' / '3' / 'late' = late
-        is_early = tag in {"R", "C", "4", "5", "EARLY", "RUTHLESS", "SPICY"} or (not tag and len(pieces) == 2)
+        # Commander Spellbook tags: 'E' (Explosive), 'O' (Optimized), 'R' (Ruthless) = early/Bracket 4+; 'S'/'P'/'C' = late/Bracket 3
+        is_early = tag in {"E", "O", "R", "4", "5", "EARLY", "RUTHLESS", "EXPLOSIVE", "OPTIMIZED"} or (not tag and len(pieces) == 2)
         item = {"cards": pieces, "early": is_early, "produces": c.get("produces")}
         if len(pieces) <= 2:
             two_card.append(item)
@@ -601,20 +622,23 @@ def _score_and_bracket(
     salt_sub = min(10.0, avg_salt * 4.0)
     removal_sub = min(10.0, removal_pct * 65.0)
 
-    weighted = (
-        tutor_sub * 0.18
-        + combo_sub * 0.15
-        + gc_sub * 0.15
-        + curve_sub * 0.12
-        + draw_sub * 0.12
-        + ramp_sub * 0.10
-        + salt_sub * 0.10
-        + removal_sub * 0.08
-    )
-
     synergy = _synergy_profile(nonland_cards)
     interaction_score = round(min(10.0, removal_sub * (0.65 + 0.35 * instant_ratio)), 1)
     interaction_bonus = round(min(0.4, interaction_score * 0.04), 2)
+
+    # Allow clean synergy/combo density to stand in when a deck avoids high-salt stax or expensive Game Changers
+    effective_gc_sub = max(gc_sub, min(10.0, (combo_sub + tutor_sub) * 0.5))
+    effective_salt_sub = max(salt_sub, min(10.0, synergy["score"] * 0.9))
+    weighted = (
+        tutor_sub * 0.18
+        + combo_sub * 0.15
+        + effective_gc_sub * 0.15
+        + curve_sub * 0.12
+        + draw_sub * 0.12
+        + ramp_sub * 0.10
+        + effective_salt_sub * 0.10
+        + removal_sub * 0.08
+    )
     raw = weighted + synergy["bonus"] + interaction_bonus
 
     # Base Bracket 1..4 decision (EDHcheck decideBracket)
@@ -677,7 +701,12 @@ def _score_and_bracket(
         cedh_signals.append(f"power {power_total:.1f}")
 
     bracket = base_bracket
-    if base_bracket == 4 and (combo_info["early_two_card"] or power_total >= 8.5) and len(cedh_signals) >= 3:
+    if (
+        base_bracket == 4
+        and len(game_changers) >= 4
+        and (combo_info["early_two_card"] or power_total >= 8.5)
+        and len(cedh_signals) >= 3
+    ):
         bracket = 5
         if power_total < 8.6:
             power_total = 8.6
@@ -785,18 +814,18 @@ def _score_and_bracket(
     # ---- House 3-School Scorecard (NeRo + Defcat + Based 33-card) ----
     draw_on_cast = len(set(roles.get("draw_on_cast", [])))
     immediate_draw_share = draw_on_cast / max(1, draw_count) if draw_count else 0.0
-    veggie_total = ramp_count + draw_count + interaction_total
+    veggie_total = ramp_count + draw_count + interaction_total + tutors_count
     nero_score = round(
         min(
             10.0,
-            max(0.0, (3.2 - avg_cmc) * 2.5)
-            + min(3.5, veggie_total / 10.0)
-            + immediate_draw_share * 2.5,
+            min(4.0, max(0.0, (3.4 - avg_cmc) * 3.1))
+            + min(3.5, veggie_total / 9.5)
+            + min(2.5, immediate_draw_share * 1.5 + min(1.0, combo_info["total_combos"] * 0.25)),
         ),
         1,
     )
     instant_nonlands = sum(1 for c in nonland_cards if _is_instant_speed(c))
-    defcat_score = round(min(10.0, instant_ratio * 6.0 + (instant_nonlands / nonland_count) * 10.0), 1)
+    defcat_score = round(min(10.0, instant_ratio * 6.0 + min(4.0, (instant_nonlands / nonland_count) * 12.0)), 1)
 
     # Based 33-card core alignment: how well role counts scale into 3 x 33 games
     per_33 = {
@@ -946,12 +975,15 @@ def analyze_mana(
         for col in c.get("color_identity") or []:
             if col in COLORS:
                 identity.add(col)
+
+    for e, c in resolved:
         is_cmd = _front_lower(c.get("name", e.name)) in cmd_set
         tl = front_type_line(c)
-        produced = [col for col in (c.get("produced_mana") or []) if col in COLORS]
+        raw_prod = [col for col in (c.get("produced_mana") or []) if col in COLORS]
         text_low = oracle_text(c).lower()
-        if not produced and "any color" in text_low:
-            produced = list(COLORS)
+        if not raw_prod and "any color" in text_low:
+            raw_prod = list(COLORS)
+        produced = [col for col in raw_prod if not identity or col in identity]
 
         if "Land" in tl:
             lands += e.quantity
@@ -1047,9 +1079,12 @@ def analyze_mana(
     else:
         overall_cast_rate = 1.0
 
-    # Opener 2+ lands probability & untapped ratio
-    two_plus_lands = _hypergeom_at_least(library_size, lands, min(library_size, 7), 2)
-    untapped_share = (speed_counts["untapped"] + 0.65 * speed_counts["conditional"]) / max(1, lands) if lands else 1.0
+    # Opener 2+ lands probability (accounting for Commander's free mulligan when hand has <2 or >5 lands)
+    p_two_plus = _hypergeom_at_least(library_size, lands, min(library_size, 7), 2)
+    p_six_plus = _hypergeom_at_least(library_size, lands, min(library_size, 7), 6)
+    p_mull = (1.0 - p_two_plus) + p_six_plus
+    two_plus_lands = min(1.0, (p_two_plus - p_six_plus) + p_mull * p_two_plus)
+    untapped_share = (speed_counts["untapped"] + 0.85 * speed_counts["conditional"]) / max(1, lands) if lands else 1.0
 
     # EDHcheck 0-100 gradeManaBase
     score = 100
@@ -1282,11 +1317,13 @@ def collect_deck_tokens(deck: ParsedDeck, cards: dict[str, dict[str, Any]]) -> d
         text_low = text.lower()
         repeatable = bool(re.search(r"\bwhenever\b|\bat the beginning of\b|\beach (?:turn|combat|upkeep|end step)\b", text_low)) or ":" in text_low
 
-        # 1. Scryfall all_parts token references if present
-        for part in c.get("all_parts") or []:
-            if part.get("component") == "token":
+        # 1. Scryfall all_parts token references if present; otherwise fallback to oracle regex
+        parts = [p for p in (c.get("all_parts") or []) if p.get("component") == "token"]
+        if parts:
+            for part in parts:
                 tname = part.get("name") or "Token"
                 tkey = f"{tname}|{part.get('type_line', '')}".lower()
+                scales = "for each" in text_low or "create x " in text_low
                 item = by_token.setdefault(tkey, {
                     "name": tname,
                     "type_line": part.get("type_line", "Token"),
@@ -1299,26 +1336,26 @@ def collect_deck_tokens(deck: ParsedDeck, cards: dict[str, dict[str, Any]]) -> d
                 if card_name not in item["sources"]:
                     item["sources"].append(card_name)
                 item["repeatable"] = item["repeatable"] or repeatable
-
-        # 2. Oracle text token parser (always runs so cards without all_parts still report exact tokens)
-        for m in _CREATE_TOKEN_RE.finditer(text):
-            cnt_raw, desc = m.group(1).lower(), m.group(2).strip()
-            scales = cnt_raw == "x" or "for each" in text_low
-            batch = 3 if scales else (_TOKEN_BATCH_WORDS.get(cnt_raw) or (int(cnt_raw) if cnt_raw.isdigit() else 1))
-            tkey = re.sub(r"\btokens?\b", "token", desc.lower()).strip()
-            item = by_token.setdefault(tkey, {
-                "name": desc,
-                "type_line": "Token",
-                "sources": [],
-                "max_batch": 1,
-                "repeatable": False,
-                "scales": False,
-            })
-            if card_name not in item["sources"]:
-                item["sources"].append(card_name)
-            item["max_batch"] = max(item["max_batch"], batch)
-            item["repeatable"] = item["repeatable"] or repeatable
-            item["scales"] = item["scales"] or scales
+                item["scales"] = item["scales"] or scales
+        else:
+            for m in _CREATE_TOKEN_RE.finditer(text):
+                cnt_raw, desc = m.group(1).lower(), m.group(2).strip()
+                scales = cnt_raw == "x" or "for each" in text_low
+                batch = 3 if scales else (_TOKEN_BATCH_WORDS.get(cnt_raw) or (int(cnt_raw) if cnt_raw.isdigit() else 1))
+                tkey = re.sub(r"\btokens?\b", "token", desc.lower()).strip()
+                item = by_token.setdefault(tkey, {
+                    "name": desc,
+                    "type_line": "Token",
+                    "sources": [],
+                    "max_batch": 1,
+                    "repeatable": False,
+                    "scales": False,
+                })
+                if card_name not in item["sources"]:
+                    item["sources"].append(card_name)
+                item["max_batch"] = max(item["max_batch"], batch)
+                item["repeatable"] = item["repeatable"] or repeatable
+                item["scales"] = item["scales"] or scales
 
     tokens_out = []
     for item in by_token.values():
