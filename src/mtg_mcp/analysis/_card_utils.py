@@ -7,9 +7,6 @@ from collections import Counter
 
 COLORS = "WUBRG"
 
-
-_ANY_NUMBER = re.compile(r"a deck can have any number of cards named")
-_UP_TO_N = re.compile(r"a deck can have up to (\w+) cards named")
 _PIP = re.compile(r"\{([^}]+)\}")
 
 

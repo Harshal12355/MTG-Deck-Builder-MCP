@@ -27,8 +27,8 @@
     "power_consistency": 4.6
   },
   "combos": {
-    "in_deck": 0,
-    "one_card_away": 0
+    "in_deck": 1,
+    "one_card_away": 2
   },
   "simulate_seed_1": {
     "trials": 500,

@@ -1,31 +1,13 @@
-"""MCP tool implementations."""
+"""Archidekt deck search and inspection MCP tools."""
 
 from __future__ import annotations
 
 from typing import Any, Literal
 
 from .. import wiring
-from ..http import ApiError
-
-
-def _clients():
-    return wiring.clients()
-
-
-def _error(exc: ApiError) -> dict[str, Any]:
-    return wiring.api_error(exc)
-
-
-async def _resolve_deck(decklist: str, commanders: list[str] | None):
-    return await wiring.resolve_deck(decklist, commanders)
-
-
-def _archidekt():
-    return wiring.archidekt()
-
-
 from ..archidekt import parse_deck_id
 from ..decklist import parse_decklist
+from ..http import ApiError
 
 
 async def archidekt_search_decks(
@@ -50,20 +32,20 @@ async def archidekt_search_decks(
     - bracket: Commander bracket 1-5. order: "views" (most viewed), "newest", "updated" or "name".
     Returns deck ids and URLs; pass one to archidekt_get_deck for the full list.
     """
-    scryfall, _, _ = _clients()
+    scryfall, _, _ = wiring.clients()
     try:
         if commander:
             commander = (await scryfall.named(commander)).get("name", commander)
         if card:
             card = (await scryfall.named(card)).get("name", card)
-        return await _archidekt().search(
+        return await wiring.archidekt().search(
             name=name, commander=commander, card=card, fmt=format, owner=owner, colors=colors,
             exact_colors=exact_colors, bracket=bracket, order=order, page=page, limit=limit,
         )
     except ValueError as exc:
         return {"error": str(exc)}
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
 
 
 async def archidekt_get_deck(deck: str, include_cards: bool = True) -> dict[str, Any]:
@@ -77,9 +59,9 @@ async def archidekt_get_deck(deck: str, include_cards: bool = True) -> dict[str,
     if deck_id is None:
         return {"error": f"Couldn't find an Archidekt deck id in {deck!r}."}
     try:
-        return await _archidekt().deck_summary(deck_id, include_cards=include_cards)
+        return await wiring.archidekt().deck_summary(deck_id, include_cards=include_cards)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
 
 
 async def archidekt_popular_cards(
@@ -100,19 +82,18 @@ async def archidekt_popular_cards(
     Each card shows inclusion % across the sample and the category builders most often file it under.
     A complement to edhrec_recommendations: smaller sample, but real, recently edited lists.
     """
-    scryfall, _, _ = _clients()
+    scryfall, _, _ = wiring.clients()
     try:
         resolved = (await scryfall.named(commander)).get("name", commander)
         exclude: set[str] = set()
         if decklist:
             exclude = {e.name for e in parse_decklist(decklist).playing}
-        return await _archidekt().popular_cards(
+        return await wiring.archidekt().popular_cards(
             resolved, decks=max(1, min(decks, 30)), order=order, bracket=bracket,
             exclude=exclude, include_basics=include_basics, top=max(1, min(top, 200)),
         )
     except ApiError as exc:
-        return _error(exc)
-
+        return wiring.api_error(exc)
 
 
 def register(mcp) -> None:

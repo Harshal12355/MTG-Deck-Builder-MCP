@@ -34,7 +34,7 @@ MCP host (Cursor, Claude, HTTP)
 
 **Card data:** Scryfall-shaped `dict[str, Any]` keyed by lowercased name. **Deck data:** `ParsedDeck` from `decklist.py`.
 
-## Directory layout (target)
+## Directory layout
 
 ```text
 src/mtg_mcp/
@@ -61,7 +61,7 @@ src/mtg_mcp/
     pod.py               # evaluate_pod
     tokens.py            # collect_deck_tokens
     legality.py          # copy limits, color identity checks
-    core.py              # analyze() orchestrator (until fully slimmed)
+    analyze.py           # analyze() orchestrator
 
   decklist.py, goldfish.py, library.py, principles.py, skills.py
   scryfall.py, spellbook.py, edhrec.py, archidekt.py, moxfield.py, forge.py, http.py

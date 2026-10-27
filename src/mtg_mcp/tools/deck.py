@@ -1,29 +1,11 @@
-"""MCP tool implementations."""
+"""Deck analysis, simulation, mana base, and pricing MCP tools."""
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any, Literal
 
 from .. import wiring
-from ..http import ApiError
-
-
-def _clients():
-    return wiring.clients()
-
-
-def _error(exc: ApiError) -> dict[str, Any]:
-    return wiring.api_error(exc)
-
-
-async def _resolve_deck(decklist: str, commanders: list[str] | None):
-    return await wiring.resolve_deck(decklist, commanders)
-
-
-def _archidekt():
-    return wiring.archidekt()
-
-
 from ..analysis import (
     LAND_CYCLES,
     TEMPLATE_CATEGORIES,
@@ -37,17 +19,8 @@ from ..analysis import (
 )
 from ..decklist import parse_decklist
 from ..goldfish import simulate
+from ..http import ApiError
 from ..principles import principles as build_principles
-from ..scryfall import price_usd, summarize_card
-
-from ..analysis import (
-    LAND_CYCLES,
-    analyze_mana,
-    collect_deck_tokens,
-    compare_decks_analysis,
-    evaluate_pod,
-)
-from ..decklist import parse_decklist
 from ..scryfall import price_usd, summarize_card
 
 
@@ -77,19 +50,18 @@ async def analyze_deck(
     if not deck_parsed.playing:
         return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck_parsed.unparsed_lines[:10]}
     try:
-        _, cards, not_found = await _resolve_deck(decklist, commanders)
         if include_combos:
-            _, spellbook, _ = _clients()
-            for e in deck_parsed.commanders:
-                full_name = (cards.get(e.name.lower()) or {}).get("name")
-                if full_name and "//" in full_name:
-                    e.name = full_name
-            combo_res = await spellbook.find_my_combos(deck_parsed, include_steps=False)
+            _, spellbook, _ = wiring.clients()
+            (_, cards, not_found), combo_res = await asyncio.gather(
+                wiring.resolve_deck(deck_parsed, commanders),
+                spellbook.find_my_combos(deck_parsed, include_steps=False),
+            )
             combos = (combo_res.get("in_deck") or {}).get("combos") or []
         else:
+            _, cards, not_found = await wiring.resolve_deck(deck_parsed, commanders)
             combos = None
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     result = analyze(deck_parsed, cards, fmt=format, budget_per_card=budget_per_card, template=template, combos=combos)
     result["cards_not_found"] = sorted(set(result["cards_not_found"]) | set(not_found)) or None
     if deck_parsed.unparsed_lines:
@@ -176,9 +148,9 @@ async def simulate_deck(
     if not 0 <= extra_cards_per_turn <= 5:
         return {"error": "extra_cards_per_turn must be from 0 to 5."}
     try:
-        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+        deck, cards, not_found = await wiring.resolve_deck(decklist, commanders)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     if not deck.playing:
         return {"error": "Couldn't find any cards in that decklist.", "unparsed_lines": deck.unparsed_lines[:10]}
     result = simulate(
@@ -200,22 +172,20 @@ async def price_decklist(
 
     Pass `budget_target` to see which priciest non-commander cards would need to be cut to get under that target.
     """
-    scryfall, _, _ = _clients()
-    deck = parse_decklist(decklist)
-    entries = deck.playing + deck.sideboard
-    cmd_names = {e.name.lower() for e in deck.commanders}
     try:
-        cards, not_found = await scryfall.collection(e.name for e in entries)
+        deck, cards, not_found = await wiring.resolve_deck(decklist, None)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
+    entries = deck.playing + deck.sideboard
+    cmd_names = {e.name.lower() for e in deck.commanders} | {
+        (cards.get(e.name.lower()) or {}).get("name", "").lower() for e in deck.commanders
+    }
     rows = []
     for e in entries:
         c = cards.get(e.name.lower())
         if c is None:
             continue
         p = price_usd(c, currency=currency)
-        if currency == "eur" and p is None:
-            p = price_usd(c, currency="usd")
         total_p = round(p * e.quantity, 2) if p is not None else None
         row: dict[str, Any] = {"card": c.get("name"), "qty": e.quantity, "usd_each": p, "usd_total": total_p}
         if currency == "eur":
@@ -261,9 +231,9 @@ async def analyze_mana_base(
     color deficits, turn 1-8 cast rates by color, and land cycle speed breakdown (untapped / conditional / tapped).
     """
     try:
-        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+        deck, cards, not_found = await wiring.resolve_deck(decklist, commanders)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     if not deck.playing:
         return {"error": "Couldn't find any cards in that decklist."}
     out = analyze_mana(deck, cards)
@@ -297,7 +267,7 @@ async def search_lands(
     if cycle is None and color_identity is None and max_price is None:
         return {"cycles": cycles}
 
-    scryfall, _, _ = _clients()
+    scryfall, _, _ = wiring.clients()
     picked = cycles[0]
     q_parts = [f"({picked['query']})", "f:commander"]
     if color_identity:
@@ -308,7 +278,7 @@ async def search_lands(
     try:
         res = await scryfall.search(query, order="edhrec", limit=max(1, min(limit, 60)))
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     return {
         "cycle": picked,
         "query": query,
@@ -330,7 +300,7 @@ async def compare_decks(
     Speed, Consistency, 3-School Score, average mana value, lands, ramp, card draw, interaction, tutors,
     Game Changers, and USD price.
     """
-    scryfall, _, _ = _clients()
+    scryfall, _, _ = wiring.clients()
     deck_a = parse_decklist(decklist_a, commanders_a)
     deck_b = parse_decklist(decklist_b, commanders_b)
     if not deck_a.playing or not deck_b.playing:
@@ -339,7 +309,7 @@ async def compare_decks(
     try:
         cards, not_found = await scryfall.collection(names)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     out = compare_decks_analysis(deck_a, deck_b, cards)
     out["cards_not_found"] = not_found or None
     return out
@@ -357,7 +327,7 @@ async def check_pod(
     """
     if not 2 <= len(decks) <= 4:
         return {"error": "check_pod requires between 2 and 4 decklists."}
-    scryfall, _, _ = _clients()
+    scryfall, _, _ = wiring.clients()
     parsed = [parse_decklist(d) for d in decks]
     if any(not p.playing for p in parsed):
         return {"error": "Every deck in `decks` must contain cards."}
@@ -365,7 +335,7 @@ async def check_pod(
     try:
         cards, not_found = await scryfall.collection(all_names)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
 
     seats = []
     for idx, p in enumerate(parsed):
@@ -393,9 +363,9 @@ async def find_tokens(
     in the deck (e.g. Doubling Season, Parallel Lives, Mondrak).
     """
     try:
-        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+        deck, cards, not_found = await wiring.resolve_deck(decklist, commanders)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     if not deck.playing:
         return {"error": "Couldn't find any cards in that decklist."}
     out = collect_deck_tokens(deck, cards)

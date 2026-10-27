@@ -79,8 +79,8 @@ class GoldenPipelineTests(unittest.TestCase):
     def test_find_combos(self):
         exp = self.golden["combos"]
         r = run(server.find_combos(self.deck))
-        self.assertEqual(len(r.get("combos_in_deck") or []), exp["in_deck"])
-        self.assertEqual(len(r.get("combos_one_card_away") or []), exp["one_card_away"])
+        self.assertEqual(len(r["in_deck"]["combos"]), exp["in_deck"])
+        self.assertEqual(len(r["one_card_away"]["combos"]), exp["one_card_away"])
 
     def test_simulate_deck_seed_1(self):
         exp = self.golden["simulate_seed_1"]

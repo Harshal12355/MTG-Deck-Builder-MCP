@@ -112,11 +112,21 @@ class Scryfall:
             cards.extend(data.get("data", []))
         return {"total_cards": total, "cards": cards[:limit], "warnings": data.get("warnings")}
 
+    def _cache_card(self, card: dict[str, Any], *aliases: str) -> None:
+        for k in (*_index_by_names([card]), *(a.strip().lower() for a in aliases if a.strip())):
+            self.http.cache.set(f"card:{k}", card, CARD_TTL)
+
     async def named(self, name: str, *, fuzzy: bool = True, set_code: str | None = None) -> dict[str, Any]:
+        key = name.strip().lower()
+        if set_code is None and (cached := self.http.cache.get(f"card:{key}")) is not None:
+            return cached
         params: dict[str, Any] = {"fuzzy" if fuzzy else "exact": name}
         if set_code:
             params["set"] = set_code
-        return await self.http.get(f"{BASE}/cards/named", params=params, ttl=CARD_TTL)
+        card = await self.http.get(f"{BASE}/cards/named", params=params, ttl=CARD_TTL)
+        if set_code is None:
+            self._cache_card(card, *(() if fuzzy else (key,)))
+        return card
 
     async def rulings(self, card: dict[str, Any]) -> list[dict[str, Any]]:
         url = card.get("rulings_uri") or f"{BASE}/cards/{card['id']}/rulings"
@@ -155,9 +165,23 @@ class Scryfall:
                 unique.append(n.strip())
 
         found: dict[str, dict[str, Any]] = {}
+
+        def _put(req: str, card: dict[str, Any]) -> None:
+            found[req.lower()] = card
+            for k in _index_by_names([card]):
+                found.setdefault(k, card)
+
+        uncached: list[str] = []
+        for n in unique:
+            cached = self.http.cache.get(f"card:{n.lower()}")
+            if cached is not None:
+                _put(n, cached)
+            else:
+                uncached.append(n)
+
         not_found: list[str] = []
-        for i in range(0, len(unique), 75):
-            chunk = unique[i : i + 75]
+        for i in range(0, len(uncached), 75):
+            chunk = uncached[i : i + 75]
             data = await self.http.post(
                 f"{BASE}/cards/collection",
                 {"identifiers": [{"name": n} for n in chunk]},
@@ -176,7 +200,8 @@ class Scryfall:
                 if card is None:
                     not_found.append(requested)
                 else:
-                    found[requested.lower()] = card
+                    self._cache_card(card, requested)
+                    _put(requested, card)
             not_found.extend(n for n in chunk if n.lower() in missing)
 
         still_missing: list[str] = []
@@ -185,7 +210,8 @@ class Scryfall:
             if card is None:
                 still_missing.append(requested)
             else:
-                found[requested.lower()] = card
+                self._cache_card(card, requested)
+                _put(requested, card)
         return found, still_missing
 
     async def _lookup_alias(self, name: str) -> dict[str, Any] | None:
@@ -214,7 +240,8 @@ class Scryfall:
 def _index_by_names(cards: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     index: dict[str, dict[str, Any]] = {}
     for card in cards:
-        names = [card.get("name", "")]
+        full = card.get("name", "")
+        names = [full, *(p.strip() for p in full.split("//") if "//" in full)]
         names += [f.get("name", "") for f in card.get("card_faces") or []]
         for n in names:
             if n:

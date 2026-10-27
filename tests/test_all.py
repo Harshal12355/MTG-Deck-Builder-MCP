@@ -139,6 +139,9 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["color_identity"], "WUBG")
         self.assertEqual(r["lands"], 91)
         self.assertEqual(r["land_color_sources"]["G"], 46)
+        self.assertNotIn("R", r["land_color_sources"])
+        colorless_cmd = analyze(parse_decklist("1 Sol Ring *CMDR*\n1 Command Tower"), CARDS)
+        self.assertEqual(colorless_cmd["land_color_sources"], {})
         self.assertEqual(r["game_changers"], ["Demonic Tutor", "Rhystic Study"])
         self.assertEqual(r["bracket"]["bracket"], 3)
         self.assertEqual(r["bracket"]["label"], "Upgraded")
@@ -222,6 +225,36 @@ class ToolTests(unittest.TestCase):
         self.assertEqual(len(posts), 1)
         with_combos = run(server.analyze_deck(atraxa_list(), include_combos=True))
         self.assertEqual(with_combos["bracket"]["bracket"], 4)  # Spellbook 'R' early 2-card combo elevates to B4
+
+    def test_analyze_deck_dfc_commander_with_combos(self):
+        from unittest.mock import patch
+        esika = {
+            **CARDS["atraxa, praetors' voice"],
+            "name": "Esika, God of the Tree // The Prismatic Bridge",
+            "card_faces": [
+                {"name": "Esika, God of the Tree", "mana_cost": "{1}{G}{G}", "type_line": "Legendary Creature — God"},
+                {"name": "The Prismatic Bridge", "mana_cost": "{W}{U}{B}{R}{G}", "type_line": "Legendary Enchantment"},
+            ],
+        }
+        with patch.dict(CARDS, {"esika, god of the tree": esika}):
+            r = run(server.analyze_deck("1 Esika, God of the Tree *CMDR*\n1 Sol Ring", include_combos=True))
+            priced = run(server.price_decklist("1 Esika, God of the Tree *CMDR*\n1 Sol Ring", budget_target=1.0))
+        self.assertEqual(r["commanders"], ["Esika, God of the Tree // The Prismatic Bridge"])
+        self.assertEqual([c["card"] for c in priced["suggested_cuts_to_hit_budget"]], ["Sol Ring"])
+
+    def test_price_decklist_eur_no_usd_contamination(self):
+        r = run(server.price_decklist("1 Sol Ring\n1 Rhystic Study", currency="eur"))
+        self.assertEqual(r["total_eur"], 0)
+        self.assertEqual(set(r["no_price_listed"]), {"Sol Ring", "Rhystic Study"})
+
+    def test_collection_per_card_cache(self):
+        run(server.get_card("Sol Ring"))
+        run(server.price_decklist("1 Sol Ring\n1 Counterspell"))
+        run(server.price_decklist("1 Sol Ring\n1 Counterspell\n1 Lightning Bolt"))
+        posts = [c for c in self.fake.calls if c[0] == "POST" and "/cards/collection" in c[1]]
+        self.assertEqual(len(posts), 2)
+        self.assertEqual(posts[0][2]["identifiers"], [{"name": "Counterspell"}])
+        self.assertEqual(posts[1][2]["identifiers"], [{"name": "Lightning Bolt"}])
 
     def test_edhcheck_suite_tools(self):
         mana = run(server.analyze_mana_base(atraxa_list()))
@@ -330,6 +363,15 @@ class ToolTests(unittest.TestCase):
         self.assertIn("mulligan_strategy", mull)
         self.assertEqual(len(mull["mulligan_strategy"]["targets"]), 2)
         self.assertIn("card_impact", mull)
+        cmd_line = run(server.simulate_deck(
+            atraxa_list().replace("45 Forest", "45 Command Tower"),
+            win_lines=[["Atraxa, Praetors' Voice", "Doubling Season"]],
+            turns=8,
+            trials=200,
+            seed=1,
+        ))
+        self.assertFalse(cmd_line.get("win_line_cards_not_in_deck"))
+        self.assertGreater(cmd_line["win_lines"][0]["assembled_by_turn"]["8"], 0.0)
 
     def test_goldfish_color_hand_and_payable_line(self):
         from mtg_mcp.goldfish import SimCard, _play_game, pay
@@ -616,6 +658,24 @@ class ReferenceCompareAndImportTests(unittest.TestCase):
                 primers = list((Path(tmp) / "someuser" / "primers").glob("*.md"))
                 self.assertEqual(len(primers), 1)
                 self.assertIn("Counter everything", primers[0].read_text())
+            finally:
+                del os.environ["MTG_MCP_LIBRARY_DIR"]
+                library.reload_library()
+
+    def test_moxfield_import_sanitizes_source_key(self):
+        import os
+        import tempfile
+        from mtg_mcp import library
+        with tempfile.TemporaryDirectory() as tmp:
+            lib_dir = Path(tmp) / "lib"
+            lib_dir.mkdir()
+            os.environ["MTG_MCP_LIBRARY_DIR"] = str(lib_dir)
+            try:
+                res = run(server.moxfield_import_user("SomeUser", source_key="../evil_escape"))
+                self.assertEqual(res["source"], "evil-escape")
+                self.assertTrue((lib_dir / "evil-escape" / "decks.json").is_file())
+                self.assertFalse((Path(tmp) / "evil_escape").exists())
+                self.assertFalse((Path(tmp) / "evil-escape").exists())
             finally:
                 del os.environ["MTG_MCP_LIBRARY_DIR"]
                 library.reload_library()

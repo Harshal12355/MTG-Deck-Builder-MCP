@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from typing import Any
 
 from ..scryfall import front_type_line, oracle_text
-from ._card_utils import COLORS, _front_lower
-from .roles import card_roles
+from ._card_utils import _front_lower
 
 # Official WotC Game Changers list (53 cards, Feb 9 2026 update) fallback when Scryfall flag is absent.
 GAME_CHANGERS_SET: frozenset[str] = frozenset(
@@ -122,7 +121,7 @@ CURATED_TWO_CARD_COMBOS: tuple[tuple[str, str, bool], ...] = (
 
 # Community EDHREC salt scores for the most-flagged Commander staples (0-4 scale).
 SALT_SCORES: dict[str, float] = {
-    "stasis": 3.5, "winter orb": 3.4, "armageddon": 3.3, "TERGRID, GOD OF FRIGHT".lower(): 3.2,
+    "stasis": 3.5, "winter orb": 3.4, "armageddon": 3.3, "tergrid, god of fright": 3.2,
     "vorinclex, voice of hunger": 3.1, "static orb": 3.1, "ravages of war": 3.1, "sunder": 3.0,
     "expropriate": 2.9, "jin-gitaxias, core augur": 2.9, "jokulhaups": 2.9, "obliterate": 2.9,
     "grand arbiter augustin iv": 2.8, "drannith magistrate": 2.8, "humility": 2.8, "back to basics": 2.8,
@@ -233,16 +232,19 @@ def _is_instant_speed(card: dict[str, Any]) -> bool:
 
 
 def _synergy_profile(nonland_cards: list[dict[str, Any]]) -> dict[str, Any]:
+    card_features = [
+        (
+            f"{front_type_line(c)} {re.sub(r'\([^)]*\)', '', oracle_text(c))}".lower(),
+            set((c.get("forge_tags") or {}).get("synergy_enables") or ()),
+            set((c.get("forge_tags") or {}).get("synergy_needs") or ()),
+        )
+        for c in nonland_cards
+    ]
     axes: dict[str, dict[str, int]] = {}
     for axis, (enabler_pat, payoff_pat) in _SYNERGY_AXES.items():
         enablers = 0
         payoffs = 0
-        for c in nonland_cards:
-            oracle = re.sub(r"\([^)]*\)", "", oracle_text(c))
-            text = f"{front_type_line(c)} {oracle}".lower()
-            ftags = c.get("forge_tags") or {}
-            f_enables = set(ftags.get("synergy_enables") or ())
-            f_needs = set(ftags.get("synergy_needs") or ())
+        for text, f_enables, f_needs in card_features:
             if enabler_pat.search(text) or axis in f_enables:
                 enablers += 1
             if payoff_pat.search(text) or axis in f_needs:
@@ -320,24 +322,49 @@ def _detect_combos_and_tiers(
 BRACKET_LABELS = {1: "Exhibition", 2: "Core", 3: "Upgraded", 4: "Optimized", 5: "cEDH"}
 
 
-def _score_and_bracket(
+def _instant_interaction_ratio(
+    resolved: list[tuple[Any, dict[str, Any]]],
+    roles: dict[str, list[str]],
+) -> float:
+    interaction_names = set(roles.get("removal", [])) | set(roles.get("counterspell", [])) | set(roles.get("board_wipe", []))
+    if not interaction_names:
+        return 0.0
+    instant_interaction = sum(
+        1 for _, c in resolved if c.get("name") in interaction_names and _is_instant_speed(c)
+    )
+    return round(instant_interaction / max(1, len(interaction_names)), 2)
+
+
+def _power_tier(power_total: float) -> str:
+    if power_total >= 9.5:
+        return "Bleeding Edge"
+    if power_total >= 9.0:
+        return "Razor's Edge"
+    if power_total >= 8.5:
+        return "Hyper-Tuned"
+    if power_total >= 8.0:
+        return "Elite"
+    if power_total >= 7.0:
+        return "High Power"
+    if power_total >= 5.5:
+        return "Tuned"
+    if power_total >= 4.0:
+        return "Focused"
+    return "Casual"
+
+
+def _compute_power_scores(
     *,
     resolved: list[tuple[Any, dict[str, Any]]],
-    nonland_cards: list[dict[str, Any]],
-    lands: int,
+    nonland_count: int,
     avg_cmc: float,
     roles: dict[str, list[str]],
     interaction_total: int,
+    instant_ratio: float,
     game_changers: list[str],
-    spellbook_combos: list[dict[str, Any]] | None = None,
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
-    deck_names_lower = {_front_lower(c.get("name", e.name)) for e, c in resolved}
-    fast_mana = sorted({c.get("name", e.name) for e, c in resolved if _is_fast_mana(c)})
-    extra_turns = sorted({c.get("name", e.name) for e, c in resolved if _is_extra_turn(c)})
-    mld = sorted({c.get("name", e.name) for e, c in resolved if _is_mld(c)})
-    combo_info = _detect_combos_and_tiers(deck_names_lower, spellbook_combos)
-
-    nonland_count = max(1, len(nonland_cards))
+    combo_info: dict[str, Any],
+    synergy: dict[str, Any],
+) -> tuple[float, dict[str, Any]]:
     tutors_count = len(set(roles.get("tutor", [])))
     ramp_count = len(set(roles.get("ramp", [])))
     draw_count = len(set(roles.get("card_draw", [])))
@@ -348,14 +375,12 @@ def _score_and_bracket(
     draw_pct = draw_count / nonland_count
     removal_pct = interaction_total / nonland_count
 
-    interaction_names = set(roles.get("removal", [])) | set(roles.get("counterspell", [])) | set(roles.get("board_wipe", []))
-    instant_interaction = sum(
-        1 for _, c in resolved if c.get("name") in interaction_names and _is_instant_speed(c)
-    )
-    instant_ratio = round(instant_interaction / max(1, len(interaction_names)), 2) if interaction_names else 0.0
-
-    # Salt average over salty cards present (or 0.2 baseline)
-    salty_hits = [SALT_SCORES[_front_lower(c.get("name", e.name))] for e, c in resolved if _front_lower(c.get("name", e.name)) in SALT_SCORES]
+    # Salt average over salty cards present (or 0.15 baseline)
+    salty_hits = [
+        SALT_SCORES[_front_lower(c.get("name", e.name))]
+        for e, c in resolved
+        if _front_lower(c.get("name", e.name)) in SALT_SCORES
+    ]
     avg_salt = sum(salty_hits) / max(4, len(salty_hits)) if salty_hits else 0.15
 
     # 8 EDHcheck 0-10 sub-scores (exact EDHcheck weights and scalers)
@@ -368,7 +393,6 @@ def _score_and_bracket(
     salt_sub = min(10.0, avg_salt * 4.0)
     removal_sub = min(10.0, removal_pct * 47.0)
 
-    synergy = _synergy_profile(nonland_cards)
     interaction_score = round(min(10.0, removal_sub * (0.65 + 0.35 * instant_ratio)), 1)
     interaction_bonus = round(min(0.4, interaction_score * 0.04), 2)
 
@@ -403,6 +427,77 @@ def _score_and_bracket(
     budget_stretched = 6.0 + (budget_raw - 6.0) * 1.3 if budget_raw > 6.0 else budget_raw
     budget_power_total = round(min(10.0, max(0.0, budget_stretched)), 1)
 
+    speed_score = round(min(10.0, curve_sub * 0.35 + ramp_sub * 0.25 + tutor_sub * 0.20 + combo_sub * 0.20), 1)
+    consistency_score = round(min(10.0, (draw_sub * 0.45 + tutor_sub * 0.35 + ramp_sub * 0.20) * 0.83), 1)
+    token_axis = (synergy["axes"].get("tokens") or {}).get("score", 0)
+    resilience_score = round(min(10.0, (protection_count + recursion_count) * 0.35 + token_axis * 0.2), 1)
+
+    power_report: dict[str, Any] = {
+        "total": 0.0,
+        "budget_adjusted_total": budget_power_total,
+        "tier": "",
+        "raw_weighted": round(weighted, 2),
+        "speed": speed_score,
+        "consistency": consistency_score,
+        "saltiness": round(salt_sub, 1),
+        "interaction": interaction_score,
+        "synergy": synergy["score"],
+        "resilience": resilience_score,
+        "components": {
+            "tutors": round(tutor_sub, 1),
+            "combos": round(combo_sub, 1),
+            "game_changers": round(gc_sub, 1),
+            "mana_curve": round(curve_sub, 1),
+            "card_draw": round(draw_sub, 1),
+            "ramp": round(ramp_sub, 1),
+            "salt": round(salt_sub, 1),
+            "removal": round(removal_sub, 1),
+            "synergy_bonus": synergy["bonus"],
+            "interaction_bonus": interaction_bonus,
+            "instant_interaction_ratio": instant_ratio,
+        },
+    }
+    return raw, power_report
+
+
+def _bracket_path(
+    bracket: int,
+    game_changers: list[str],
+    combo_info: dict[str, Any],
+    mld: list[str],
+    extra_turns: list[str],
+) -> list[str]:
+    path: list[str] = []
+    if bracket >= 4:
+        if len(game_changers) > 3:
+            excess = len(game_changers) - 3
+            path.append(f"Cut {excess} Game Changer(s) (from {', '.join(game_changers)}) to fit Bracket 3's 3-card limit.")
+        if combo_info["early_two_card"]:
+            early_names = [" + ".join(c["cards"]) for c in combo_info["two_card_combos"] if c["early"]]
+            path.append(f"Break up early 2-card infinite combo(s) ({'; '.join(early_names[:2])}) to drop to Bracket 3.")
+        if mld:
+            path.append(f"Cut mass land denial ({', '.join(mld)}) to play in Brackets 1–3.")
+    if bracket == 3:
+        if game_changers:
+            path.append(f"Cut all {len(game_changers)} Game Changer(s) ({', '.join(game_changers)}) to drop to Bracket 2.")
+        if combo_info["late_two_card"]:
+            late_names = [" + ".join(c["cards"]) for c in combo_info["two_card_combos"] if not c["early"]]
+            path.append(f"Remove 2-card combo(s) ({'; '.join(late_names[:2])}) to drop to Bracket 2.")
+        if len(extra_turns) > 1:
+            path.append(f"Trim extra-turn spells ({', '.join(extra_turns)}) down to at most 1 for Bracket 2.")
+    return path
+
+
+def _decide_bracket(
+    *,
+    raw: float,
+    game_changers: list[str],
+    fast_mana: list[str],
+    extra_turns: list[str],
+    mld: list[str],
+    combo_info: dict[str, Any],
+    tutors_count: int,
+) -> tuple[dict[str, Any], float]:
     # Base Bracket 1..4 decision (EDHcheck decideBracket)
     b4_reasons: list[str] = []
     if len(game_changers) > 3:
@@ -494,48 +589,12 @@ def _score_and_bracket(
             "Mention its speed/consistency before the game or play it at Bracket 4 tables."
         )
 
-    # Actionable Bracket Path
-    bracket_path: list[str] = []
-    if bracket >= 4:
-        if len(game_changers) > 3:
-            excess = len(game_changers) - 3
-            bracket_path.append(f"Cut {excess} Game Changer(s) (from {', '.join(game_changers)}) to fit Bracket 3's 3-card limit.")
-        if combo_info["early_two_card"]:
-            early_names = [" + ".join(c["cards"]) for c in combo_info["two_card_combos"] if c["early"]]
-            bracket_path.append(f"Break up early 2-card infinite combo(s) ({'; '.join(early_names[:2])}) to drop to Bracket 3.")
-        if mld:
-            bracket_path.append(f"Cut mass land denial ({', '.join(mld)}) to play in Brackets 1–3.")
-    if bracket == 3:
-        if game_changers:
-            bracket_path.append(f"Cut all {len(game_changers)} Game Changer(s) ({', '.join(game_changers)}) to drop to Bracket 2.")
-        if combo_info["late_two_card"]:
-            late_names = [" + ".join(c["cards"]) for c in combo_info["two_card_combos"] if not c["early"]]
-            bracket_path.append(f"Remove 2-card combo(s) ({'; '.join(late_names[:2])}) to drop to Bracket 2.")
-        if len(extra_turns) > 1:
-            bracket_path.append(f"Trim extra-turn spells ({', '.join(extra_turns)}) down to at most 1 for Bracket 2.")
-
-    speed_score = round(min(10.0, curve_sub * 0.35 + ramp_sub * 0.25 + tutor_sub * 0.20 + combo_sub * 0.20), 1)
-    consistency_score = round(min(10.0, (draw_sub * 0.45 + tutor_sub * 0.35 + ramp_sub * 0.20) * 0.83), 1)
-    token_axis = (synergy["axes"].get("tokens") or {}).get("score", 0)
-    resilience_score = round(min(10.0, (protection_count + recursion_count) * 0.35 + token_axis * 0.2), 1)
-
-    tier = (
-        "Bleeding Edge" if power_total >= 9.5 else
-        "Razor's Edge" if power_total >= 9.0 else
-        "Hyper-Tuned" if power_total >= 8.5 else
-        "Elite" if power_total >= 8.0 else
-        "High Power" if power_total >= 7.0 else
-        "Tuned" if power_total >= 5.5 else
-        "Focused" if power_total >= 4.0 else
-        "Casual"
-    )
-
     bracket_report = {
         "bracket": bracket,
         "label": BRACKET_LABELS[bracket],
         "reason": reason,
         "bracket_up_warning": bracket_up_warning,
-        "bracket_path": bracket_path,
+        "bracket_path": _bracket_path(bracket, game_changers, combo_info, mld, extra_turns),
         "flags": {
             "game_changers": game_changers,
             "fast_mana": fast_mana,
@@ -547,34 +606,23 @@ def _score_and_bracket(
             "late_two_card_combo": combo_info["late_two_card"],
         },
     }
+    return bracket_report, power_total
 
-    power_report = {
-        "total": power_total,
-        "budget_adjusted_total": budget_power_total,
-        "tier": tier,
-        "raw_weighted": round(weighted, 2),
-        "speed": speed_score,
-        "consistency": consistency_score,
-        "saltiness": round(salt_sub, 1),
-        "interaction": interaction_score,
-        "synergy": synergy["score"],
-        "resilience": resilience_score,
-        "components": {
-            "tutors": round(tutor_sub, 1),
-            "combos": round(combo_sub, 1),
-            "game_changers": round(gc_sub, 1),
-            "mana_curve": round(curve_sub, 1),
-            "card_draw": round(draw_sub, 1),
-            "ramp": round(ramp_sub, 1),
-            "salt": round(salt_sub, 1),
-            "removal": round(removal_sub, 1),
-            "synergy_bonus": synergy["bonus"],
-            "interaction_bonus": interaction_bonus,
-            "instant_interaction_ratio": instant_ratio,
-        },
-    }
 
-    # ---- House 3-School Scorecard (NeRo + Defcat + Based 33-card) ----
+def _school_score(
+    *,
+    nonland_cards: list[dict[str, Any]],
+    lands: int,
+    avg_cmc: float,
+    roles: dict[str, list[str]],
+    interaction_total: int,
+    instant_ratio: float,
+    combo_info: dict[str, Any],
+) -> dict[str, Any]:
+    nonland_count = max(1, len(nonland_cards))
+    tutors_count = len(set(roles.get("tutor", [])))
+    ramp_count = len(set(roles.get("ramp", [])))
+    draw_count = len(set(roles.get("card_draw", [])))
     draw_on_cast = len(set(roles.get("draw_on_cast", [])))
     immediate_draw_share = draw_on_cast / max(1, draw_count) if draw_count else 0.0
     veggie_total = ramp_count + draw_count + interaction_total + tutors_count
@@ -629,7 +677,7 @@ def _score_and_bracket(
             f"Based 3x33: keystone combo pieces in 3+ lines ({', '.join(keystone_cards[:3])}) need functional twins or tutors across Piles B/C."
         )
 
-    school_report = {
+    return {
         "total": round((nero_score + defcat_score + based_score) / 3.0, 1),
         "nero": nero_score,
         "defcat": defcat_score,
@@ -640,4 +688,57 @@ def _score_and_bracket(
         "notes": school_notes,
     }
 
+
+def _score_and_bracket(
+    *,
+    resolved: list[tuple[Any, dict[str, Any]]],
+    nonland_cards: list[dict[str, Any]],
+    lands: int,
+    avg_cmc: float,
+    roles: dict[str, list[str]],
+    interaction_total: int,
+    game_changers: list[str],
+    spellbook_combos: list[dict[str, Any]] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
+    deck_names_lower = {_front_lower(c.get("name", e.name)) for e, c in resolved}
+    fast_mana = sorted({c.get("name", e.name) for e, c in resolved if _is_fast_mana(c)})
+    extra_turns = sorted({c.get("name", e.name) for e, c in resolved if _is_extra_turn(c)})
+    mld = sorted({c.get("name", e.name) for e, c in resolved if _is_mld(c)})
+    combo_info = _detect_combos_and_tiers(deck_names_lower, spellbook_combos)
+
+    instant_ratio = _instant_interaction_ratio(resolved, roles)
+    synergy = _synergy_profile(nonland_cards)
+
+    raw, power_report = _compute_power_scores(
+        resolved=resolved,
+        nonland_count=max(1, len(nonland_cards)),
+        avg_cmc=avg_cmc,
+        roles=roles,
+        interaction_total=interaction_total,
+        instant_ratio=instant_ratio,
+        game_changers=game_changers,
+        combo_info=combo_info,
+        synergy=synergy,
+    )
+    bracket_report, power_total = _decide_bracket(
+        raw=raw,
+        game_changers=game_changers,
+        fast_mana=fast_mana,
+        extra_turns=extra_turns,
+        mld=mld,
+        combo_info=combo_info,
+        tutors_count=len(set(roles.get("tutor", []))),
+    )
+    power_report["total"] = power_total
+    power_report["tier"] = _power_tier(power_total)
+
+    school_report = _school_score(
+        nonland_cards=nonland_cards,
+        lands=lands,
+        avg_cmc=avg_cmc,
+        roles=roles,
+        interaction_total=interaction_total,
+        instant_ratio=instant_ratio,
+        combo_info=combo_info,
+    )
     return bracket_report, power_report, synergy, school_report

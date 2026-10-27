@@ -1,4 +1,4 @@
-"""MCP tool implementations."""
+"""Reference library and Moxfield import MCP tools."""
 
 from __future__ import annotations
 
@@ -6,25 +6,7 @@ from typing import Any, Literal
 
 from .. import wiring
 from ..http import ApiError
-
-
-def _clients():
-    return wiring.clients()
-
-
-def _error(exc: ApiError) -> dict[str, Any]:
-    return wiring.api_error(exc)
-
-
-async def _resolve_deck(decklist: str, commanders: list[str] | None):
-    return await wiring.resolve_deck(decklist, commanders)
-
-
-def _archidekt():
-    return wiring.archidekt()
-
-
-from ..library import ROLES, decklist_text, deck_label, get_library, library_dir, reload_library
+from ..library import ROLES, deck_label, decklist_text, get_library, library_dir, reload_library
 from ..moxfield import import_user
 
 
@@ -33,7 +15,6 @@ def _library_or_error():
     if not lib.decks:
         return None, {"error": f"No reference library found in {library_dir()}. Import one with moxfield_import_user."}
     return lib, None
-
 
 
 async def reference_library() -> dict[str, Any]:
@@ -171,9 +152,9 @@ async def reference_compare(
     if err:
         return err
     try:
-        deck, cards, not_found = await _resolve_deck(decklist, commanders)
+        deck, cards, not_found = await wiring.resolve_deck(decklist, commanders)
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
     if not deck.commanders:
         return {"error": "Couldn't tell the commander; pass commanders=[...]."}
     known = []
@@ -204,7 +185,7 @@ async def moxfield_import_user(username: str, source_key: str | None = None, inc
         result = await import_user(wiring.http_client(), username, library_dir(), source_key=source_key,
                                    include_primers=include_primers, max_decks=max(1, min(max_decks, 200)))
     except ApiError as exc:
-        return {**_error(exc), "hint": "Moxfield may be blocking automated requests from this network."}
+        return {**wiring.api_error(exc), "hint": "Moxfield may be blocking automated requests from this network."}
     reload_library()
     return result
 

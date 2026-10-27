@@ -29,13 +29,25 @@ ROLES = [
     "combo", "recursion", "untap", "clone", "tokens", "evasion", "land",
 ]
 
-_TAG_TO_ROLE = {
-    "ramp": "ramp", "land ramp": "ramp", "extra land drops": "ramp", "land tutors": "ramp", "land-tutor": "ramp",
-    "draw": "draw", "card advantage": "draw", "t2 flip": "draw",
+# Builder roles map 1:1 to analysis.roles heuristic names except draw->card_draw, counter->counterspell, wipe->board_wipe.
+ROLE_TO_ANALYSIS_ROLE = {
+    "ramp": "ramp",
+    "draw": "card_draw",
     "tutor": "tutor",
-    "counter": "counter", "counterspells": "counter",
-    "removal": "removal", "edict": "removal", "burn": "removal",
-    "wipe": "wipe", "boardwipe": "wipe",
+    "counter": "counterspell",
+    "removal": "removal",
+    "wipe": "board_wipe",
+    "protection": "protection",
+    "recursion": "recursion",
+}
+
+_TAG_TO_ROLE = {
+    "ramp": "ramp", "mana": "ramp", "land ramp": "ramp", "extra land drops": "ramp", "land tutors": "ramp", "land-tutor": "ramp",
+    "draw": "draw", "card draw": "draw", "card_draw": "draw", "card advantage": "draw", "t2 flip": "draw",
+    "tutor": "tutor", "tutors": "tutor",
+    "counter": "counter", "counterspell": "counter", "counterspells": "counter",
+    "removal": "removal", "targeted disruption": "removal", "edict": "removal", "burn": "removal",
+    "wipe": "wipe", "board wipe": "wipe", "board_wipe": "wipe", "boardwipe": "wipe", "mass disruption": "wipe",
     "protection": "protection",
     "stax": "stax", "hate": "stax", "rule of law": "stax", "etb hate": "stax", "active hate": "stax",
     "cost up": "stax", "tutor hate": "stax", "cast hate": "stax",

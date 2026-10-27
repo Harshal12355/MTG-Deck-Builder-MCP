@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..library import ROLE_TO_ANALYSIS_ROLE, _TAG_TO_ROLE
 from .roles import card_roles
 
 # The Command Zone's Commander deckbuilding template (2025). Targets add up to
@@ -42,15 +43,11 @@ TEMPLATE_CATEGORIES: dict[str, dict[str, Any]] = {
     },
 }
 
+# Derive from library._TAG_TO_ROLE so decklist category tags and reference library tags never drift.
 _ENTRY_CATEGORY_TO_ROLE = {
-    "ramp": "ramp", "mana": "ramp",
-    "draw": "card_draw", "card draw": "card_draw", "card advantage": "card_draw",
-    "removal": "removal", "targeted disruption": "removal", "edict": "removal",
-    "counter": "counterspell", "counterspell": "counterspell", "counterspells": "counterspell",
-    "wipe": "board_wipe", "board wipe": "board_wipe", "boardwipe": "board_wipe", "mass disruption": "board_wipe",
-    "tutor": "tutor", "tutors": "tutor",
-    "protection": "protection",
-    "recursion": "recursion",
+    tag: ROLE_TO_ANALYSIS_ROLE[role]
+    for tag, role in _TAG_TO_ROLE.items()
+    if role in ROLE_TO_ANALYSIS_ROLE
 }
 _CATEGORY_ROLES = {
     "ramp": {"ramp"},

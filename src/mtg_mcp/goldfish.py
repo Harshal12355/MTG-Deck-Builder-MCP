@@ -65,7 +65,7 @@ class SimCard:
     basic: bool = False
     flexible: bool = False  # fetch or land ramp: color filled in once the deck's basics are known
     interaction: bool = False
-    # shortcut: {W/U} and {2/W} are one pip of those colors. Two-brid is not a generic-or-color choice.
+    # shortcut: {W/U} and {2/W} count as one colored pip, upgrade when a deck relies on two-brid generic payment (e.g. Beseech the Queen).
 
 
 def _clause_units(clause: str) -> tuple[int, list[frozenset[str]]]:
@@ -300,7 +300,7 @@ def _line_ready(line: list[tuple[list[str], bool]], seen: set[str], tutors: dict
 
 
 def _bundle_cost(line: list[tuple[list[str], bool]], hand: list[SimCard],
-                 deployed: set[str]) -> tuple[int, list[frozenset[str]]] | None:
+                 deployed: set[str], commanders: set[str] | frozenset[str] = frozenset()) -> tuple[int, list[frozenset[str]]] | None:
     """Mana to cast every piece still in hand. Tutors in hand stand in for missing pieces."""
     held = {c.name: c for c in hand}
     generic = 0
@@ -311,6 +311,8 @@ def _bundle_cost(line: list[tuple[list[str], bool]], hand: list[SimCard],
             continue
         card = next((held[n] for n in names if n in held), None)
         if card is None:
+            if all(n in commanders for n in names):
+                return None
             missing.append(is_creature)
             continue
         g, r = _spell_cost(card)
@@ -336,7 +338,8 @@ def _bundle_cost(line: list[tuple[list[str], bool]], hand: list[SimCard],
 def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | None, turns: int,
                on_play: bool, extra: int, lines: list[list[tuple[list[str], bool]]],
                commander_cost: tuple[int, tuple[frozenset[str], ...]] | None = None,
-               draw_first: bool = False) -> dict[str, Any]:
+               draw_first: bool = False,
+               commander_names: tuple[str, ...] = ()) -> dict[str, Any]:
     mulligans = 0
     while True:
         rng.shuffle(library)
@@ -347,7 +350,8 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
     to_bottom = max(0, mulligans - 1)  # first mulligan is free in multiplayer Commander
     hand = _bottom(hand, to_bottom)
     deck_pos = 7
-    seen = [c.name for c in hand]
+    seen = [c.name for c in hand] + list(commander_names)
+    cmd_set = frozenset(commander_names)
     tutors = {"tutor": 0, "creature_tutor": 0}
     for c in hand:
         if c.kind in tutors:
@@ -377,13 +381,34 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
         if card.kind in tutors:
             tutors[card.kind] += 1
 
+    def try_cast_mana_piece(c: SimCard) -> bool:
+        nonlocal perm_c, pending_c, pool_c, pool_s
+        paid = pay(pool_c, pool_s, *_spell_cost(c))
+        if paid is None:
+            return False
+        pool_c, pool_s = paid
+        hand.remove(c)
+        add_c, add_s = _mana_of(c)
+        if c.kind == "land_ramp" or c.sick:
+            pending_c += add_c
+            pending_s.extend(add_s)
+        else:
+            perm_c += add_c
+            perm_s.extend(add_s)
+            pool_c += add_c
+            pool_s.extend(add_s)
+        return True
+
     for turn in range(1, turns + 1):
+        # 1. Draw & untap pending mana
         draws = (0 if (on_play and turn == 1 and not draw_first) else 1) + (extra if turn >= 2 else 0)
         for _ in range(draws):
             draw_one()
         perm_c += pending_c
         perm_s += pending_s
         pending_c, pending_s = 0, []
+
+        # 2. Land drop (untapped before tapped)
         land = next((c for c in hand if c.kind == "land"), None) or next(
             (c for c in hand if c.kind == "tapped_land"), None)
         if land:
@@ -396,6 +421,8 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
                 pending_c += add_c
                 pending_s += add_s
         pool_c, pool_s = perm_c, list(perm_s)
+
+        # 3. Commander cast check (rituals are spent only on the commander)
         rituals = [c for c in hand if c.kind == "ritual"]
         if commander_cmc is not None and ignore_turn is None:
             if _cast_with_rituals(pool_c, pool_s, commander_cmc, (), rituals) is not None:
@@ -404,58 +431,47 @@ def _play_game(library: list[SimCard], rng: random.Random, commander_cmc: int | 
             got = _cast_with_rituals(pool_c, pool_s, color_cost[0], color_cost[1], rituals)
             if got is not None:
                 commander_turn = turn
+                deployed.update(commander_names)
                 leftover_c, leftover_s, used = got
                 for ritual in used:
                     hand.remove(ritual)
                 # A ritual's extra mana pays the commander and nothing else.
                 pool_c, pool_s = (0, []) if used else (leftover_c, leftover_s)
+
+        # 4. Pre-combo ramp
         for c in sorted((c for c in hand if c.kind in ("source", "land_ramp")), key=lambda c: (c.cmc, c.name)):
-            paid = pay(pool_c, pool_s, *_spell_cost(c))
-            if paid is None:
-                continue
-            pool_c, pool_s = paid
-            hand.remove(c)
-            add_c, add_s = _mana_of(c)
-            if c.kind == "land_ramp" or c.sick:
-                pending_c += add_c
-                pending_s += add_s
-            else:
-                perm_c += add_c
-                perm_s += add_s
-                pool_c += add_c
-                pool_s += add_s
+            try_cast_mana_piece(c)
+
+        # 5. Win-line assembly check
         snap_c, snap_s = perm_c, list(perm_s)
         seen_set = set(seen)
         for i, line in enumerate(lines):
             if seen_turn[i] is None and _line_ready(line, seen_set, tutors):
                 seen_turn[i] = turn
-            bundle = None if line_turn[i] is not None else _bundle_cost(line, hand, deployed)
+            bundle = None if line_turn[i] is not None else _bundle_cost(line, hand, deployed, cmd_set)
             if bundle is not None and pay(snap_c, snap_s, bundle[0], bundle[1]) is not None:
                 line_turn[i] = turn
         if any_turn is None and any(t is not None for t in line_turn):
             any_turn = turn
+
+        # 6. Follow-up spells & card draw
         for _ in range(6):
             played = False
             options = [c for c in hand if c.kind in ("source", "land_ramp", "other", "tutor", "creature_tutor")]
             for c in sorted(options, key=lambda c: (c.cmc, c.name)):
-                if c.kind in ("other", "tutor", "creature_tutor") and c.cmc == 0 and c.draws == 0 and not c.requirements:
-                    continue
-                paid = pay(pool_c, pool_s, *_spell_cost(c))
-                if paid is None:
-                    continue
-                pool_c, pool_s = paid
-                hand.remove(c)
-                deployed.add(c.name)
-                add_c, add_s = _mana_of(c)
-                if c.kind == "land_ramp" or (c.kind == "source" and c.sick):
-                    pending_c += add_c
-                    pending_s += add_s
-                elif c.kind == "source":
-                    perm_c += add_c
-                    perm_s += add_s
-                    pool_c += add_c
-                    pool_s += add_s
+                if c.kind in ("source", "land_ramp"):
+                    if not try_cast_mana_piece(c):
+                        continue
+                    deployed.add(c.name)
                 else:
+                    if c.cmc == 0 and c.draws == 0 and not c.requirements:
+                        continue
+                    paid = pay(pool_c, pool_s, *_spell_cost(c))
+                    if paid is None:
+                        continue
+                    pool_c, pool_s = paid
+                    hand.remove(c)
+                    deployed.add(c.name)
                     if follow_up is None:
                         follow_up = turn
                     for _draw in range(c.draws):
@@ -593,13 +609,15 @@ def _compute_card_impact(
     draw_first: bool,
     seed: int | None,
     trials: int,
+    commander_names: tuple[str, ...] = (),
 ) -> list[dict[str, Any]]:
     """EDHcheck Turn Clock knockout attribution: replace each active card with a blank using the same shuffles."""
     impact_trials = min(trials, 600)
     base_seed = seed if seed is not None else 49420
     base_rng = random.Random(base_seed)
     base_res = [
-        _play_game(list(library), base_rng, commander_cmc, turns, on_play, extra_cards_per_turn, lines, commander_cost, draw_first)
+        _play_game(list(library), base_rng, commander_cmc, turns, on_play, extra_cards_per_turn, lines,
+                   commander_cost, draw_first, commander_names)
         for _ in range(impact_trials)
     ]
     ideal_turn = min(turns, max(1, (commander_cmc or 4) - 1))
@@ -617,7 +635,8 @@ def _compute_card_impact(
         mod_lib = [blank if c.name == name else c for c in library]
         rng = random.Random(base_seed)
         mod_res = [
-            _play_game(list(mod_lib), rng, commander_cmc, turns, on_play, extra_cards_per_turn, lines, commander_cost, draw_first)
+            _play_game(list(mod_lib), rng, commander_cmc, turns, on_play, extra_cards_per_turn, lines,
+                       commander_cost, draw_first, commander_names)
             for _ in range(impact_trials)
         ]
         mod_cmd = sum(1 for r in mod_res if r["commander_turn"] is not None and r["commander_turn"] <= ideal_turn) / impact_trials
@@ -648,22 +667,38 @@ def simulate(deck: ParsedDeck, cards: dict[str, dict[str, Any]], *, win_lines: l
             sim = SimCard(e.name, "other")
         else:
             sim = classify(e.name, c)
+            full_name = c.get("name") or ""
+            if full_name:
+                name_of.setdefault(full_name.lower(), e.name)
+                for part in full_name.split(" // "):
+                    name_of.setdefault(part.strip().lower(), e.name)
         name_of[e.name.lower()] = e.name
         library.extend([sim] * e.quantity)
     if not library:
         return {"error": "No cards to simulate. Put the deck's cards in the main deck section."}
 
+    by_name = {c.name: c for c in library}
     identity: frozenset[str] = frozenset()
     commander = None
+    commander_names: tuple[str, ...] = ()
     commander_cmc = None
     commander_cost = None
     if deck.commanders:
         commander = [e.name for e in deck.commanders]
+        commander_names = tuple(commander)
         options = []
         for e in deck.commanders:
+            name_of.setdefault(e.name.lower(), e.name)
             c = cards.get(e.name.lower())
             if not c:
+                by_name.setdefault(e.name, SimCard(e.name, "other"))
                 continue
+            by_name.setdefault(e.name, classify(e.name, c))
+            full_name = c.get("name") or ""
+            if full_name:
+                name_of.setdefault(full_name.lower(), e.name)
+                for part in full_name.split(" // "):
+                    name_of.setdefault(part.strip().lower(), e.name)
             identity |= frozenset(c.get("color_identity") or [])
             g, reqs = _cost_parts(c)
             cmc = int(float(c.get("cmc") or 0))
@@ -675,7 +710,7 @@ def simulate(deck: ParsedDeck, cards: dict[str, dict[str, Any]], *, win_lines: l
             commander_cost = (g, reqs)
 
     basic_colors = frozenset(c for card in library if card.basic for src in card.sources for c in src)
-    # shortcut: a fetch finds any basic color in the deck, not a specific land you still have left
+    # shortcut: a fetch finds any basic color in the deck without tracking remaining basic copies, upgrade when decks run fewer basics than fetches.
     flex = basic_colors or identity or _ANY
     stamped: set[int] = set()
     for card in library:
@@ -687,7 +722,6 @@ def simulate(deck: ParsedDeck, cards: dict[str, dict[str, Any]], *, win_lines: l
         elif card.sources:
             card.sources = tuple(_fit(src, identity) for src in card.sources)
 
-    by_name = {c.name: c for c in library}
     lines: list[list[tuple[list[str], bool]]] = []
     labels: list[list[str]] = []
     unknown_line_cards = []
@@ -710,7 +744,7 @@ def simulate(deck: ParsedDeck, cards: dict[str, dict[str, Any]], *, win_lines: l
     rng = random.Random(seed)
     results = [
         _play_game(list(library), rng, commander_cmc, turns, on_play, extra_cards_per_turn, lines,
-                   commander_cost, bool(deck.commanders))
+                   commander_cost, bool(deck.commanders), commander_names)
         for _ in range(trials)
     ]
 
@@ -768,7 +802,7 @@ def simulate(deck: ParsedDeck, cards: dict[str, dict[str, Any]], *, win_lines: l
     if track_card_impact:
         out["card_impact"] = _compute_card_impact(
             library, commander_cmc, commander_cost, turns, on_play, extra_cards_per_turn,
-            lines, bool(deck.commanders), seed, trials,
+            lines, bool(deck.commanders), seed, trials, commander_names,
         )
     out["cards_not_found"] = missing or None
     out["assumptions"] = ASSUMPTIONS

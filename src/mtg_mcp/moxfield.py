@@ -110,7 +110,7 @@ async def import_user(http: HttpClient, username: str, dest: Path, source_key: s
     """
     mox = Moxfield(http)
     listing = await mox.user_decks(username)
-    key = source_key or _slug(username)
+    key = _slug(source_key or username)
     folder = dest / key
     (folder / "primers").mkdir(parents=True, exist_ok=True)
 
@@ -143,7 +143,7 @@ async def import_user(http: HttpClient, username: str, dest: Path, source_key: s
                 errors.append(f"{pid} primer: {exc}")
                 text = ""
             if text.strip():
-                (folder / "primers" / f"{_slug(deck['name'])[:60]}-{pid}.md").write_text(
+                (folder / "primers" / f"{_slug(deck['name'])[:60]}-{_slug(str(pid))}.md").write_text(
                     f"# {deck['name']}\n\nSource: {deck['url']}\n\n{text}\n")
                 deck["has_primer"] = True
         decks.append(deck)
