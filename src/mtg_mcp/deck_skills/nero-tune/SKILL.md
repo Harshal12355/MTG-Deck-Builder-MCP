@@ -1,11 +1,10 @@
 ---
 name: nero-tune
 description: >
-  Tune an existing Commander deck against NeRo's principles with the
-  mtg-deckbuilder MCP: one plan-fixing swap, then at most four more,
-  each tied to a tool number. Use when the user pastes a deck, shares a
-  Moxfield, Archidekt, or MTGO link, or asks to tune, cut, upgrade, or
-  check a list, including NeRo, _NeRo, budget cEDH, or Bracket 4.
+  Tune an existing Commander deck after deck-upgrade locks the goal,
+  the win, and the budget: one plan-fixing swap, then the gaps the lock
+  names, each tied to a tool number. Use when deck-upgrade hands off,
+  including NeRo, _NeRo, budget cEDH, or Bracket 4.
 ---
 
 # Tune a deck the NeRo way
@@ -15,6 +14,14 @@ NeRo (@_NeRo) builds ~$100 high-power Bracket 4. A swap is a 1-for-1 quality bum
 If `reference_principles` is not in this session, read `src/mtg_mcp/data/library/nero/source.json`, or `get_library()` with `PYTHONPATH=src` from the repo root. Same fallback for `reference_deck`, `reference_compare`, and `reference_cards` (`decks.json` via `get_library()`, not by reading the whole file). Say that you used the files. Do not recite principles from memory.
 
 Get the list as text first. Moxfield has no public API. For an Archidekt URL, `archidekt_get_deck` and use its `decklist`. For one of his decks, `reference_deck` and use its `decklist`.
+
+## Called from deck-upgrade
+
+This skill is called twice.
+
+**Read.** No locked Goal yet. Run the order below. Hand back the scorecard. Set `Change` to `waiting on the lock`. Name no add and no cut.
+
+**Build.** A locked Goal, Win, and budget are in the message. Every swap serves that lock. `price_decklist` uses their budget, not a silent $100. The "at most four" cap lifts when the lock lists more gaps. Each change still ties to a gap or a tool number. If keeping the win blows the budget, stop. Do not cut the win to hit the number. `deck-upgrade` owns the `does not fit` block.
 
 ## Order
 
@@ -83,7 +90,7 @@ Change:      cut X → add Y, because <one number or one combo>
 Then:        at most four more, each tied to a number
 ```
 
-Lead with the one swap that fixes the plan. A card he plays in three or more decks still has to pass the jobs test.
+On a Read from `deck-upgrade`, lead with the scorecard and stop. On a Build, lead with the one swap that fixes the locked plan. A card he plays in three or more decks still has to pass the jobs test.
 
 ## Example
 

@@ -77,7 +77,7 @@ Combos, EDHREC & Archidekt:
 
 Reference Library & Deckbuilding Skills:
 - Tested ~$100 Bracket 4 lists (NeRo): reference_library, reference_principles, reference_cards, reference_card, reference_deck, reference_compare, moxfield_import_user.
-- Skills (also MCP prompts): call get_skill and follow it (`nero-build` for new commanders, `nero-tune` for existing lists, running NeRo + Defcat + Based 3x33 passes through `moxfield-primer`).
+- Skills (also MCP prompts): call get_skill and follow it (`deck-plan` for a new commander, `deck-upgrade` for a pasted list — lock the goal, the win, and the budget before a new list — then `nero-build` or `nero-tune`, running NeRo + Defcat + Based 3x33 passes through `moxfield-primer`).
 """
 
 mcp = FastMCP("mtg-deckbuilder", instructions=INSTRUCTIONS)

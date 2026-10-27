@@ -20,21 +20,31 @@ get_card(commander, include_forge_tags=True)
     |
     v
 get_card_rulings          if the ability uses X, "this turn", or a timing word
-four questions
+engine converter check    cost, normal-action fuel, payoff (cards / mana / outlet)
+five bend questions       scope, lock, fuel, board gate, leftover cost
+synergy multipliers       double-duty hooks, A+B twins, parity-breaking stax
 win shape                 one spell, a pile of the same effect, or overlapping combos
 3-4 jobs                  a later card that does none of them is out
 ```
 
 1. `get_card(commander, include_forge_tags=True)` on the commander. Quote the ability that is not the creature type, and inspect `forge_tags` (`deck_has`, `deck_needs`, `abilities`, `triggers`, `sacrifice_costs`) for explicit synergy hooks.
 2. `get_card_rulings` when the sequence matters. Rowan is this case. Skip the call only when the text has no timing, no X, and no "this turn".
-3. Answer five questions from the tool result:
+3. Run **NeRo's 3-Question Engine Check (Converter, Not Billboard)**. Do not build the creature type or keyword label (`Vren` is not Rat tribal, it converts `Removal -> Rat Army`; `Meria` converts `0-mana artifacts -> Mana + Impulse Draw`; `Hapatra` converts `-1/-1 removal -> Deathtouch Snakes -> Draw/Sac Loops`; `Tannuk` converts `2nd Land -> Draw + Burn Outlet`):
+   - **Cost & speed:** Does it cost `2–4 MV` (or immediately draw/impact the board the turn it enters, like `Kefka`)? If it costs `5+ MV` and must survive a turn cycle, name how the deck bridges that gap (rituals, dorks, or reanimation).
+   - **Fuel (normal game action):** Does it reward an action you *already want to take* with $0.25 commons (playing lands, killing creatures, discarding dead cards, casting cheap spells), or trap you into 25 bad theme cards?
+   - **Payoff (Cards, Mana/Bodies, or Combo Outlet):** Which of the three engine outputs does the commander supply in the command zone? Whatever it lacks must be supplied by the 99.
+4. Answer five bend questions from the tool result:
    - Scope. The next spell, or every spell this turn? One trigger, or each end step?
    - Lock. When is the number fixed? Life you lose after that moment does not count.
    - Fuel. What has to happen before the lock? Name the amount, not "some life".
    - Board gate. What permanent, power total, or fodder must already be on the battlefield before the commander's ability turns on (`Station 2+ / 8+`, `Saddle`, `Crew`, sacrifice a creature/land)? When a board gate exists, early ramp and draw slots must provide that body or permanent type (e.g. a 2-power ramp creature over `Farseek` so it both ramps and stations `Hearthhull` the turn it arrives).
    - Leftover cost. Generic mana only, or the colored pips too? Pips you still pay are part of the bend.
-4. Name the trap. It is the card the surface theme suggests that pays off on the wrong turn, or for 1 when the plan needs 3 or 4. `get_card` it before you call it a trap.
-5. Write the win shape in one sentence. Do not add cards in this skill.
+5. Name the trap. It is the card or EDHREC theme shell the surface suggests that pays off on the wrong turn, costs $20+ because of tribal demand, or gives 1 when the plan needs 3 or 4. `get_card` it before you call it a trap.
+6. Name the **~$100 synergy multipliers** that make the engine punch above its price:
+   - **Double-duty slots:** Which two jobs can a single $0.50 card combine here (e.g. `Skeleton Key` = evasion trigger + loot draw in `Hapatra`; `Bridgeworks Battle` = land + removal; `Essence Flux` = 1-mana protection + re-trigger ETB)?
+   - **Web of twins ("for every A, 2–3 Bs") or density:** How does the deck assemble its engine naturally without $40 tutors (e.g. 27 cheap edicts in `Vren`, or interchangeable `Blood Artist` / `Zulaport Cutthroat` / `Obelisk Spider` halves)?
+   - **Parity-breaking stax & low curve (`~2.0–2.6` avg MV):** Which stax/tax piece does the commander naturally sidestep (`Winter Orb` with `Meria`; rule-of-law with `Ratadrabik`'s activated abilities; `Dauthi Voidwalker` in black)?
+7. Write the win shape in one sentence. Do not add cards in this skill.
 
 A win does not have to be a combo.
 
@@ -44,10 +54,12 @@ A win does not have to be a combo.
 ## Hand back
 
 ```
-Surface:  what the obvious theme is
+Surface:  what the obvious EDHREC billboard theme is
+Engine:   <Normal action> -> <Commander converter> -> <Cards / Mana / Bodies / Outlet>
 Bend:     the rule, the lock, the mana you still pay
 Trap:     one card, and the turn it actually does something
 Fuel:     what happens before the ability, and how much
+Synergy:  double-duty hook + A/B twin density + stax parity the commander breaks
 Win:      one spell | a pile | overlapping combos
 Jobs:     1 …  2 …  3 …  4 …
 ```

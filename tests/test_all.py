@@ -686,7 +686,7 @@ class SkillTest(unittest.TestCase):
         from mtg_mcp.skills import fetch_skill, load_skills
 
         loaded = load_skills()
-        names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+        names = {"deck-plan", "deck-upgrade", "nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
                  "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
                  "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"}
         self.assertEqual(set(loaded), names)
@@ -694,6 +694,14 @@ class SkillTest(unittest.TestCase):
             self.assertTrue(skill.description)
             self.assertTrue(skill.instructions)
         self.assertIn("reference_principles", loaded["nero-tune"].instructions)
+        self.assertIn("does not fit", loaded["deck-upgrade"].instructions)
+        self.assertIn("nero-tune", loaded["deck-upgrade"].instructions)
+        self.assertIn("deck-upgrade", loaded["nero-tune"].instructions)
+        self.assertIn("Which plan", loaded["deck-plan"].instructions)
+        self.assertIn("nero-build", loaded["deck-plan"].instructions)
+        self.assertIn("3-Question Engine Check", loaded["deck-plan"].instructions)
+        self.assertIn("3-Question Engine Check", loaded["nero-read"].instructions)
+        self.assertIn("deck-plan", loaded["nero-build"].instructions)
         self.assertIn("nero-read", loaded["nero-build"].instructions)
         self.assertIn("defcat-read", loaded["nero-build"].instructions)
         self.assertIn("based-core", loaded["nero-build"].instructions)
@@ -778,7 +786,7 @@ class McpProtocolTest(unittest.TestCase):
         )
         self.assertEqual(
             {p.name for p in prompts.prompts},
-            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+            {"deck-plan", "deck-upgrade", "nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
              "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
              "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"},
         )

@@ -14,6 +14,10 @@ NeRo (@_NeRo) builds ~$100 high-power Bracket 4. The test is his primers, not th
 
 If `reference_principles` is not in this session, read `src/mtg_mcp/data/library/nero/source.json`, or `get_library()` with `PYTHONPATH=src` from the repo root. Same fallback for `reference_deck` and `reference_cards`. Say that you used the files. Do not recite principles from memory.
 
+## Locked plan
+
+A locked plan from `deck-plan` is the win. Paste its Goal, Win, Turn, and Not-this at the top of the hand-back. `nero-lines` fills that win. It does not shop for a second one. If `nero-read` or `nero-lines` cannot do the lock, stop and tell the user. Do not swap plans quietly.
+
 ## Order
 
 ```
