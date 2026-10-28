@@ -145,14 +145,28 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["game_changers"], ["Demonic Tutor", "Rhystic Study"])
         self.assertEqual(r["bracket"]["bracket"], 3)
         self.assertEqual(r["bracket"]["label"], "Upgraded")
+        self.assertIn("6+ turns", r["bracket"]["expected_turns"])
+        self.assertTrue(r["bracket"]["estimated_win_turn"].startswith("Turn "))
         self.assertTrue(r["bracket"]["bracket_path"])
+        self.assertTrue(r["bracket"]["tune_up"])
+        self.assertEqual(r["bracket"]["flags"]["one_mana_ramp"], ["Sol Ring"])
+        self.assertEqual(r["bracket"]["flags"]["fast_tutors"], ["Demonic Tutor"])
         self.assertGreater(r["power_score"]["total"], 0)
+        self.assertNotIn("budget_adjusted_total", r["power_score"])
+        self.assertIn("missing_levers", r["power_score"])
+        self.assertTrue(any("Tutors (18% weight)" in m for m in r["power_score"]["missing_levers"]))
         self.assertIn("speed", r["power_score"])
         self.assertIn("consistency", r["power_score"])
         self.assertIn("school_score", r)
         self.assertIn("nero", r["school_score"])
         self.assertIn("defcat", r["school_score"])
         self.assertIn("based_33", r["school_score"])
+        r_tmpl_combo = analyze(
+            d,
+            CARDS,
+            combos=[{"cards": ["A", "B"], "also_requires": ["Sacrifice outlet"], "bracket_tag": "R"}],
+        )
+        self.assertTrue(any("template combo(s) have `also_requires`" in m for m in r_tmpl_combo["power_score"]["missing_levers"]))
         r_keystone = analyze(
             d,
             CARDS,
@@ -163,6 +177,17 @@ class AnalysisTests(unittest.TestCase):
             ],
         )
         self.assertEqual(r_keystone["school_score"]["keystone_combo_pieces"], ["Zuran Orb"])
+        self.assertIn("clunk_risk", r["school_score"])
+        celes_cards = {
+            **CARDS,
+            "celes, rune knight": {
+                **CARDS["atraxa, praetors' voice"],
+                "name": "Celes, Rune Knight",
+                "color_identity": ["W", "B", "R"],
+            },
+        }
+        r_celes = analyze(parse_decklist("1 Celes, Rune Knight *CMDR*\n1 Sol Ring"), celes_cards)
+        self.assertIn("Natural Bracket 4", r_celes["bracket"]["commander_bracket_fit"])
         self.assertIn("synergy", r)
         self.assertEqual(r["roles"]["cards"]["draw_on_their_spell"], ["Rhystic Study"])
         self.assertEqual(r["price"]["most_expensive"][0], {"card": "Doubling Season", "usd": 45.0})
@@ -268,6 +293,10 @@ class ToolTests(unittest.TestCase):
         pains = run(server.search_lands(color_identity="wubg", cycle="pain", max_price=5.0))
         self.assertEqual(pains["cycle"]["slug"], "pain")
         self.assertIn("is:painland", pains["query"])
+        # Scryfall rejects display opts (unique:cards) inside parentheses
+        self.assertNotRegex(pains["query"], r"\([^)]*unique:")
+        self.assertNotIn("error", pains)
+        self.assertIn("lands", pains)
 
         list_b = atraxa_list().replace("1 Rhystic Study", "1 Lightning Bolt").replace("1 Demonic Tutor", "1 Forest")
         diff = run(server.compare_decks(atraxa_list(), list_b))

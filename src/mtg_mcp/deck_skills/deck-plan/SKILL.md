@@ -43,14 +43,18 @@ get_skill nero-lines                    real wins, still no decklist
 1. `reference_principles(source="nero")` and `get_card(commander, include_forge_tags=True)`. One sentence: what the card does on the turn you cast it, and what it converts (`Normal Action -> Commander -> Free Resource / Win`). Quote the ability that is not the creature type.
 2. `reference_deck`. A hit is plan 1. Use his goal and his `notes.win_lines`. Say the deck name. Do not hide his list behind a new brew.
 3. `get_skill("nero-read")`, then `get_skill("defcat-read")`. You need Engine Converter, Bend, Trap, Synergy Multipliers (double-duty slots, A+B twins / density over tutors, parity-breaking stax), Jobs, When, and Bar. `Bar: none` is a complete answer.
-4. `get_skill("nero-lines")`. This finds the real ways the game can end. It is not permission to print a 99. Keep two or three win shapes. A one-spell or pile win does not grow a combo package.
+   - **Natural Bracket 4 Hair-Trigger Check:** Check if the commander's own text is half of a compact 1-card or 2-card infinite or Turn 3–4 storm kill (`Celes, Rune Knight` erasing Persist `-1/-1` counters, `Stella Lee, Wild Card` copying untap cantrips, `The Jolly Balloon Man` copying untap dorks, `Rowan, Scion of War` / `Will, Scion of Peace` tap-discounts, `Zirda`, `Kinnan`, `Malcolm`, `Godo`, `Codie`, `Alaundo`, `Meria`, `Glarb`). Say so up front: its natural home is **Bracket 4**, and if the user wants **Bracket 3**, the plan MUST use a dedicated **Domino / Fulcrum Synergy Engine** (not a neutered half-combo or 8-MV battlecruiser bricks).
+4. `get_skill("nero-lines")`. This finds the real ways the game can end. It is not permission to print a 99. Keep two or three win shapes.
+   - **Bracket 4 vs. Bracket 3 Blueprint (High Consistency, Zero Clunk):**
+     - **Bracket 4 (`8.0–9.0+/10` Race Car):** `30–33` lands (`10–11` per 33), rituals/fast mana, `6–9` fast tutors, and overlapping compact 2–3 card combos (`Turn 4–6` clock).
+     - **Bracket 3 (`7.5–8.2/10` Freight Train Engine):** `35–37` lands including 2–4 MDFC spell-lands (`12` per 33 so you never miss Turn 4–6 land drops), **`6` high-tempo tutors** (`2` per 33: 1–2 MV or straight-to-battlefield/graveyard tutors that grab your **Engine Fulcrum** on Turn 3–4 and your **Finisher** on Turn 6–7 — NOT 4 clunky 3-MV sorcery transmutes), **`9+` unconditional draw spells** (never rely on creature-sacrifice draw unless the commander makes creature tokens), **`<= 5` situational/6+ MV cards** (Salubrious Snail floor rule), and either on-theme Turn 6+ combos or a Domino/Drain/Overrun wave (`engine_momentum_bonus` rewards `8.0+` synergy + `10+` draw + `10+` interaction without forcing off-theme 4-card combos).
 5. Show the picture (including why the engine works on ~$100) and the plans. Ask one question. Stop. Do not call `nero-build`, `nero-hunt`, or `based-core` in this turn.
 
 ## How to talk
 
 One question per turn. Wait for the answer.
 
-At most three plans. Put the one you recommend first. Each plan is four lines: Goal, Win, Turn, Not this. Plain words. No card dump. A plan may name the finisher or the effect (`Torment of Hailfire`, "a pile of edicts"). It does not name a mana base.
+At most three plans. Put the one you recommend first. Each plan is five lines: **Target** (`Bracket __ · EDHcheck Power __–__/10`), **Goal**, **Win**, **Turn**, **Not this**. Plain words. No card dump. A plan may name the finisher, combo pair, or effect (`Torment of Hailfire`, `Chatterfang + Pitiless Plunderer`, "a pile of edicts"). It does not name a mana base.
 
 A bare commander is not a yes. "Just build it", "don't ask", or a message that already names the win is a yes to build. Still print the locked card in that same reply, then `get_skill("nero-build")`.
 
@@ -82,13 +86,15 @@ Synergy:    ...
 Win:        ...
 
 1. <name>  (recommended)
+   Target:   B__ · EDHcheck Power __–__/10 (2–3 explicit Spellbook combos + 6+ tutors + 2–3 budget GCs)
    Goal:     Every game we ...
    Win:      The game ends when ...
    Turn:     turn __
    Not this: the obvious theme, and the turn it actually does something
 
-2. ...
-3. ...
+2. <fair / no-combo alternative>
+   Target:   B2 · EDHcheck Power ~4.8–5.2/10 ceiling (0 combos / 0 tutors / 0 GCs forfeits 48% of EDHcheck's formula)
+   ...
 
 Assuming: ~$100, Bracket 4, unless you say otherwise.
 ```
@@ -101,6 +107,7 @@ Restate the lock. One question. Stop.
 
 ```
 Locked
+Target:   B__ · EDHcheck Power >= __/10
 Goal:     ...
 Win:      ...
 Turn:     ...

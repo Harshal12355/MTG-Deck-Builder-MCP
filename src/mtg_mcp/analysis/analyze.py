@@ -147,6 +147,7 @@ def analyze(
         interaction_total=interaction,
         game_changers=game_changers,
         spellbook_combos=combos,
+        commanders=[c.get("name", "") for c in commander_cards if c],
     )
 
     return {

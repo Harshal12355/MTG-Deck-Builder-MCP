@@ -269,7 +269,9 @@ async def search_lands(
 
     scryfall, _, _ = wiring.clients()
     picked = cycles[0]
-    q_parts = [f"({picked['query']})", "f:commander"]
+    # Do not wrap cycle query in (...): LAND_CYCLES embeds display opts like
+    # `unique:cards`, and Scryfall 400s those inside parentheses.
+    q_parts = [picked["query"], "f:commander"]
     if color_identity:
         q_parts.append(f"id<={color_identity.lower().strip()}")
     if max_price is not None:

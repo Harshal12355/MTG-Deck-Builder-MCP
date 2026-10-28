@@ -60,7 +60,8 @@ A plan that names a win and leaves a surrounding piece blank is not ready to ask
 
 One question per turn. Wait.
 
-Two plans. The one you recommend is first. Each plan is the upgrade, in four lines: Goal, Win, Turn, Budget. Plain words. Name the pattern you would cut ("the Rat lords"). Do not print the new 99.
+Two plans. The one you recommend is first. Each plan is the upgrade, in five lines: **Target** (`B__ · EDHcheck Power __–__/10`), **Goal**, **Win**, **Turn**, **Budget**. Plain words. Name the pattern you would cut ("the Rat lords"). Do not print the new 99.
+- **Deterministic EDHcheck Power Score math:** Because Tutors (`18%`) + Explicit Spellbook Combos (`15%`) + WotC Game Changers (`15%`) = `48%` of EDHcheck's 0–10 Power Score, always show the exact predicted EDHcheck Power Score on each plan (e.g. **Plan 1: `B3 · Power 7.5–8.5/10`** with `2–3` explicit Spellbook combos + `6+` budget tutors + `2–3` budget Game Changers vs. **Plan 2: `B2 · Power ~4.8–5.2/10 ceiling`** for a zero-combo/zero-tutor fair build).
 
 A plan you already know cannot be bought at the cap gets `Budget: does not fit` on that plan, with the dollar gap. Offer the cheaper win next to it. Do not hide the expensive one.
 
