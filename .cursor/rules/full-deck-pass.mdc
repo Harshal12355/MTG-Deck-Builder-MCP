@@ -5,28 +5,34 @@ alwaysApply: true
 
 # Full deck pass
 
-A new commander (no list yet) or a deck to evaluate (paste, file, Moxfield, Archidekt, MTGO) runs the whole pass. One lookup is not the pass. If a named tool is missing, say so and stop. Do not fill the gap from memory.
+A new commander (no list yet) starts at `get_skill("deck-plan")` and stops until the user locks a goal and a win. A pasted list, file, or Moxfield / Archidekt / MTGO link starts at `get_skill("deck-upgrade")` and stops until the user locks a goal, a win, and a budget. One lookup is not the pass. If a named tool is missing, say so and stop. Do not fill the gap from memory.
 
 Every build runs all three schools on the same list. NeRo picks the bend, the win, and the cards that do a job the turn you cast them. Defcat then asks when in the turn that card wants to resolve, and whether casting it makes another card better. Based (Based Deck Department / Brother Frog) shrinks the deck to one 33-card average game (`based-core`), goldfishes that 33-card core at low variance first, and scales `33 × 3 = 99` with two functional twins per slot (`based-scale`) — or splits an existing 99 into three 33-card piles (`based-split`) to cut `1/0/0` orphans and slow value engines. A card that fails any school is out.
 
 ## New commander
 
-`get_skill` and follow it. Do not skip a skill because the commander looks obvious.
+`get_skill("deck-plan")` and follow it. Stop when it says stop. Do not start `nero-build` in the same turn as the first plan question, unless the user already named the win or said to just build it. A bare commander is not a yes.
 
-1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order, including the Defcat and Based 33-card steps.
+A locked plan is a Goal, a Win, a Turn, and a Not-this. The user picked it, or they named the win in their message. After the lock, `get_skill("nero-build")` and follow it. Do not skip a later skill because the commander looks obvious.
+
+1. `deckbuilding_principles`, then `get_skill("nero-build")`. That skill is the order, including the Defcat and Based 33-card steps. The locked plan is the win.
 2. `reference_principles(source="nero")`, `get_card(commander, include_forge_tags=True)`, `reference_deck`. A hit starts from his list and switches to the evaluate pass. Do not brew a second one.
 3. `get_skill("nero-read")`, then `get_skill("defcat-read")`. `get_card_rulings` when the ability uses X, "this turn", "each turn", or a timing word. `Bar: none` is a complete answer when the commander does not compare mana value.
 4. `get_skill("nero-lines")`. `search_combos` or `search_cards` as that skill says. A one-spell or edict-pile win does not get a combo package.
 5. `get_skill("based-core")`. Lock the 33-card 1-game slot budget, fill Pile A (33 cards) with `get_skill("nero-hunt")` and `get_skill("defcat-turn")` (`get_skill("defcat-fuel")` only when the bar is real), and run `analyze_deck(include_combos=True)` + `get_skill("nero-goldfish")` on that 34-card core (`commander + 33`) first.
 6. `get_skill("based-scale")`. Replicate Pile A two more times (`33 × 3 = 99`, Piles B and C) with functional twins — zero `1/0/0` orphans (`Archmage Emeritus` test) and no slow random value engines in specific slots (`Exalted Flamer of Tzeentch` test).
 7. `get_skill("nero-mana")` (`analyze_mana_base` + `search_lands`) on the finished list.
-8. `analyze_deck(include_combos=True)`, `price_decklist(budget_target=100)`, `find_combos`, `find_tokens`, `get_skill("nero-goldfish")` (`simulate_deck` with `track_card_impact=True` and `mulligan_targets`) on the full 100-card list (same `seed` as the 33-card core). Report `bracket` (1–5), `power_score` (0–10), `school_score` (NeRo / Defcat / Based 3x33), and `synergy` (`Enabler × Payoff`). Re-price before telling anyone to buy.
+8. `analyze_deck(include_combos=True)`, `price_decklist(budget_target=100)`, `find_combos`, `find_tokens`, `get_skill("nero-goldfish")` (`simulate_deck` with `track_card_impact=True` and `mulligan_targets`) on the full 100-card list (same `seed` as the 33-card core). `power_score.total` is the single deterministic 0–10 EDHcheck Power Score (never cite `school_score` or `synergy` as Power). Enforce the locked Power Gate (`>= 7.5/10` for Bracket 3, `>= 8.0/10` for Bracket 4; fix `power_score.missing_levers` before outputting if short). Report `bracket` (1–5), `power_score.total` (0–10), `school_score` (NeRo / Defcat / Based 3x33), and `synergy` (`Enabler × Payoff`). Re-price before telling anyone to buy.
 9. After the list exists: `edhrec_recommendations` with `budget="budget"`, and `archidekt_popular_cards`. Both show the shell. Neither is the shopping list.
 10. `get_skill("moxfield-primer")`. Tagged decklist for Moxfield bulk paste plus markdown primer (plan, mulligan, lines, key cards, tokens). Skip only if the user said they do not want a primer or tags.
 
 ## Evaluate a list
 
-Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("nero-tune")` and follow it: `analyze_deck(include_combos=True)` (for WotC Bracket 1–5, 0–10 Power Score, 3-School Score, and 10-axis Synergy), `price_decklist(budget_target=100)`, `get_card(commander, include_forge_tags=True)`, `reference_deck`, `get_skill("based-split")` (deal the 99 into `3 × 33` piles to expose uneven splits, `1/0/0` orphans, uncounted theme density, and fake job slots), `find_combos`, `reference_compare`, `analyze_mana_base` (and `get_skill("nero-mana")` + `search_lands` when a color has a Karsten deficit or low grade), `find_tokens`, and the goldfish skill (Pile A 33-card core vs. full 99 with `track_card_impact=True`, same `seed`), plus `compare_decks` to verify before/after upgrade deltas and `check_pod` when evaluating 2–4 decks at a table. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real.
+Get the list as text first. `archidekt_get_deck` for an Archidekt URL. Then `get_skill("deck-upgrade")` and follow it. Stop when it says stop. Do not print a rebuilt list in that first turn.
+
+The read is `get_skill("nero-tune")` with no adds: `analyze_deck(include_combos=True)` (for WotC Bracket 1–5, 0–10 Power Score, 3-School Score, and 10-axis Synergy), `price_decklist` at the user's budget or the list's current total, `get_card(commander, include_forge_tags=True)`, `reference_deck`, `get_skill("based-split")` (deal the 99 into `3 × 33` piles to expose uneven splits, `1/0/0` orphans, uncounted theme density, and fake job slots), `find_combos`, `reference_compare`, `analyze_mana_base` (and `get_skill("nero-mana")` + `search_lands` when a color has a Karsten deficit or low grade), `find_tokens`, and the goldfish skill (Pile A 33-card core vs. full 99 with `track_card_impact=True`, same `seed`), plus `check_pod` when evaluating 2–4 decks at a table. Fill the fit table (win, setup, mana, interaction, seeing cards) before the question.
+
+After the user locks the Goal, the Win, and the budget: the same win uses `nero-tune` (then `compare_decks` for the before/after delta). A different win uses `nero-build`. A new card uses `nero-hunt`, then `defcat-turn`. A new line uses `nero-lines`. `defcat-read` on the commander. `defcat-fuel` only when that skill's bar is real. If the win does not fit the budget, say `Budget: does not fit` and stop.
 
 `get_card` (with `include_forge_tags=True` when checking `DeckHas`/`DeckNeeds` synergy) before you name an add or a cut. `get_card_rulings` if the line depends on timing. `get_card_printings` before telling anyone which copy to buy.
 
@@ -44,6 +50,6 @@ Do not stop after the first tool that returns.
 - Tested lists and staples: `reference_deck`, `reference_cards`, `reference_compare`, `reference_card`, `reference_principles`, `reference_library`.
 - Combos already in the list: `find_combos`. Combos to consider: `search_combos`.
 
-Hand back the block the skill asks for. A new list leads with the bend, the turn, and the bar. An existing list leads with the one swap.
+Hand back the block the skill asks for. A new commander with no locked plan leads with the plan question. A pasted list with no lock leads with the upgrade question and the fit table. A locked plan leads with the bend, the turn, and the bar, then the budget line (`fits`, `tight`, or `does not fit`).
 
-Example: "Build a $100 Rowan" runs steps 1–8. Her bar is none, so fuel is skipped and the turn check still runs. A pasted list runs the evaluate pass. Neither stops after `get_card`.
+Example: "Build a $100 Rowan" runs steps 1–8 after `deck-plan` locks the win. Her bar is none, so fuel is skipped and the turn check still runs. A pasted list runs `deck-upgrade` and stops for the lock. Neither stops after `get_card`.

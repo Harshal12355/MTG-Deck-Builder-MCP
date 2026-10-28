@@ -6,9 +6,9 @@ Read **`docs/architecture.md`** for layers, module map, migration checklist, and
 
 | Layer | Location |
 |-------|----------|
-| MCP transport | `server.py`, `tools/` (split in progress) |
+| MCP transport | `server.py`, `tools/*.py` (`cards`, `deck`, `combos`, `edhrec_tools`, `archidekt_tools`, `reference`, `skills_tool`) |
 | HTTP + deck resolve | `wiring.py` |
-| Deck math | `analysis/` (`core.py` today → split into roles, mana, bracket, …) |
+| Deck math | `analysis/*.py` (`analyze`, `roles`, `mana`, `bracket`, `template`, `compare`, `pod`, `tokens`, `legality`) |
 | Simulation | `goldfish.py` |
 | Parse | `decklist.py` |
 | Upstream APIs | `scryfall.py`, `spellbook.py`, `edhrec.py`, `archidekt.py`, `moxfield.py`, `http.py` |
@@ -20,7 +20,7 @@ Read **`docs/architecture.md`** for layers, module map, migration checklist, and
 ## Test-driven refactors
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -v          # or: .venv/bin/python -m unittest discover -s tests -v
 ```
 
 - **Golden pipeline:** `tests/test_regression.py` + `tests/fixtures/golden_atraxa_pipeline.json`

@@ -44,10 +44,10 @@ def api_error(exc: ApiError) -> dict[str, Any]:
 
 
 async def resolve_deck(
-    decklist: str,
-    commanders: list[str] | None,
+    decklist: str | ParsedDeck,
+    commanders: list[str] | None = None,
 ) -> tuple[ParsedDeck, dict[str, dict[str, Any]], list[str]]:
     scryfall, _, _ = clients()
-    deck = parse_decklist(decklist, commanders)
+    deck = parse_decklist(decklist, commanders) if isinstance(decklist, str) else decklist
     cards, not_found = await scryfall.collection(e.name for e in deck.commanders + deck.main + deck.sideboard)
     return deck, cards, not_found

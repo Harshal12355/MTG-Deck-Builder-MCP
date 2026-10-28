@@ -1,0 +1,103 @@
+// Commander
+1 The Jolly Balloon Man #combo #synergy
+
+// Deck
+1 Skullclamp #draw
+1 Sol Ring #ramp
+1 Springleaf Drum #ramp
+1 Blacksmith's Skill #protection
+1 Lightning Bolt #removal
+1 Loran's Escape #protection
+1 Path to Exile #removal
+1 Surge of Salvation #protection
+1 Swords to Plowshares #removal
+1 Wayfarer's Bauble #ramp
+1 Abrade #removal
+1 Arabella, Abandoned Doll #wincon
+1 Arcane Signet #ramp
+1 Boros Charm #protection
+1 Boros Signet #ramp
+1 Charming Scoundrel #draw #ramp
+1 Electroduplicate #combo
+1 Flicker of Fate #synergy
+1 Generator Servant #ramp
+1 Goblin Bombardment #wincon #removal
+1 Goldhound #ramp
+1 Hedron Crawler #ramp #combo
+1 Helpful Hunter #draw
+1 Idol of Oblivion #draw
+1 Impact Tremors #wincon
+1 Iron Myr #ramp #combo
+1 Loyal Apprentice #synergy
+1 Manakin #ramp #combo
+1 Mind Stone #ramp #draw
+1 Ornithopter of Paradise #ramp #combo
+1 Prismatic Lens #ramp
+1 Raid Bombardment #wincon
+1 Reckless Barbarian #ramp
+1 Selfless Spirit #protection
+1 Spirited Companion #draw
+1 Splitskin Doll #draw
+1 Sunset Strikemaster #ramp #combo
+1 Talisman of Conviction #ramp
+1 Twinflame #combo
+1 Wall of Omens #draw
+1 Wear // Tear #removal
+1 Chaos Warp #removal
+1 Circuit Mender #draw
+1 Coercive Recruiter #combo
+1 Combat Celebrant #combo
+1 Cursed Mirror #combo #ramp
+1 Determined Iteration #combo #synergy
+1 Enduring Innocence #draw
+1 Ertha Jo, Frontier Mentor #combo
+1 Fanatic of Mogis #wincon
+1 Fear of Missing Out #combo #draw
+1 Generous Gift #removal
+1 Get Lost #removal
+1 Gold Myr #ramp #combo
+1 Inspiring Overseer #draw
+1 Marvin, Murderous Mimic #combo
+1 Mentor of the Meek #draw
+1 Molten Gatekeeper #wincon
+1 Skyclave Apparition #removal
+1 Sparring Mummy #combo
+1 Tocasia's Welcome #draw
+1 Village Bell-Ringer #combo
+1 Weftstalker Ardent #wincon
+1 Welcoming Vampire #draw
+1 Witty Roastmaster #wincon
+1 Zealous Conscripts #combo
+1 Battlefield Forge #land
+1 Castle Embereth #land
+1 Clifftop Retreat #land
+1 Command Tower #land
+1 Exotic Orchard #land
+1 Furycalm Snarl #land
+1 Inspiring Vantage #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Mountain #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Plains #land
+1 Rugged Prairie #land
+1 Slayers' Stronghold #land
+1 Spectator Seating #land
+1 Sunbaked Canyon #land
+1 Sundown Pass #land
+1 Sunscorched Divide #land
+1 Temple of Triumph #land

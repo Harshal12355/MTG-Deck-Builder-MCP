@@ -139,17 +139,34 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["color_identity"], "WUBG")
         self.assertEqual(r["lands"], 91)
         self.assertEqual(r["land_color_sources"]["G"], 46)
+        self.assertNotIn("R", r["land_color_sources"])
+        colorless_cmd = analyze(parse_decklist("1 Sol Ring *CMDR*\n1 Command Tower"), CARDS)
+        self.assertEqual(colorless_cmd["land_color_sources"], {})
         self.assertEqual(r["game_changers"], ["Demonic Tutor", "Rhystic Study"])
         self.assertEqual(r["bracket"]["bracket"], 3)
         self.assertEqual(r["bracket"]["label"], "Upgraded")
+        self.assertIn("6+ turns", r["bracket"]["expected_turns"])
+        self.assertTrue(r["bracket"]["estimated_win_turn"].startswith("Turn "))
         self.assertTrue(r["bracket"]["bracket_path"])
+        self.assertTrue(r["bracket"]["tune_up"])
+        self.assertEqual(r["bracket"]["flags"]["one_mana_ramp"], ["Sol Ring"])
+        self.assertEqual(r["bracket"]["flags"]["fast_tutors"], ["Demonic Tutor"])
         self.assertGreater(r["power_score"]["total"], 0)
+        self.assertNotIn("budget_adjusted_total", r["power_score"])
+        self.assertIn("missing_levers", r["power_score"])
+        self.assertTrue(any("Tutors (18% weight)" in m for m in r["power_score"]["missing_levers"]))
         self.assertIn("speed", r["power_score"])
         self.assertIn("consistency", r["power_score"])
         self.assertIn("school_score", r)
         self.assertIn("nero", r["school_score"])
         self.assertIn("defcat", r["school_score"])
         self.assertIn("based_33", r["school_score"])
+        r_tmpl_combo = analyze(
+            d,
+            CARDS,
+            combos=[{"cards": ["A", "B"], "also_requires": ["Sacrifice outlet"], "bracket_tag": "R"}],
+        )
+        self.assertTrue(any("template combo(s) have `also_requires`" in m for m in r_tmpl_combo["power_score"]["missing_levers"]))
         r_keystone = analyze(
             d,
             CARDS,
@@ -160,6 +177,17 @@ class AnalysisTests(unittest.TestCase):
             ],
         )
         self.assertEqual(r_keystone["school_score"]["keystone_combo_pieces"], ["Zuran Orb"])
+        self.assertIn("clunk_risk", r["school_score"])
+        celes_cards = {
+            **CARDS,
+            "celes, rune knight": {
+                **CARDS["atraxa, praetors' voice"],
+                "name": "Celes, Rune Knight",
+                "color_identity": ["W", "B", "R"],
+            },
+        }
+        r_celes = analyze(parse_decklist("1 Celes, Rune Knight *CMDR*\n1 Sol Ring"), celes_cards)
+        self.assertIn("Natural Bracket 4", r_celes["bracket"]["commander_bracket_fit"])
         self.assertIn("synergy", r)
         self.assertEqual(r["roles"]["cards"]["draw_on_their_spell"], ["Rhystic Study"])
         self.assertEqual(r["price"]["most_expensive"][0], {"card": "Doubling Season", "usd": 45.0})
@@ -223,6 +251,36 @@ class ToolTests(unittest.TestCase):
         with_combos = run(server.analyze_deck(atraxa_list(), include_combos=True))
         self.assertEqual(with_combos["bracket"]["bracket"], 4)  # Spellbook 'R' early 2-card combo elevates to B4
 
+    def test_analyze_deck_dfc_commander_with_combos(self):
+        from unittest.mock import patch
+        esika = {
+            **CARDS["atraxa, praetors' voice"],
+            "name": "Esika, God of the Tree // The Prismatic Bridge",
+            "card_faces": [
+                {"name": "Esika, God of the Tree", "mana_cost": "{1}{G}{G}", "type_line": "Legendary Creature — God"},
+                {"name": "The Prismatic Bridge", "mana_cost": "{W}{U}{B}{R}{G}", "type_line": "Legendary Enchantment"},
+            ],
+        }
+        with patch.dict(CARDS, {"esika, god of the tree": esika}):
+            r = run(server.analyze_deck("1 Esika, God of the Tree *CMDR*\n1 Sol Ring", include_combos=True))
+            priced = run(server.price_decklist("1 Esika, God of the Tree *CMDR*\n1 Sol Ring", budget_target=1.0))
+        self.assertEqual(r["commanders"], ["Esika, God of the Tree // The Prismatic Bridge"])
+        self.assertEqual([c["card"] for c in priced["suggested_cuts_to_hit_budget"]], ["Sol Ring"])
+
+    def test_price_decklist_eur_no_usd_contamination(self):
+        r = run(server.price_decklist("1 Sol Ring\n1 Rhystic Study", currency="eur"))
+        self.assertEqual(r["total_eur"], 0)
+        self.assertEqual(set(r["no_price_listed"]), {"Sol Ring", "Rhystic Study"})
+
+    def test_collection_per_card_cache(self):
+        run(server.get_card("Sol Ring"))
+        run(server.price_decklist("1 Sol Ring\n1 Counterspell"))
+        run(server.price_decklist("1 Sol Ring\n1 Counterspell\n1 Lightning Bolt"))
+        posts = [c for c in self.fake.calls if c[0] == "POST" and "/cards/collection" in c[1]]
+        self.assertEqual(len(posts), 2)
+        self.assertEqual(posts[0][2]["identifiers"], [{"name": "Counterspell"}])
+        self.assertEqual(posts[1][2]["identifiers"], [{"name": "Lightning Bolt"}])
+
     def test_edhcheck_suite_tools(self):
         mana = run(server.analyze_mana_base(atraxa_list()))
         self.assertIn("grade", mana)
@@ -235,6 +293,10 @@ class ToolTests(unittest.TestCase):
         pains = run(server.search_lands(color_identity="wubg", cycle="pain", max_price=5.0))
         self.assertEqual(pains["cycle"]["slug"], "pain")
         self.assertIn("is:painland", pains["query"])
+        # Scryfall rejects display opts (unique:cards) inside parentheses
+        self.assertNotRegex(pains["query"], r"\([^)]*unique:")
+        self.assertNotIn("error", pains)
+        self.assertIn("lands", pains)
 
         list_b = atraxa_list().replace("1 Rhystic Study", "1 Lightning Bolt").replace("1 Demonic Tutor", "1 Forest")
         diff = run(server.compare_decks(atraxa_list(), list_b))
@@ -330,6 +392,15 @@ class ToolTests(unittest.TestCase):
         self.assertIn("mulligan_strategy", mull)
         self.assertEqual(len(mull["mulligan_strategy"]["targets"]), 2)
         self.assertIn("card_impact", mull)
+        cmd_line = run(server.simulate_deck(
+            atraxa_list().replace("45 Forest", "45 Command Tower"),
+            win_lines=[["Atraxa, Praetors' Voice", "Doubling Season"]],
+            turns=8,
+            trials=200,
+            seed=1,
+        ))
+        self.assertFalse(cmd_line.get("win_line_cards_not_in_deck"))
+        self.assertGreater(cmd_line["win_lines"][0]["assembled_by_turn"]["8"], 0.0)
 
     def test_goldfish_color_hand_and_payable_line(self):
         from mtg_mcp.goldfish import SimCard, _play_game, pay
@@ -620,13 +691,31 @@ class ReferenceCompareAndImportTests(unittest.TestCase):
                 del os.environ["MTG_MCP_LIBRARY_DIR"]
                 library.reload_library()
 
+    def test_moxfield_import_sanitizes_source_key(self):
+        import os
+        import tempfile
+        from mtg_mcp import library
+        with tempfile.TemporaryDirectory() as tmp:
+            lib_dir = Path(tmp) / "lib"
+            lib_dir.mkdir()
+            os.environ["MTG_MCP_LIBRARY_DIR"] = str(lib_dir)
+            try:
+                res = run(server.moxfield_import_user("SomeUser", source_key="../evil_escape"))
+                self.assertEqual(res["source"], "evil-escape")
+                self.assertTrue((lib_dir / "evil-escape" / "decks.json").is_file())
+                self.assertFalse((Path(tmp) / "evil_escape").exists())
+                self.assertFalse((Path(tmp) / "evil-escape").exists())
+            finally:
+                del os.environ["MTG_MCP_LIBRARY_DIR"]
+                library.reload_library()
+
 
 class SkillTest(unittest.TestCase):
     def test_packaged_skills_parse(self):
         from mtg_mcp.skills import fetch_skill, load_skills
 
         loaded = load_skills()
-        names = {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+        names = {"deck-plan", "deck-upgrade", "nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
                  "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
                  "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"}
         self.assertEqual(set(loaded), names)
@@ -634,6 +723,14 @@ class SkillTest(unittest.TestCase):
             self.assertTrue(skill.description)
             self.assertTrue(skill.instructions)
         self.assertIn("reference_principles", loaded["nero-tune"].instructions)
+        self.assertIn("does not fit", loaded["deck-upgrade"].instructions)
+        self.assertIn("nero-tune", loaded["deck-upgrade"].instructions)
+        self.assertIn("deck-upgrade", loaded["nero-tune"].instructions)
+        self.assertIn("Which plan", loaded["deck-plan"].instructions)
+        self.assertIn("nero-build", loaded["deck-plan"].instructions)
+        self.assertIn("3-Question Engine Check", loaded["deck-plan"].instructions)
+        self.assertIn("3-Question Engine Check", loaded["nero-read"].instructions)
+        self.assertIn("deck-plan", loaded["nero-build"].instructions)
         self.assertIn("nero-read", loaded["nero-build"].instructions)
         self.assertIn("defcat-read", loaded["nero-build"].instructions)
         self.assertIn("based-core", loaded["nero-build"].instructions)
@@ -718,7 +815,7 @@ class McpProtocolTest(unittest.TestCase):
         )
         self.assertEqual(
             {p.name for p in prompts.prompts},
-            {"nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
+            {"deck-plan", "deck-upgrade", "nero-build", "nero-tune", "nero-mana", "nero-goldfish", "nero-read", "nero-lines", "nero-hunt",
              "defcat-build", "defcat-read", "defcat-fuel", "defcat-turn",
              "based-build", "based-core", "based-scale", "based-split", "moxfield-primer"},
         )

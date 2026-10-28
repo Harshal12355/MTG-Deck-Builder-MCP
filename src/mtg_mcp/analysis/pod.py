@@ -72,6 +72,8 @@ def evaluate_pod(seats: list[dict[str, Any]]) -> dict[str, Any]:
             "commanders": a["commanders"],
             "bracket": a["bracket"]["bracket"],
             "bracket_label": a["bracket"]["label"],
+            "expected_turns": a["bracket"]["expected_turns"],
+            "estimated_win_turn": a["bracket"]["estimated_win_turn"],
             "power_score": a["power_score"]["total"],
             "speed_score": a["power_score"]["speed"],
             "consistency_score": a["power_score"]["consistency"],

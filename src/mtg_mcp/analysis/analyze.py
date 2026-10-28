@@ -6,10 +6,11 @@ from collections import Counter, defaultdict
 from typing import Any
 
 from ..decklist import ParsedDeck
-from ..scryfall import front_type_line, oracle_text, price_usd
+from ..scryfall import front_type_line, price_usd
 from ._card_utils import COLORS, _pips
 from .bracket import _is_game_changer, _score_and_bracket
 from .legality import _copy_limit
+from .mana import land_produced_colors
 from .roles import card_roles
 from .template import _ENTRY_CATEGORY_TO_ROLE, _template_report, resolve_template
 
@@ -38,6 +39,14 @@ def analyze(
     nonland_cmc: list[float] = []
     lands = 0
 
+    # ---- Commander colour identity ----
+    has_commander = bool(deck.commanders)
+    commander_cards = [cards.get(e.name.lower()) for e in deck.commanders]
+    identity: set[str] = set()
+    for c in commander_cards:
+        if c:
+            identity |= {col for col in (c.get("color_identity") or []) if col in COLORS}
+
     for e, c in resolved:
         tl = front_type_line(c)
         for t in ("Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Planeswalker", "Battle", "Land"):
@@ -46,10 +55,8 @@ def analyze(
         is_land = "Land" in tl
         if is_land:
             lands += e.quantity
-            produced = c.get("produced_mana") or []
-            for color in COLORS:
-                if color in produced:
-                    sources[color] += e.quantity
+            for color in land_produced_colors(c, identity, has_commander=has_commander):
+                sources[color] += e.quantity
         else:
             cmc = float(c.get("cmc") or 0)
             nonland_cmc.extend([cmc] * e.quantity)
@@ -67,13 +74,6 @@ def analyze(
                     detected_roles.append(mapped)
         for r in detected_roles:
             roles[r].append(c.get("name", e.name))
-
-    # ---- Commander colour identity ----
-    commander_cards = [cards.get(e.name.lower()) for e in deck.commanders]
-    identity: set[str] = set()
-    for c in commander_cards:
-        if c:
-            identity |= set(c.get("color_identity") or [])
 
     # ---- Legality ----
     issues: list[str] = []
@@ -147,6 +147,7 @@ def analyze(
         interaction_total=interaction,
         game_changers=game_changers,
         spellbook_combos=combos,
+        commanders=[c.get("name", "") for c in commander_cards if c],
     )
 
     return {

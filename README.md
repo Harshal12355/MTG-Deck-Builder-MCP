@@ -13,7 +13,7 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
           └─────────────────────┴──────────────────┼───────────────┴─────────────────┘
                                                    ▼
                                ┌───────────────────────────────────────┐
-                               │     mtg-deckbuilder MCP (28 Tools)    │
+                               │     mtg-deckbuilder MCP (31 Tools)    │
                                │  + 16 Deckbuilding Skills & Prompts   │
                                │  + Monte Carlo Goldfish Simulator     │
                                └───────────────────┬───────────────────┘
@@ -43,7 +43,7 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
 
 ---
 
-## MCP Tools (28 Tools)
+## MCP Tools (31 Tools)
 
 ### Cards, Scryfall & Card-Forge
 
@@ -99,7 +99,7 @@ An MCP server (`mtg-deckbuilder`) that lets Cursor, Claude Desktop, Claude Code,
 | `reference_deck` | Full reference deck entry by commander, name, or Moxfield ID: plan, ideal turn, mulligan guide, `win_lines` (ready for `simulate_deck`), key cards, stats, and full `decklist` |
 | `reference_compare` | Compare a decklist against the reference library to surface proven staples in its colour identity that it isn't running yet, grouped by role |
 | `moxfield_import_user` | Import or refresh every public Commander deck (cards, author tags, card metadata, and raw Markdown primers) of a Moxfield user into the reference library |
-| `get_skill` | Load one of the 16 deckbuilding skills from `src/mtg_mcp/deck_skills/` (also exposed as MCP prompts via `prompts/list` and `prompts/get`) |
+| `get_skill` | Load one of the 18 deckbuilding skills from `src/mtg_mcp/deck_skills/` (also exposed as MCP prompts via `prompts/list` and `prompts/get`) |
 
 ---
 
@@ -115,7 +115,9 @@ Every build or tune runs **three deckbuilding schools on the same list** via `ge
 New Commander ("Build a $100 Rowan")           Existing Decklist / Link ("Tune my Vren list")
                 │                                                      │
                 ▼                                                      ▼
-   1. deckbuilding_principles                             1. nero-tune (load decklist text)
+   0. deck-plan ──► Goal + Win. Stop until the user picks.
+   1. deckbuilding_principles                             0. deck-upgrade ► fit + budget. Stop until they pick.
+                                                          1. nero-tune read, then build after the lock
    2. nero-build + reference_deck check                   2. reference_principles(source="nero")
    3. nero-read  ──► Surface vs. Bend, Trap, Jobs         3. analyze_deck + price_decklist
    4. defcat-read ─► Turn window & MV Bar (or "none")     4. get_card(commander) + defcat-read
@@ -131,12 +133,14 @@ New Commander ("Build a $100 Rowan")           Existing Decklist / Link ("Tune m
   14. moxfield-primer (#tags + Markdown primer)
 ```
 
-### All 16 Skills (`src/mtg_mcp/deck_skills/`)
+### All 18 Skills (`src/mtg_mcp/deck_skills/`)
 
 | Skill | School | When to use |
 |---|---|---|
-| `nero-build` | NeRo + Defcat + Based | Master build order for a new commander at ~$100 high-power Bracket 4 |
-| `nero-tune` | NeRo + Defcat + Based | Evaluate and tune an existing decklist: one plan-fixing swap first, then at most four more tied to tool numbers |
+| `deck-plan` | Planning | Talk through one goal and one win with the user, then hand off to `nero-build`. No list until they pick. |
+| `deck-upgrade` | Planning | Read a pasted list, show how the win, mana, interaction, and card draw fit, lock the plan and the budget, then upgrade. Say when it does not fit. |
+| `nero-build` | NeRo + Defcat + Based | Master build order for a new commander at ~$100 high-power Bracket 4, after `deck-plan` locks the win |
+| `nero-tune` | NeRo + Defcat + Based | After `deck-upgrade` locks the plan and the budget: scorecard first, then the swaps that serve that lock |
 | `nero-read` | NeRo | Read a commander past its EDHREC theme: what locks, what mana you still pay, the trap card, win shape, and 3–4 jobs |
 | `nero-lines` | NeRo | Pick the win: one finisher spell, a pile of the same effect, or overlapping 2–4 card combos with no dead pieces |
 | `nero-hunt` | NeRo | Find ~$100 Bracket 4 veggies and double-duty cards; cut 4-mana enablers that do nothing the turn they enter |
@@ -312,7 +316,7 @@ docker run --rm -p 8000:8000 mtg-mcp --http --host 0.0.0.0 --port 8000 --allowed
 
 ## Tests
 
-The test suite (`tests/test_all.py`) is 100% offline using deterministic API fakes (`tests/fakes.py`):
+The test suite (`tests/test_all.py` and `tests/test_regression.py`) is 100% offline using deterministic API fakes (`tests/fakes.py`):
 
 ```bash
 python -m unittest discover -s tests -v
@@ -324,24 +328,24 @@ python -m unittest discover -s tests -v
 
 | Upstream Source | Min Request Interval | Cache TTL | Notes |
 |---|---|---|---|
-| **Scryfall** (`api.scryfall.com`) | `100 ms` | `1–24 h` | Uses `/cards/collection` in batches of 75 cards. Prices are daily TCGplayer USD market prices for the returned printing. |
+| **Scryfall** (`api.scryfall.com`) | `100 ms` | `1–24 h` | Uses `/cards/collection` in batches of 75 cards with per-card caching. Prices are daily TCGplayer USD / Cardmarket EUR market prices. |
 | **Commander Spellbook** (`backend.commanderspellbook.com`) | `250 ms` | `6–12 h` | Official combo search and deck combo detection API. |
 | **EDHREC** (`json.edhrec.com`) | `500 ms` | `24 h` | Unofficial JSON endpoints loaded by EDHREC's web pages. Best-effort; may change if EDHREC updates its frontend. |
 | **Archidekt** (`archidekt.com`) | `1.0 s` | `6 h` | Unofficial JSON endpoints for public deck search and deck pages. `archidekt_popular_cards` fetches 1 request per sampled deck (~15s for 15 decks). |
 | **Moxfield** (`api2.moxfield.com`) | `1.0 s` | — | Unofficial API used by `moxfield_import_user` (~2 requests per deck). Often blocked by Cloudflare on datacenter IPs; paste decklists directly when blocked. |
 
-- **Role tagging** in `analysis.py` is a regex heuristic over oracle text—great for spotting structural gaps, always verified with `get_card` during the skill pass.
+- **Role tagging** in `analysis/roles.py` is a regex heuristic over oracle text—great for spotting structural gaps, always verified with `get_card` during the skill pass.
 - **Fan Content Policy**: follows Wizards of the Coast's Fan Content Policy and Scryfall's API terms. Keep projects built on this free and do not imply official endorsement.
 
 ---
 
 ## Roadmap
 
-See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the upcoming 10-phase plan:
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the 10-phase roadmap and status:
 
-1. **Part 1 (Phases 1–5 — Foundation & Moxfield Loop)**: `captured_at` provenance on library tools, one-call `moxfield_get_deck`, deterministic `tag_decklist`, persistent SQLite HTTP cache (`~/.cache/mtg-mcp/http_cache.sqlite3`), and golden-deck CI regression evals.
-2. **Part 2 (Phase 6 — Speed & Richer Reports)**: per-card cache inside `Scryfall.collection()`, parallel host calls via `asyncio.gather`, automatic WotC Bracket 1–5 estimation in `analyze_deck`, and EUR + cheapest-printing budget swap finder in `price_decklist`.
-3. **Part 3 (Phases 7–10 — EDHcheck Tool Suite)**: `analyze_mana_base` (exact `math.comb` hypergeometric on-curve cast rates & land cycle classification), `search_lands`, color-aware goldfish + custom `mulligan_targets`, `compare_decks` (A/B deck diff), `check_pod` (4-deck Rule 0 pod checker), and `find_tokens`.
+1. **Part 1 (Phases 1–5 — Foundation & Moxfield Loop)**: golden-deck CI regression evals (`tests/test_regression.py`, shipped) plus optional `captured_at` provenance, `moxfield_get_deck`, `tag_decklist`, and persistent SQLite HTTP cache.
+2. **Part 2 (Phase 6 — Speed & Richer Reports, shipped)**: per-card cache inside `Scryfall.collection()`, parallel host calls via `asyncio.gather`, automatic WotC Bracket 1–5 + Power/School/Synergy scoring in `analyze_deck`, and EUR + `budget_target` cut suggestions in `price_decklist`.
+3. **Part 3 (Phases 7–10 — EDHcheck Tool Suite, shipped)**: `analyze_mana_base` (exact `math.comb` hypergeometric on-curve cast rates & land cycle classification), `search_lands`, color-aware goldfish + `mulligan_targets` + `track_card_impact`, `compare_decks` (A/B deck diff), `check_pod` (4-deck Rule 0 pod checker), and `find_tokens`.
 
 ---
 
@@ -352,10 +356,10 @@ See **[`docs/architecture.md`](docs/architecture.md)** for layers, dependency ru
 ```text
 src/mtg_mcp/
   __init__.py         package version
-  server.py           FastMCP server, 28 MCP tools, CLI entry point (--http / stdio)
+  server.py           FastMCP server, 31 MCP tools, CLI entry point (--http / stdio)
   wiring.py           shared HTTP clients and deck resolution for tools
-  tools/              MCP tool registration (split in progress; see architecture.md)
-  analysis/           deck analysis package (core.py today; roles/mana/bracket split planned)
+  tools/              MCP tool handlers (cards, deck, combos, edhrec_tools, archidekt_tools, reference, skills_tool)
+  analysis/           deck analysis submodules (analyze, roles, mana, bracket, template, compare, pod, tokens, legality)
   http.py             per-host rate-limited, retrying async HTTP client + in-memory TTLCache
   scryfall.py         Scryfall API client (search, named, collection batches, rulings, printings)
   forge.py            Card-Forge rules script & AI synergy tag parser (DeckHas, DeckNeeds, AST nodes)
@@ -368,18 +372,21 @@ src/mtg_mcp/
   archidekt.py        Archidekt client (deck search, full deck summary, popular cards across top decks)
   library.py          reference library loader, role normalizer, card/deck search, staple comparison
   moxfield.py         Moxfield user importer for reference library sources
-  deck_skills/        16 deckbuilding skills (nero-*, defcat-*, based-*, moxfield-primer)
+  deck_skills/        18 deckbuilding skills (deck-plan, deck-upgrade, nero-*, defcat-*, based-*, moxfield-primer)
   data/library/       bundled reference library data (nero/source.json, decks.json, cards.json)
 scripts/
   build_library_docs.py   regenerate docs/library/ Markdown files from src/mtg_mcp/data/library/
 docs/
+  architecture.md     layering, allowed imports, submodule map, and tool registration guide
   ROADMAP.md          10-phase architecture, performance, and EDHcheck tool suite roadmap
   library/            browsable Markdown reference library (PRINCIPLES.md, CARD_LIBRARY.md, DECKS.md)
 .cursor/
   mcp.json            Cursor MCP server config
   rules/              Cursor workspace rules (full-deck-pass.mdc, use-mtg-mcp.mdc, ponytail.mdc)
-  skills/             Ponytail engineering workflow skills
+  skills/             Mirrored deckbuilding skills and Ponytail engineering workflow skills
 tests/
   fakes.py            deterministic offline HTTP fakes for Scryfall, Spellbook, EDHREC, Archidekt, Moxfield
   test_all.py         offline unit and integration test suite
+  test_regression.py  golden-deck pipeline and skill-chain regression suite
+  fixtures/           golden_atraxa_pipeline.json regression baseline
 ```

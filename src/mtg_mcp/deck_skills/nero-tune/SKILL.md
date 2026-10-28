@@ -1,11 +1,10 @@
 ---
 name: nero-tune
 description: >
-  Tune an existing Commander deck against NeRo's principles with the
-  mtg-deckbuilder MCP: one plan-fixing swap, then at most four more,
-  each tied to a tool number. Use when the user pastes a deck, shares a
-  Moxfield, Archidekt, or MTGO link, or asks to tune, cut, upgrade, or
-  check a list, including NeRo, _NeRo, budget cEDH, or Bracket 4.
+  Tune an existing Commander deck after deck-upgrade locks the goal,
+  the win, and the budget: one plan-fixing swap, then the gaps the lock
+  names, each tied to a tool number. Use when deck-upgrade hands off,
+  including NeRo, _NeRo, budget cEDH, or Bracket 4.
 ---
 
 # Tune a deck the NeRo way
@@ -15,6 +14,14 @@ NeRo (@_NeRo) builds ~$100 high-power Bracket 4. A swap is a 1-for-1 quality bum
 If `reference_principles` is not in this session, read `src/mtg_mcp/data/library/nero/source.json`, or `get_library()` with `PYTHONPATH=src` from the repo root. Same fallback for `reference_deck`, `reference_compare`, and `reference_cards` (`decks.json` via `get_library()`, not by reading the whole file). Say that you used the files. Do not recite principles from memory.
 
 Get the list as text first. Moxfield has no public API. For an Archidekt URL, `archidekt_get_deck` and use its `decklist`. For one of his decks, `reference_deck` and use its `decklist`.
+
+## Called from deck-upgrade
+
+This skill is called twice.
+
+**Read.** No locked Goal yet. Run the order below. Hand back the scorecard. Set `Change` to `waiting on the lock`. Name no add and no cut.
+
+**Build.** A locked Goal, Win, and budget are in the message. Every swap serves that lock. `price_decklist` uses their budget, not a silent $100. The "at most four" cap lifts when the lock lists more gaps. Each change still ties to a gap or a tool number. If keeping the win blows the budget, stop. Do not cut the win to hit the number. `deck-upgrade` owns the `does not fit` block.
 
 ## Order
 
@@ -36,7 +43,7 @@ get_card + get_card_printings           before a buy
 ```
 
 1. `reference_principles(source="nero")`. Grade against the tool result. Do not recite principles from memory.
-2. `analyze_deck(include_combos=True)` on the full list. Pass `commanders` if the list does not mark them. Read `bracket` (1–5 + `bracket_path` + `bracket_up_warning`), `power_score` (`0–10` + Speed, Consistency, Saltiness, Interaction, Synergy, Resilience), `school_score` (`NeRo` / `Defcat` / `Based 3x33` + `notes`), and `synergy` (`Enabler × Payoff` axes). `price_decklist(budget_target=100)` (or the user's cap) for the real total and `suggested_cuts_to_hit_budget`. The ~$100 cap is the deck, not a per-card cap. When evaluating 2–4 decks for a table, also run `check_pod`.
+2. `analyze_deck(include_combos=True)` on the full list. Pass `commanders` if the list does not mark them. Read `bracket` (1–5 + `bracket_path` + `bracket_up_warning`), `power_score` (`total` is the single deterministic 0–10 EDHcheck Power Score — never quote `school_score` or `synergy` as Power; inspect `missing_levers` to see which of Tutors `18%`, explicit Spellbook Combos `15%`, or Game Changers `15%` is capping the score), `school_score` (`NeRo` / `Defcat` / `Based 3x33` + `notes`), and `synergy` (`Enabler × Payoff` axes). `price_decklist(budget_target=100)` (or the user's cap) for the real total and `suggested_cuts_to_hit_budget`. The ~$100 cap is the deck, not a per-card cap. When evaluating 2–4 decks for a table, also run `check_pod`.
 3. `get_card(commander, include_forge_tags=True)` on the commander. One sentence: the rule it breaks (plus `forge_tags` `deck_has` / `deck_needs`). If the list is built around the surface theme (Rat tribal for Vren, landfall tokens for Tannuk), that is the first cut.
 4. `reference_deck` for this commander. Use his plan, mulligan, and `notes.win_lines` as the comparison, not as cards to copy blindly.
 4b. `get_skill("based-split")`. Deal the 99 main-deck cards into three 33-card piles (`Pile A / Pile B / Pile C`) by job. Flag uneven `2/2/1` or `11/11/10` splits, `1/0/0` orphan one-offs (`Archmage Emeritus` test), uncounted theme density (`count / 3` per game), and slow random value engines occupying a specific job slot (`Exalted Flamer of Tzeentch` test).
@@ -83,7 +90,7 @@ Change:      cut X → add Y, because <one number or one combo>
 Then:        at most four more, each tied to a number
 ```
 
-Lead with the one swap that fixes the plan. A card he plays in three or more decks still has to pass the jobs test.
+On a Read from `deck-upgrade`, lead with the scorecard and stop. On a Build, lead with the one swap that fixes the locked plan. A card he plays in three or more decks still has to pass the jobs test.
 
 ## Example
 

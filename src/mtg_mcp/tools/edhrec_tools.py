@@ -1,30 +1,12 @@
-"""MCP tool implementations."""
+"""EDHREC recommendation MCP tools."""
 
 from __future__ import annotations
 
 from typing import Any, Literal
 
 from .. import wiring
-from ..http import ApiError
-
-
-def _clients():
-    return wiring.clients()
-
-
-def _error(exc: ApiError) -> dict[str, Any]:
-    return wiring.api_error(exc)
-
-
-async def _resolve_deck(decklist: str, commanders: list[str] | None):
-    return await wiring.resolve_deck(decklist, commanders)
-
-
-def _archidekt():
-    return wiring.archidekt()
-
-
 from ..decklist import parse_decklist
+from ..http import ApiError
 
 
 async def edhrec_recommendations(
@@ -45,7 +27,7 @@ async def edhrec_recommendations(
     Each card shows inclusion % (share of this commander's decks running it) and synergy % (how much
     more often it appears here than in other decks of these colours).
     """
-    scryfall, _, edhrec = _clients()
+    scryfall, _, edhrec = wiring.clients()
     names = [commander] + ([partner] if partner else [])
     try:
         # Normalise names through Scryfall so slugs match (fixes typos/partial names).
@@ -66,17 +48,17 @@ async def edhrec_recommendations(
             categories=categories,
         )
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
 
 
 async def edhrec_card(name: str) -> dict[str, Any]:
     """EDHREC data for a card: the commanders that play it most and cards commonly played with it."""
-    scryfall, _, edhrec = _clients()
+    scryfall, _, edhrec = wiring.clients()
     try:
         card = await scryfall.named(name)
         return await edhrec.card(card.get("name", name))
     except ApiError as exc:
-        return _error(exc)
+        return wiring.api_error(exc)
 
 
 def register(mcp) -> None:

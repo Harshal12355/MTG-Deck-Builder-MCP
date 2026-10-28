@@ -53,11 +53,6 @@ _ROLE_PATTERNS: dict[str, list[re.Pattern[str]]] = {
     ],
 }
 
-_ANY_NUMBER = re.compile(r"a deck can have any number of cards named")
-_UP_TO_N = re.compile(r"a deck can have up to (\w+) cards named")
-_PIP = re.compile(r"\{([^}]+)\}")
-
-
 _DRAW_HERE = re.compile(
     r"\bdraws? (?:a|an|one|two|three|four|five|x|that many|cards equal|\d+) (?:additional )?cards?|\bdraw cards equal"
 )

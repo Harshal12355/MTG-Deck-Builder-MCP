@@ -118,6 +118,31 @@ def classify_land(card: dict[str, Any]) -> dict[str, str]:
     return {"slug": "utility", "label": "Untapped Land", "speed": "untapped"}
 
 
+def land_produced_colors(
+    card: dict[str, Any],
+    identity: set[str],
+    land_slug: str | None = None,
+    has_commander: bool = False,
+) -> list[str]:
+    """Colors a card can produce within the commander's color identity (fetches count for all identity colors)."""
+    text_low = oracle_text(card).lower()
+    if not identity and (has_commander or "commander's color identity" in text_low):
+        return []
+    raw = [col for col in (card.get("produced_mana") or []) if col in COLORS]
+    if not raw and "any color" in text_low:
+        raw = list(COLORS)
+    produced = [col for col in raw if not identity or col in identity]
+    if not produced:
+        slug = land_slug if land_slug is not None else classify_land(card)["slug"]
+        # shortcut: fetches/panoramas count for every color in identity, upgrade to parse basic land types when checking off-color fetches
+        if slug in {"fetch", "panorama"}:
+            return [col for col in COLORS if col in identity]
+    return produced
+
+
+_land_produced_colors = land_produced_colors
+
+
 def analyze_mana(
     deck: ParsedDeck,
     cards: dict[str, dict[str, Any]],
@@ -139,21 +164,20 @@ def analyze_mana(
     speed_counts: Counter[str] = Counter()
     groups: dict[str, dict[str, Any]] = {}
     pip_demands: list[dict[str, Any]] = []
-    identity: set[str] = set()
-
-    for e, c in resolved:
-        for col in c.get("color_identity") or []:
-            if col in COLORS:
-                identity.add(col)
+    has_commander = bool(deck.commanders)
+    commander_cards = [cards.get(e.name.lower()) for e in deck.commanders]
+    identity: set[str] = {
+        col for c in commander_cards if c for col in (c.get("color_identity") or []) if col in COLORS
+    }
+    if not has_commander:
+        for _, c in resolved:
+            for col in c.get("color_identity") or []:
+                if col in COLORS:
+                    identity.add(col)
 
     for e, c in resolved:
         is_cmd = _front_lower(c.get("name", e.name)) in cmd_set
         tl = front_type_line(c)
-        raw_prod = [col for col in (c.get("produced_mana") or []) if col in COLORS]
-        text_low = oracle_text(c).lower()
-        if not raw_prod and "any color" in text_low:
-            raw_prod = list(COLORS)
-        produced = [col for col in raw_prod if not identity or col in identity]
 
         if "Land" in tl:
             lands += e.quantity
@@ -162,9 +186,7 @@ def analyze_mana(
             g = groups.setdefault(info["slug"], {"slug": info["slug"], "label": info["label"], "speed": info["speed"], "count": 0, "cards": []})
             g["count"] += e.quantity
             g["cards"].append(c.get("name", e.name))
-            # Fetch lands count as sources for any color in identity
-            cols = produced or (list(identity) if info["slug"] in {"fetch", "panorama"} else [])
-            for col in cols:
+            for col in land_produced_colors(c, identity, info["slug"], has_commander=has_commander):
                 color_sources[col] += e.quantity
                 land_color_sources[col] += e.quantity
         else:
@@ -174,7 +196,7 @@ def analyze_mana(
             roles = card_roles(c)
             if "ramp" in roles and not is_cmd:
                 ramp_count += e.quantity
-                for col in produced:
+                for col in land_produced_colors(c, identity, "", has_commander=has_commander):
                     color_sources[col] += e.quantity
             cost = c.get("mana_cost") or ((c.get("card_faces") or [{}])[0].get("mana_cost", ""))
             pips = _pips(cost)

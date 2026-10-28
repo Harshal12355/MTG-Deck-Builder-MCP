@@ -1,0 +1,18 @@
+---
+description: When the user pastes or links a decklist, diagnose how it plays, lock the plan and the budget with them, then upgrade. Say clearly when the plan does not fit the budget.
+alwaysApply: true
+---
+
+# Upgrade a pasted list
+
+A pasted list, a file, or a Moxfield / Archidekt / MTGO link starts at `get_skill("deck-upgrade")`. Follow it. Stop when it says stop.
+
+Do not print a new decklist in the same turn as the first look at a paste. A paste is not a yes to rebuild.
+
+Before any add or cut, the user has locked three things: the Goal, the Win, and the budget. Setup, mana, interaction, and seeing your cards have to serve that win. A swap that improves one number and breaks the win is out.
+
+If the locked win cannot be built inside the budget, say `Budget: does not fit`, the two dollar amounts, and what would have to be dropped. Do not hand over a list that quietly changed the win.
+
+After they say yes, `nero-tune` upgrades a list that already has this plan. `nero-build` rebuilds a list whose plan changed. Both keep the lock.
+
+Example: a $400 combo pasted with "keep it under $100" does not become a $100 list with the combo removed and no mention. It stops on `does not fit`.
